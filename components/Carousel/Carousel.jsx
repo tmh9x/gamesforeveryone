@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 
 import Image from 'next/image';
 import Slider from 'react-slick';
-import { dataDigitalBestSeller } from './data';
+import { dataDigitalBestSeller } from '../data';
 // import imgGirl from '/images/defaultImage.jpg';
 import styles from './carousel.module.css';
 
@@ -55,21 +55,20 @@ export default function SimpleSlider () {
   };
   
     return (
-    
+
       <Slider {...settings}>
         {dataDigitalBestSeller.map((item, i) => (
           <div key={i} className={styles.card}>
-            <div className={styles.card_top}>
-              <img
+            <div className={styles.card_top} >
+              <Image
                 src={
                   defaultImage[item.title] === item.title
                     ? defaultImage.linkDefault
-                    : item.linkImg
-                }
+                    : item.linkImg}
                 alt={item.title}
                 onError={handleErrorImage}
-                width={300}
-                height={400}
+                width={450}
+                height={250}
               />
               <h1>{item.title}</h1>
             </div>
