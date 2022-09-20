@@ -13,11 +13,14 @@ import MenuItem from "@mui/material/MenuItem";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
+import { useAuth } from "../../context/AuthContext";
+import { useRouter } from "next/router";
 
-const pages = ["Home", "FAQ", "Login"];
+const pages = ["Home", "FAQ", "Login", "SignUp"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
-
 const NavBar = () => {
+  const { user, logout } = useAuth();
+  const router = useRouter();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -39,7 +42,16 @@ const NavBar = () => {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+  const handleNavMenuClick = (e: string) => {
+    console.log("e: ", e);
 
+    setAnchorElUser(null);
+    if (e === "Home") {
+      router.push(`/`);
+    } else {
+      router.push(`/${e.toLowerCase()}`);
+    }
+  };
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
@@ -93,10 +105,16 @@ const NavBar = () => {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                <MenuItem key={page} onClick={(e) => handleNavMenuClick(page)}>
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
+             {user && <MenuItem  onClick={(e) => {
+              logout();
+              router.push(`/login`)
+             }}>
+                <Typography textAlign="center">Logout</Typography>
+              </MenuItem>}
             </Menu>
           </Box>
           <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
@@ -133,7 +151,8 @@ const NavBar = () => {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar alt="Remy Sharp" src="/images/defaultImage.jpg" />
+                {/* <Avatar alt="Remy Sharp" src="/static/images/.jpg" /> */}
               </IconButton>
             </Tooltip>
             <Menu
