@@ -14,7 +14,7 @@ export default function GameCard() {
   return (
     <Card sx={{ maxWidth: 345 }} className={styles.card}>
       <CardHeader title="PLATFORM" className={styles.card_header} />
-      <Link href="/details">
+      <Link href="/game/details">
         <CardMedia
           component="img"
           height="200"
