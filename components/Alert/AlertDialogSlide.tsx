@@ -25,6 +25,7 @@ interface IProps {
   dialogTitle?: string;
   buttonTxt1?: string;
   buttonTxt2?: string;
+  open?:boolean;
   children?: React.ReactNode | React.ReactNode[];
 }
 // export default function AlertDialogSlide() {
@@ -35,6 +36,7 @@ const AlertDialogSlide: React.FC<IProps> = ({
   children,
   buttonTxt1,
   buttonTxt2,
+  open,
 }) => {
   // const [open, setOpen] = React.useState<boolean>(true);
 

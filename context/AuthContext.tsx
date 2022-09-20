@@ -70,8 +70,15 @@ export const AuthContextProvider = ({
         password
       );
       setUser(userCredential.user);
-    } catch (error) {
-      console.log("error: ", error);
+    } catch (err:any) {
+        if (err.message === "Firebase: Error (auth/user-not-found).") {
+          setIsEmailAlreadyExists(false);
+          setOpenAlert(true);
+          setAlerTxt1(
+            "This email is not exists. Please try with another email."
+          );
+        }
+      console.log("err: ", err.message === "Firebase: Error (auth/user-not-found).");
     } finally {
       setLoading(false);
     }

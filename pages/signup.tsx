@@ -7,11 +7,7 @@ const Signup = () => {
   const {
     user,
     signup,
-    openAlert,
-    alertText2,
-    setAlertText2,
     alerTxt1,
-    setAlerTxt1,
   } = useAuth();
   const [data, setData] = useState({
     email: "",
@@ -67,7 +63,7 @@ const Signup = () => {
         />
         <button type="submit">SignUp</button>
       </form>
-      <AlertDialogSlide dialogTitle="Allert" text1={alerTxt1} buttonTxt1={"Close"} />
+      <AlertDialogSlide dialogTitle="Alert" text1={alerTxt1} buttonTxt1={"Close"} />
     </div>
   );
 };
