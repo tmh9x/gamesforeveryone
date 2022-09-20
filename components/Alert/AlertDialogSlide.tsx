@@ -27,7 +27,6 @@ interface IProps {
   buttonTxt2?: string;
   children?: React.ReactNode | React.ReactNode[];
 }
-// export default function AlertDialogSlide() {
 const AlertDialogSlide: React.FC<IProps> = ({
   text1,
   text2,
@@ -36,16 +35,11 @@ const AlertDialogSlide: React.FC<IProps> = ({
   buttonTxt1,
   buttonTxt2,
 }) => {
-  // const [open, setOpen] = React.useState<boolean>(true);
 
-  //   const {} =React.useContext(AuthContext)
   const { setOpenAlert, openAlert } = useAuth();
 
-  //   const handleClickOpen = () => {
-  //     setOpenAlert(true);
-  //   };
 
-  const handleClose = (event: any, reason: any): void => {
+  const handleClose = (event: any, reason?: string): void => {
     console.log("reason: ", reason);
     if (reason === "clickaway") {
       return;

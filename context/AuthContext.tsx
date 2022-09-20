@@ -24,6 +24,7 @@ export const AuthContextProvider = ({
   const [alertText2, setAlertText2] = useState<string>("");
   const [alerTxt1, setAlerTxt1] = useState<string>('');
   const [dialogTitle, setDialogTitle] = useState<string>('');
+  const [openSnackBar, setOpenSnackBar] = useState(false);
       
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -100,6 +101,8 @@ export const AuthContextProvider = ({
         setAlerTxt1,
         dialogTitle,
         setDialogTitle,
+        openSnackBar,
+        setOpenSnackBar,
       }}
     >
       {loading ? null : children}
