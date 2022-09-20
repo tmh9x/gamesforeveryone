@@ -11,7 +11,7 @@ import { auth } from "../firebase/config";
 // import {getAuth} from 'firebase/app';
 
 interface ISignUpPage {
-  children?: JSX.Element | JSX.Element[];
+  children?: JSX.Element | JSX.Element[]
 
   // children: React.ReactNode;
 }
