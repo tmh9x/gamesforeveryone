@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 
-import AlertDialogSlide from "../components/Alert/AlertDialogSlide";
+import AlertDialogSlide from "../components/alerts/AlertDialogSlide";
 import { useAuth } from "../context/AuthContext";
 
 const Signup = () => {

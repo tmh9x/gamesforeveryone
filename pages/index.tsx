@@ -1,5 +1,5 @@
-import Carousel from "../components/Carousel/Carousel";
-import GameCard from "../components/Card/Card";
+import Carousel from "../components/Carousel";
+import GameCard from "../components/Card";
 import type { NextPage } from "next";
 import styles from "../styles/Home.module.css";
 

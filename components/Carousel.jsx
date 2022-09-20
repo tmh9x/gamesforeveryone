@@ -5,9 +5,9 @@ import React, { useState } from "react";
 
 import Image from "next/image";
 import Slider from "react-slick";
-import { dataDigitalBestSeller } from "../data";
+import { dataDigitalBestSeller } from "./data";
 // import imgGirl from '/images/defaultImage.jpg';
-import styles from "./Carousel.module.css";
+import styles from "../styles/Carousel.module.css";
 
 export default function SimpleSlider() {
   const [defaultImage, setDefaultImage] = useState({});
