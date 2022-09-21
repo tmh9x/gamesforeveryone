@@ -25,7 +25,13 @@ interface IProps {
   dialogTitle?: string;
   buttonTxt1?: string;
   buttonTxt2?: string;
-  open?:boolean;
+  open?: boolean;
+  buttonVariant1?: any;
+  buttonVariant2?: any;
+  buttonColor1?: any;
+  buttonColor2?: any;
+  allowFunction?: any;
+  rejectFunction?: any;
   children?: React.ReactNode | React.ReactNode[];
 }
 const AlertDialogSlide: React.FC<IProps> = ({
@@ -36,19 +42,30 @@ const AlertDialogSlide: React.FC<IProps> = ({
   buttonTxt1,
   buttonTxt2,
   open,
+  buttonVariant1,
+  buttonVariant2,
+  buttonColor1,
+  buttonColor2,
+  allowFunction,
+  rejectFunction,
 }) => {
-
   const { setOpenAlert, openAlert } = useAuth();
 
-
   const handleClose = (event: any, reason?: string): void => {
+    const value = event.target.value;
+    // allow  delete
+    if (allowFunction && value === "delete") {
+      allowFunction();
+    }
     console.log("reason: ", reason);
     if (reason === "clickaway") {
       return;
     }
     setOpenAlert(false);
   };
+
   console.log("openAlert: ", openAlert);
+  // console.log("allowFunction: ", allowFunction);
 
   return (
     <Dialog
@@ -66,10 +83,23 @@ const AlertDialogSlide: React.FC<IProps> = ({
       </DialogContent>
       <DialogActions>
         {buttonTxt1 && (
-          <Button onClick={(e) => handleClose(e, e)}>{buttonTxt1}</Button>
+          <Button
+            variant={buttonVariant1}
+            color={buttonColor1}
+            onClick={(e) => handleClose(e)}
+          >
+            {buttonTxt1}
+          </Button>
         )}
         {buttonTxt2 && (
-          <Button onClick={(e) => handleClose(e, e)}>{buttonTxt2}</Button>
+          <Button
+            value={buttonTxt2}
+            variant={buttonVariant2}
+            color={buttonColor2}
+            onClick={(e) => handleClose(e)}
+          >
+            {buttonTxt2}
+          </Button>
         )}
       </DialogActions>
     </Dialog>
