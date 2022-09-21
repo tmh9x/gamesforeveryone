@@ -1,6 +1,6 @@
-import * as React from "react";
-
 import IconButton, { IconButtonProps } from "@mui/material/IconButton";
+import React, { useEffect } from "react";
+import { collection, getDocs } from "firebase/firestore";
 
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
@@ -8,9 +8,27 @@ import CardMedia from "@mui/material/CardMedia";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import Link from "next/link";
 import { Typography } from "@mui/material";
+import { db } from "../../firebase/config";
 import styles from "./Card.module.css";
 
 export default function GameCard() {
+  console.log("db", db);
+
+  const getGames = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, "games"));
+      querySnapshot.forEach((doc) => {
+        console.log(`${doc.id} => ${doc.data()}`);
+      });
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
+  useEffect(() => {
+    getGames();
+  }, []);
+
   return (
     <Card sx={{ maxWidth: 345 }} className={styles.card}>
       <CardHeader title="PLATFORM" className={styles.card_header} />
