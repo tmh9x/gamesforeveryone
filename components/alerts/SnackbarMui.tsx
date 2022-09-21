@@ -1,11 +1,10 @@
 import * as React from "react";
 
 import { IconButton, Snackbar } from "@mui/material";
-import Slide, { SlideProps } from "@mui/material/Slide";
 
 import Button from "@mui/material/Button";
 import CloseIcon from "@mui/icons-material/Close";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 
 interface IProps {
   text?: string;
@@ -22,7 +21,6 @@ interface IProps {
   background?: string;
   duration?: number;
 
-  // children?: React.ReactNode | React.ReactNode[];
 }
 const SnackbarMui: React.FC<IProps> = ({
   text,
