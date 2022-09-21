@@ -4,7 +4,7 @@ import type { AppProps } from "next/app";
 import { AuthContextProvider } from "../context/AuthContext";
 import { Children } from "react";
 // import Login from "./login";
-import NavBar from "../components/NavBar/NavBar";
+import NavBar from "../components/NavBar";
 // import SignUp from "./SignUp";
 // import SignUpPage from "./SignUpPage";
 import ProtectedRoute from "../components/ProtectedRoute";

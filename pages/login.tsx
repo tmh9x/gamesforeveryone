@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 
+import AlertDialogSlide from "../components/alerts/AlertDialogSlide";
 import { useAuth } from "../context/AuthContext";
 import { useRouter } from "next/router";
 
 const Login = () => {
   const router = useRouter();
-  const { user, login } = useAuth();
+  const { user,login, alerTxt1 } = useAuth();
   const [data, setData] = useState({
     email: "",
     password: "",
@@ -61,6 +62,11 @@ const Login = () => {
         />
         <button type="submit">Login</button>
       </form>
+      <AlertDialogSlide
+        dialogTitle="Allert"
+        text1={alerTxt1}
+        buttonTxt1={"Close"}
+      />
     </div>
   );
 };

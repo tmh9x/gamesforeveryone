@@ -8,7 +8,7 @@ import CardMedia from "@mui/material/CardMedia";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import Link from "next/link";
 import { Typography } from "@mui/material";
-import styles from "./Card.module.css";
+import styles from "../styles/Card.module.css";
 
 export default function GameCard() {
   return (
