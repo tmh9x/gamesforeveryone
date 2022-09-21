@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import {
   createUserWithEmailAndPassword,
+  deleteUser,
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
@@ -20,12 +21,14 @@ export const AuthContextProvider = ({
   const [openAlert, setOpenAlert] = useState<boolean>(false);
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [isEmailAlreadyExists, setIsEmailAlreadyExists] = useState<boolean>(false);
+  const [isEmailAlreadyExists, setIsEmailAlreadyExists] =
+    useState<boolean>(false);
   const [alertText2, setAlertText2] = useState<string>("");
-  const [alerTxt1, setAlerTxt1] = useState<string>('');
-  const [dialogTitle, setDialogTitle] = useState<string>('');
+  const [alerTxt1, setAlerTxt1] = useState<string>("");
+  const [dialogTitle, setDialogTitle] = useState<string>("");
   const [openSnackBar, setOpenSnackBar] = useState(false);
-      
+
+  // ------------- Check if User Online / Logged in ------------- start //
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -42,7 +45,9 @@ export const AuthContextProvider = ({
 
     return () => unsubscribe();
   }, []);
+  // ------------- Check if User Online / Logged in ------------- ends //
 
+  // ------------- Login Sign Up ------------- start //
   const signup = async (email: string, password: string) => {
     try {
       const userCredential = await createUserWithEmailAndPassword(
@@ -56,13 +61,15 @@ export const AuthContextProvider = ({
         setIsEmailAlreadyExists(true);
         setOpenAlert(true);
         setAlerTxt1(
-          'This email already registered. Please try with another email.'
+          "This email already registered. Please try with another email."
         );
       }
       console.log("error in signup in Context: ", err);
     }
   };
+  // ------------- Login Sign Up ------------- ends //
 
+  // ------------- Login User ------------- start //
   const login = async (email: string, password: string) => {
     try {
       const userCredential = await signInWithEmailAndPassword(
@@ -71,27 +78,42 @@ export const AuthContextProvider = ({
         password
       );
       setUser(userCredential.user);
-    } catch (err:any) {
-        if (err.message === "Firebase: Error (auth/user-not-found).") {
-          setIsEmailAlreadyExists(false);
-          setOpenAlert(true);
-          setAlerTxt1(
-            "This email is not exists. Please try with another email."
-          );
-        }
-      console.log("err: ", err.message === "Firebase: Error (auth/user-not-found).");
+    } catch (err: any) {
+      if (err.message === "Firebase: Error (auth/user-not-found).") {
+        setIsEmailAlreadyExists(false);
+        setOpenAlert(true);
+        setAlerTxt1("This email is not exists. Please try with another email.");
+      }
+      console.log(
+        "err: ",
+        err.message === "Firebase: Error (auth/user-not-found)."
+      );
     } finally {
       setLoading(false);
     }
   };
+  // ------------- Login User ------------- ends //
 
+  // ------------- Logout User ------------- start //
   const logout = async () => {
     setUser(null);
     await signOut(auth);
   };
+  // ------------- Logout User ------------- ends //
 
+  // ------------- Delete User ------------- start //
+  const delUser = (e: any) => {
+    deleteUser(user)
+      .then(() => {
+        console.log("User deleted");
+      })
+      .catch((err) => {
+        console.log("error user deleting: ", err);
+      });
+  };
+  // --------------- Delete User ------------- ends //
   console.log("user", user);
-    console.log("openAlert: ", openAlert);
+  console.log("openAlert: ", openAlert);
   console.log("isEmailAlreadyExists: ", isEmailAlreadyExists);
   return (
     <AuthContext.Provider
@@ -110,6 +132,7 @@ export const AuthContextProvider = ({
         setDialogTitle,
         openSnackBar,
         setOpenSnackBar,
+        delUser,
       }}
     >
       {loading ? null : children}

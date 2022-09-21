@@ -42,6 +42,7 @@ const NavBar = () => {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
   const handleNavMenuClick = (e: string) => {
     console.log("e: ", e);
 
@@ -52,6 +53,7 @@ const NavBar = () => {
       router.push(`/${e.toLowerCase()}`);
     }
   };
+
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
@@ -109,12 +111,16 @@ const NavBar = () => {
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
-             {user && <MenuItem  onClick={(e) => {
-              logout();
-              router.push(`/login`)
-             }}>
-                <Typography textAlign="center">Logout</Typography>
-              </MenuItem>}
+              {user && (
+                <MenuItem
+                  onClick={(e) => {
+                    logout();
+                    router.push(`/login`);
+                  }}
+                >
+                  <Typography textAlign="center">Logout</Typography>
+                </MenuItem>
+              )}
             </Menu>
           </Box>
           <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
@@ -122,7 +128,7 @@ const NavBar = () => {
             variant="h5"
             noWrap
             component="a"
-            href=""
+            href="/"
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },
@@ -172,7 +178,10 @@ const NavBar = () => {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem
+                  key={setting}
+                  onClick={(e) => handleNavMenuClick(setting)}
+                >
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}
