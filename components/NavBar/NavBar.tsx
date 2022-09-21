@@ -53,7 +53,7 @@ const NavBar = () => {
     }
   };
   return (
-    <AppBar position="static">
+    <AppBar position="static" sx={{ backgroundColor: "#e63946" }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
@@ -109,12 +109,16 @@ const NavBar = () => {
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
-             {user && <MenuItem  onClick={(e) => {
-              logout();
-              router.push(`/login`)
-             }}>
-                <Typography textAlign="center">Logout</Typography>
-              </MenuItem>}
+              {user && (
+                <MenuItem
+                  onClick={(e) => {
+                    logout();
+                    router.push(`/login`);
+                  }}
+                >
+                  <Typography textAlign="center">Logout</Typography>
+                </MenuItem>
+              )}
             </Menu>
           </Box>
           <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
