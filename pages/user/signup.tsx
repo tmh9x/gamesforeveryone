@@ -1,29 +1,29 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 
-import AlertDialogSlide from "../components/alerts/AlertDialogSlide";
-import { useAuth } from "../context/AuthContext";
+import AlertDialogSlide from "../../components/alerts/AlertDialogSlide";
+import { useAuth } from "../../context/AuthContext";
 import { useRouter } from "next/router";
 
-const Login = () => {
-  const router = useRouter();
-  const { user,login, alerTxt1 } = useAuth();
+const Signup = () => {
+  const { user, signup, alerTxt1 } = useAuth();
   const [data, setData] = useState({
     email: "",
     password: "",
   });
+  const router = useRouter();
 
-  const handleLogin = async (e: any) => {
+  const handleSignup = async (e: any) => {
     e.preventDefault();
-
-    console.log(user);
     try {
-      await login(data.email, data.password);
-      router.push("/dashboard");
+      await signup(data.email, data.password);
+      router.push("/login");
     } catch (err) {
-      console.log(err);
+      console.log("error in handleSignup:", err);
     }
   };
-  console.log("data: ", data);
+
+  console.log("user", user);
+  console.log(data);
   return (
     <div
       style={{
@@ -31,8 +31,8 @@ const Login = () => {
         margin: "30px auto",
       }}
     >
-      <h1 className="text-center my-3 ">Login</h1>
-      <form onSubmit={handleLogin}>
+      <h1 className="text-center my-3 ">Signup</h1>
+      <form onSubmit={handleSignup}>
         <label>Email address</label>
         <input
           onChange={(e: any) =>
@@ -60,10 +60,10 @@ const Login = () => {
           type="password"
           placeholder="Password"
         />
-        <button type="submit">Login</button>
+        <button type="submit">SignUp</button>
       </form>
       <AlertDialogSlide
-        dialogTitle="Allert"
+        dialogTitle="Alert"
         text1={alerTxt1}
         buttonTxt1={"Close"}
       />
@@ -71,4 +71,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Signup;

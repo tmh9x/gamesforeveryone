@@ -16,7 +16,7 @@ import Typography from "@mui/material/Typography";
 import { useAuth } from "../context/AuthContext";
 import { useRouter } from "next/router";
 
-const pages = ["Home", "FAQ", "Login", "SignUp"];
+const pages = ["Home", "Insert", "Login", "SignUp"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 const NavBar = () => {
   const { user, logout } = useAuth();
@@ -49,13 +49,15 @@ const NavBar = () => {
     setAnchorElUser(null);
     if (e === "Home") {
       router.push(`/`);
+    } else if (e === "Insert") {
+      router.push(`/game/${e.toLowerCase()}`);
     } else {
       router.push(`/${e.toLowerCase()}`);
     }
   };
 
   return (
-    <AppBar position="static">
+    <AppBar position="static" sx={{ backgroundColor: "#e63946" }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
