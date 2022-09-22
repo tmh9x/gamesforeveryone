@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 
 const Signup = () => {
   const { user, signup } = useAuth();
@@ -16,11 +16,10 @@ const Signup = () => {
     try {
       await signup(data.email, data.password);
     } catch (err) {
-     
       console.log("error in handleSignup:", err);
     }
   };
- 
+
   console.log("user", user);
   console.log(data);
   return (
