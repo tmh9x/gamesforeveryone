@@ -1,12 +1,28 @@
 import { IconButton, TextField, TextareaAutosize } from "@mui/material";
+import React, { useState } from "react";
+import { addDoc, collection } from "firebase/firestore";
 
 import AddIcon from "@mui/icons-material/Add";
-import React from "react";
+import { db } from "../../firebase/config";
 import styles from "./InsertGame.module.css";
 
-type Props = {};
+function InsertGame() {
+  const [gameData, setGameData] = useState({});
+  console.log("gameData", gameData);
+  const handleChange = (e: any) => {
+    console.log("e.target.value", e.target.value);
+    setGameData({ ...gameData, [e.target.name]: e.target.value });
+  };
 
-function InsertGame({}: Props) {
+  const insertGame = async (e: any) => {
+    try {
+      const docRef = await addDoc(collection(db, "games"), gameData);
+      console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+  };
+
   return (
     <div>
       <form className={styles.insertGame_container}>
@@ -18,6 +34,7 @@ function InsertGame({}: Props) {
           name="platform"
           label="Platform"
           variant="outlined"
+          onChange={handleChange}
           required
         />
         <TextField
@@ -26,6 +43,7 @@ function InsertGame({}: Props) {
           name="title"
           label="Title"
           variant="outlined"
+          onChange={handleChange}
           required
         />
         <TextField
@@ -34,6 +52,7 @@ function InsertGame({}: Props) {
           name="genre"
           label="Genre"
           variant="outlined"
+          onChange={handleChange}
         />
         <TextField
           sx={{ backgroundColor: "#fff" }}
@@ -41,6 +60,7 @@ function InsertGame({}: Props) {
           name="description"
           label="Description"
           variant="outlined"
+          onChange={handleChange}
           required
         />
         <TextField
@@ -49,6 +69,7 @@ function InsertGame({}: Props) {
           name="fsk"
           label="FSK"
           variant="outlined"
+          onChange={handleChange}
           required
         />
         <TextField
@@ -57,6 +78,7 @@ function InsertGame({}: Props) {
           name="price"
           label="Price"
           variant="outlined"
+          onChange={handleChange}
           required
         />
         <TextField
@@ -65,12 +87,14 @@ function InsertGame({}: Props) {
           name="creator"
           label="Creator"
           variant="outlined"
+          onChange={handleChange}
         />
       </form>
       <div className={styles.iconButton}>
         <IconButton
           size="large"
           style={{ backgroundColor: "#e63946", color: "#fff" }}
+          onClick={insertGame}
         >
           <AddIcon />
         </IconButton>
