@@ -5,11 +5,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import IconButton from "@mui/material/IconButton";
 import Link from "next/link";
 import { Typography } from "@mui/material";
-<<<<<<< HEAD:components/GameCard/GameCard.tsx
 import styles from "./GameCard.module.css";
-=======
-import styles from "../styles/Card.module.css";
->>>>>>> main:components/Card.tsx
 
 export default function GameCard(game: Game) {
   return (
