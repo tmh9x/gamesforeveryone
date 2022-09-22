@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 
+import AlertDialogSlide from "../../components/alerts/AlertDialogSlide";
 import { useAuth } from "../../context/AuthContext";
 
 const Signup = () => {
-  const { user, signup } = useAuth();
-
+  const { user, signup, alerTxt1 } = useAuth();
   const [data, setData] = useState({
     email: "",
     password: "",
@@ -12,7 +12,6 @@ const Signup = () => {
 
   const handleSignup = async (e: any) => {
     e.preventDefault();
-
     try {
       await signup(data.email, data.password);
     } catch (err) {
@@ -60,6 +59,11 @@ const Signup = () => {
         />
         <button type="submit">SignUp</button>
       </form>
+      <AlertDialogSlide
+        dialogTitle="Alert"
+        text1={alerTxt1}
+        buttonTxt1={"Close"}
+      />
     </div>
   );
 };

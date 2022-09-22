@@ -1,4 +1,4 @@
-import GameDetails from "../../components/GameDetails/GameDetails";
+import GameDetails from "../../components/GameDetails";
 import type { NextPage } from "next";
 
 const Details: NextPage = () => {

@@ -13,7 +13,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 import { useRouter } from "next/router";
 
 const pages = ["Home", "Insert", "Login", "SignUp"];
