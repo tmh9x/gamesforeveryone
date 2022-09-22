@@ -42,6 +42,7 @@ const NavBar = () => {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
   const handleNavMenuClick = (e: string) => {
     console.log("e: ", e);
 
@@ -54,6 +55,7 @@ const NavBar = () => {
       router.push(`/${e.toLowerCase()}`);
     }
   };
+
   return (
     <AppBar position="static" sx={{ backgroundColor: "#e63946" }}>
       <Container maxWidth="xl">
@@ -128,7 +130,7 @@ const NavBar = () => {
             variant="h5"
             noWrap
             component="a"
-            href=""
+            href="/"
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },
@@ -178,7 +180,10 @@ const NavBar = () => {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem
+                  key={setting}
+                  onClick={(e) => handleNavMenuClick(setting)}
+                >
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}
