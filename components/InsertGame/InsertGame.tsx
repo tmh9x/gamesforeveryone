@@ -8,7 +8,7 @@ import styles from "./InsertGame.module.css";
 import { useAuth } from "../../context/AuthContext";
 
 function InsertGame() {
-  const { insertGame } = useAuth();
+  const { insertDoc } = useAuth();
 
   const [gameData, setGameData] = useState({});
   console.log("gameData", gameData);
@@ -18,9 +18,9 @@ function InsertGame() {
   };
 
   const handleSubmit = async (e: any) => {
-    console.log('handleSubmit');
+    console.log("handleSubmit");
     // e.preventDefault();
-    insertGame("games", gameData);
+    insertDoc("games", gameData);
   };
   //   const [gameData, setGameData] = useState({});
   //   console.log("gameData", gameData);
@@ -29,7 +29,7 @@ function InsertGame() {
   //     setGameData({ ...gameData, [e.target.name]: e.target.value });
   //   };
 
-  //   const insertGame = async (e: any) => {
+  //   const insertDoc = async (e: any) => {
   //     try {
   //       const docRef = await addDoc(collection(db, "games"), gameData);
   //       console.log("Document written with ID: ", docRef.id);
@@ -69,7 +69,7 @@ function InsertGame() {
           variant="outlined"
           onChange={handleChange}
         />
-         <TextField
+        <TextField
           type="number"
           sx={{ backgroundColor: "#fff" }}
           id="year"
@@ -109,7 +109,6 @@ function InsertGame() {
           required
         />
         <TextField
-
           sx={{ backgroundColor: "#fff" }}
           id="creator"
           name="creator"

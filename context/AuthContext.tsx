@@ -103,6 +103,8 @@ export const AuthContextProvider = ({
 
   // ------------- Delete User ------------- start //
   const delUser = (e: any) => {
+    const user: any = auth.currentUser;
+
     deleteUser(user)
       .then(() => {
         console.log("User deleted");
@@ -113,11 +115,8 @@ export const AuthContextProvider = ({
   };
   // --------------- Delete User ------------- ends //
 
-
-  // ------------- insertGame  ------------- start //
-  const insertGame = async (collect: any, data: any) => {
-    console.log("data-insert-game: ", data);
-    console.log("collection-insertGame: ", collect);
+  // ------------- insertDoc  ------------- start //
+  const insertDoc = async (collect: any, data: any) => {
     try {
       const docRef = await addDoc(collection(db, collect), data);
       console.log("Document written with ID: ", docRef.id);
@@ -125,8 +124,7 @@ export const AuthContextProvider = ({
       console.error("Error adding document: ", e);
     }
   };
-  // ------------- insertGame  ------------- ends //
-
+  // ------------- insertDoc  ------------- ends //
 
   // console.log("user", user);
   // console.log("openAlert: ", openAlert);
@@ -150,7 +148,7 @@ export const AuthContextProvider = ({
         openSnackBar,
         setOpenSnackBar,
         delUser,
-        insertGame,
+        insertDoc,
       }}
     >
       {loading ? null : children}
