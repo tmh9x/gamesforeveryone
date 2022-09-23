@@ -5,7 +5,9 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import IconButton from "@mui/material/IconButton";
 import Link from "next/link";
 import { Typography } from "@mui/material";
-import styles from "../styles/Card.module.css";
+
+import styles from "./GameCard.module.css";
+
 
 export default function GameCard(game: Game) {
   return (
