@@ -5,7 +5,7 @@ import { useAuth } from "../../context/AuthContext";
 import { useRouter } from "next/router";
 
 const Signup = () => {
-  const { user, signup, alerTxt1 } = useAuth();
+  const { user, signup, alerTxt1, insertGame } = useAuth();
   const [data, setData] = useState({
     email: "",
     password: "",
@@ -16,7 +16,8 @@ const Signup = () => {
     e.preventDefault();
     try {
       await signup(data.email, data.password);
-      router.push("/login");
+      insertGame('users', data);
+      router.push("/user/login");
     } catch (err) {
       console.log("error in handleSignup:", err);
     }
