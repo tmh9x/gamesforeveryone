@@ -5,8 +5,11 @@ import { addDoc, collection } from "firebase/firestore";
 import AddIcon from "@mui/icons-material/Add";
 import { db } from "../../firebase/config";
 import styles from "./InsertGame.module.css";
+import { useAuth } from "../../context/AuthContext";
 
 function InsertGame() {
+  const { insertGame } = useAuth();
+
   const [gameData, setGameData] = useState({});
   console.log("gameData", gameData);
   const handleChange = (e: any) => {
@@ -14,18 +17,30 @@ function InsertGame() {
     setGameData({ ...gameData, [e.target.name]: e.target.value });
   };
 
-  const insertGame = async (e: any) => {
-    try {
-      const docRef = await addDoc(collection(db, "games"), gameData);
-      console.log("Document written with ID: ", docRef.id);
-    } catch (e) {
-      console.error("Error adding document: ", e);
-    }
+  const handleSubmit = async (e: any) => {
+    console.log('handleSubmit');
+    e.preventDefault();
+    insertGame("games", gameData);
   };
+  //   const [gameData, setGameData] = useState({});
+  //   console.log("gameData", gameData);
+  //   const handleChange = (e: any) => {
+  //     console.log("e.target.value", e.target.value);
+  //     setGameData({ ...gameData, [e.target.name]: e.target.value });
+  //   };
+
+  //   const insertGame = async (e: any) => {
+  //     try {
+  //       const docRef = await addDoc(collection(db, "games"), gameData);
+  //       console.log("Document written with ID: ", docRef.id);
+  //     } catch (e) {
+  //       console.error("Error adding document: ", e);
+  //     }
+  //   };
 
   return (
     <div>
-      <form className={styles.insertGame_container}>
+      <form onSubmit={handleSubmit} className={styles.insertGame_container}>
         <input type="file" />
         <TextField
           className={styles.insertGame_container_textField}
@@ -64,6 +79,7 @@ function InsertGame() {
           required
         />
         <TextField
+          type="number"
           sx={{ backgroundColor: "#fff" }}
           id="outlined"
           name="fsk"
@@ -73,6 +89,7 @@ function InsertGame() {
           required
         />
         <TextField
+          type="number"
           sx={{ backgroundColor: "#fff" }}
           id="price"
           name="price"
@@ -92,9 +109,10 @@ function InsertGame() {
       </form>
       <div className={styles.iconButton}>
         <IconButton
+          type="submit"
           size="large"
           style={{ backgroundColor: "#e63946", color: "#fff" }}
-          onClick={insertGame}
+          // onClick={insertGame}
         >
           <AddIcon />
         </IconButton>
