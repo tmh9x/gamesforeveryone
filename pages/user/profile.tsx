@@ -20,7 +20,7 @@ const Dashboard = () => {
     <>
       <Button onClick={openDeleteAlert}>Delete User</Button>
 <br/>
-      <Button href="/user/edit-profile">Edit Profile</Button>
+      <Button href="/user/edit-user">Edit Profile</Button>
 
       <AlertDialogSlide
         text1={"Are you sure?"}

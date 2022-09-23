@@ -31,7 +31,16 @@ import { useAuth } from "../../context/AuthContext";
 import { useRouter } from "next/router";
 import { number, string } from "prop-types";
 import { db } from "../../firebase/config";
-import { collection, getDocs } from "firebase/firestore"; 
+console.log("db: ", db);
+import {
+  collection,
+  getDocs,
+  doc,
+  query,
+  where,
+  setDoc,
+  onSnapshot,
+} from "firebase/firestore";
 
 // import { formatDataYyMmDd } from "../utils/formatData";
 
@@ -45,8 +54,10 @@ const EditUser: React.FC<any> = () => {
   const [isPwEquivalent, setIsPwEquivalent] = useState<boolean>(false);
   const [isPwCharcGreatThan, setIsPwCharcGreatThan] = useState<boolean>(true);
   const [selectedImage, setSelectedImage] = useState<any>(null);
-
+  const [dbUsers, setDbUsers] = useState<any>(null);
+  const [FSUsers, setFSUsers] = useState<any>(null);
   const inputFile = useRef<HTMLInputElement | null>;
+
   // const inputFile = useRef<HTMLInputElement>(null);
   // const inputFile = useRef<HTMLInputElement>();
 
@@ -87,9 +98,9 @@ const EditUser: React.FC<any> = () => {
     postcode?: number;
     city?: string;
     phone?: number;
-    email: string;
-    password1: string;
-    password2: string;
+    // email: string;
+    // password1: string;
+    // password2: string;
   };
   const [editedUserData, setEditedUserData] = React.useState<TEditedUserData>({
     username: "",
@@ -101,23 +112,29 @@ const EditUser: React.FC<any> = () => {
     postcode: 0,
     city: "",
     phone: 0,
-    email: "",
-    password1: "",
-    password2: "",
+    // email: "",
+    // password1: "",
+    // password2: "",
   });
   console.log("editedUserData: ", editedUserData);
   const [isEmailValid, setIsEmailValid] = React.useState<boolean>(true);
 
   const router = useRouter();
 
-  const updateUser = async () => {
+  const getDBUsers = async () => {
     try {
-    //   await updateProfile(auth.currentUser, {
-    //     displayName: "Jane Q. User",
-    //     photoURL: "https://example.com/jane-q-user/profile.jpg",
-    //   });
-      await updateProfile(auth.currentUser, editedUserData);
-      router.push("/profile");
+      const colRef = collection(db, "users");
+      // queries
+      const q =  query(colRef, where("email", "==", user.email));
+
+      onSnapshot(q, (snapshot) => {
+        let us: [] = [];
+        snapshot.docs.forEach((doc) => {
+          us.push({ ...doc.data(), id: doc.id });
+        });
+        setDbUsers(us);
+        console.log("us: ", us);
+      });
     } catch (err) {
       console.log("error in updateProfile:", err);
     }
@@ -126,9 +143,28 @@ const EditUser: React.FC<any> = () => {
   //   --------- Submit Changes to Firebase ---- starts
   const handleEditSubmit = async (e: any) => {
     e.preventDefault();
+    getDBUsers();
+
+    // let currentUsersEmail:[] = [];
+    // const currentUser = dbUsers.filter(u => {
+    //   // return u.email === user.email && currentUsersEmail.push(u.email);
+    //   return u.email === user.email;
+    // })
+    // console.log("currentUser: ", currentUser);
+    // console.log("currentUsersEmail: ", currentUsersEmail[0]);
+    // setDbUsers(() => us.map((id) => id.id));
+    const newUser = {
+      ...editedUserData,
+      uid: user.uid,
+    };
+    const dbUserId = dbUsers.map((id: any) => id.id);
+    console.log("dbUserId: ", dbUserId[0]);
+    const usersRef = doc(db, "users", dbUserId[0]);
+    setDoc(usersRef, newUser, { merge: true });
+
     /* ---- Email Check ---- starts*/
-    let re =
-      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    // let re =
+    //   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
     // if (re.test(editedUserData.email)) {
     //     console.log("valid email :>> ");
@@ -138,25 +174,24 @@ const EditUser: React.FC<any> = () => {
     //     setIsEmailValid(false);
     // }
     /* ---- Password Check ---- starts*/
-    if (editedUserData.password1 !== editedUserData.password2) {
-      console.log(
-        "Your first Password is not equivalent with 2nd password. Please enter same password in both fields."
-      );
-      setIsPwEquivalent(true);
-      return false;
-    } else if (editedUserData.password1.length < 5) {
-      console.log("Password validation is at least 6 character");
+    // if (editedUserData.password1 !== editedUserData.password2) {
+    //   console.log(
+    //     "Your first Password is not equivalent with 2nd password. Please enter same password in both fields."
+    //   );
+    //   setIsPwEquivalent(true);
+    //   return false;
+    // } else if (editedUserData.password1.length < 5) {
+    //   console.log("Password validation is at least 6 character");
 
-      setIsPwCharcGreatThan(false);
-      return false;
-    } else {
-      setEditedUserData({
-        ...editedUserData,
-        password1: editedUserData.password1,
-      });
-    }
+    //   setIsPwCharcGreatThan(false);
+    //   return false;
+    // } else {
+    //   setEditedUserData({
+    //     ...editedUserData,
+    //     password1: editedUserData.password1,
+    //   });
+    // }
     /* ---- Password Check ---- ends*/
-    updateUser();
   };
   //   --------- Submit Changes to Firebase ---- ends
 
@@ -175,28 +210,15 @@ const EditUser: React.FC<any> = () => {
   // -------- Handle Input Value   ends -------
 
 
-  const getUserts = async ()=>{
-
-    try {
-        const querySnapshot = await getDocs(collection(db, "users"));
-        querySnapshot.forEach((doc) => {
-          console.log('user-data',doc.data());
-          console.log("user-ID", doc.id);
-        });
-    } catch (error) {
-        console.log("error: ", error);
-        
-    }
-  }
-
-useEffect(()=> {
-    getUserts();
-},[])
+  useEffect(() => {
+    getDBUsers();
+  }, []);
 
   //   console.log("user", user);
   //   console.log(userData);
   console.log("editedUserData: ", editedUserData);
-   console.log("db", db);
+  console.log("dbUsers: ", dbUsers);
+  console.log("FBuser", user);
   return (
     <>
       <ThemeProvider theme={theme}>
@@ -295,9 +317,7 @@ useEffect(()=> {
                     label="Birthday"
                     name="birthday"
                     value={
-                      editedUserData.birthday
-                        ? editedUserData.birthday
-                        : ""
+                      editedUserData.birthday ? editedUserData.birthday : ""
                     }
                     // value={
                     //   editedUserData.birthday
@@ -395,8 +415,8 @@ useEffect(()=> {
                     label="Email Address"
                     name="email"
                     autoComplete="email"
-                    value={editedUserData.email ? editedUserData.email : ""}
-                    onChange={handleInputValueChange}
+                    // value={editedUserData.email ? editedUserData.email : ""}
+                    // onChange={handleInputValueChange}
                     // onFocus={handlePwInputFocus}
                     // onBlur={onBlur}
                   />
@@ -412,15 +432,14 @@ useEffect(()=> {
                     type="password"
                     id="password1"
                     autoComplete="new-password"
-                    value={
-                      editedUserData.password1 ? editedUserData.password1 : ""
-                    }
-                    onChange={handleInputValueChange}
+                    // value={
+                    //   editedUserData.password1 ? editedUserData.password1 : ""
+                    // }
+                    // onChange={handleInputValueChange}
                     // value={password1}
                     // onChange={(e) => setPassword1(e.target.value)}
                   />
                 </Grid>
-               
               </Grid>
               <div
                 className="btn-con"
