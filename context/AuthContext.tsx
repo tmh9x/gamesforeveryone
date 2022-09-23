@@ -47,7 +47,7 @@ export const AuthContextProvider = ({
   }, []);
   // ------------- Check if User Online / Logged in ------------- ends //
 
-  // ------------- Login Sign Up ------------- start //
+  // -------------  Sign Up ------------- start //
   const signup = async (email: string, password: string) => {
     try {
       const userCredential = await createUserWithEmailAndPassword(
@@ -67,7 +67,7 @@ export const AuthContextProvider = ({
       console.log("error in signup in Context: ", err);
     }
   };
-  // ------------- Login Sign Up ------------- ends //
+  // -------------  Sign Up ------------- ends //
 
   // ------------- Login User ------------- start //
   const login = async (email: string, password: string) => {
@@ -113,9 +113,8 @@ export const AuthContextProvider = ({
   };
   // --------------- Delete User ------------- ends //
 
-  // ------------- Delete User ------------- start //
 
-
+  // ------------- insertGame  ------------- start //
   const insertGame = async (collect: any, data: any) => {
     console.log("data-insert-game: ", data);
     console.log("collection-insertGame: ", collect);
@@ -126,12 +125,13 @@ export const AuthContextProvider = ({
       console.error("Error adding document: ", e);
     }
   };
+  // ------------- insertGame  ------------- ends //
 
 
+  // console.log("user", user);
+  // console.log("openAlert: ", openAlert);
+  // console.log("isEmailAlreadyExists: ", isEmailAlreadyExists);
 
-
-  console.log("user", user);
-  console.log("isEmailAlreadyExists: ", isEmailAlreadyExists);
   return (
     <AuthContext.Provider
       value={{
