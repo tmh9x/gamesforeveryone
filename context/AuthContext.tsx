@@ -47,7 +47,7 @@ export const AuthContextProvider = ({
   }, []);
   // ------------- Check if User Online / Logged in ------------- ends //
 
-  // ------------- Login Sign Up ------------- start //
+  // -------------  Sign Up ------------- start //
   const signup = async (email: string, password: string) => {
     try {
       const userCredential = await createUserWithEmailAndPassword(
@@ -67,7 +67,7 @@ export const AuthContextProvider = ({
       console.log("error in signup in Context: ", err);
     }
   };
-  // ------------- Login Sign Up ------------- ends //
+  // -------------  Sign Up ------------- ends //
 
   // ------------- Login User ------------- start //
   const login = async (email: string, password: string) => {
@@ -112,9 +112,13 @@ export const AuthContextProvider = ({
       });
   };
   // --------------- Delete User ------------- ends //
-  console.log("user", user);
-  console.log("openAlert: ", openAlert);
-  console.log("isEmailAlreadyExists: ", isEmailAlreadyExists);
+
+
+
+  
+  // console.log("user", user);
+  // console.log("openAlert: ", openAlert);
+  // console.log("isEmailAlreadyExists: ", isEmailAlreadyExists);
   return (
     <AuthContext.Provider
       value={{

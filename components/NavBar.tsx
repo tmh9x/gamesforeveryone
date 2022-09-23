@@ -117,7 +117,7 @@ const NavBar = () => {
                 <MenuItem
                   onClick={(e) => {
                     logout();
-                    router.push(`/login`);
+                    router.push(`/user/login`);
                   }}
                 >
                   <Typography textAlign="center">Logout</Typography>
