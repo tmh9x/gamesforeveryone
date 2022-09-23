@@ -78,16 +78,18 @@ const EditUser: React.FC<any> = () => {
     password1: "",
   });
   type TEditedUserData = {
-    username: string;
-    first_name: string;
-    last_name: string;
-    birthday?: Date;
+    username?: string;
+    first_name?: string;
+    last_name?: string;
+    birthday?: string;
     gender?: string;
     street?: string;
     postcode?: number;
     city?: string;
     phone?: number;
-    // email: string;
+    email?: string;
+    authId?: string;
+    id?: string;
     // password1: string;
     // password2: string;
   };
@@ -95,13 +97,15 @@ const EditUser: React.FC<any> = () => {
     username: "",
     first_name: "",
     last_name: "",
-    birthday: new Date(),
+    birthday: '',
     gender: "",
     street: "",
     postcode: 0,
     city: "",
     phone: 0,
-    // email: "",
+    email: "",
+    authId: '',
+    id: '',
     // password1: "",
     // password2: "",
   });
@@ -115,10 +119,12 @@ const EditUser: React.FC<any> = () => {
       const q = query(colRef, where("email", "==", user.email));
 
       onSnapshot(q, (snapshot) => {
-        let us: [] = [];
+        // let us: string[] = [];
         snapshot.docs.forEach((doc) => {
-          us.push({ ...doc.data(), id: doc.id });
+          console.log("doc.data(): ", doc.data());
+          // us.push({ ...doc.data(), id: doc.id });
           setDbUsers({ ...doc.data(), id: doc.id });
+          setEditedUserData({...doc.data(), id: doc.id})
         });
       });
     } catch (err) {
@@ -129,21 +135,10 @@ const EditUser: React.FC<any> = () => {
   //   --------- Submit Changes to Firebase ---- starts
   const handleEditSubmit = async (e: any) => {
     e.preventDefault();
-    getDBUsers();
-
-    // let currentUsersEmail:[] = [];
-    // const currentUser = dbUsers.filter(u => {
-    //   // return u.email === user.email && currentUsersEmail.push(u.email);
-    //   return u.email === user.email;
-    // })
-    // console.log("currentUser: ", currentUser);
-    // console.log("currentUsersEmail: ", currentUsersEmail[0]);
-    // setDbUsers(() => us.map((id) => id.id));
     const newUser = {
       ...editedUserData,
       authId: user.uid,
     };
-    // const dbUserId = dbUsers.map((id: any) => id.id);
     console.log("newUser: ", newUser);
     const usersRef = doc(db, "users", dbUsers.id);
     setDoc(usersRef, newUser, { merge: true });
@@ -381,7 +376,7 @@ const EditUser: React.FC<any> = () => {
                     type="text"
                     name="phone"
                     fullWidth
-                    autoComplete="phone"
+                    autoComplete='true'
                     id="phone"
                     label="Phone"
                     value={editedUserData.phone ? editedUserData.phone : ""}
@@ -400,7 +395,7 @@ const EditUser: React.FC<any> = () => {
                     label="Email Address"
                     name="email"
                     autoComplete="email"
-                    // value={editedUserData.email ? editedUserData.email : ""}
+                    value={editedUserData.email ? editedUserData.email : ""}
                     // onChange={handleInputValueChange}
                     // onFocus={handlePwInputFocus}
                     // onBlur={onBlur}
