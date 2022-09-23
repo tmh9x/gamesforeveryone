@@ -389,7 +389,7 @@ useEffect(()=> {
                     error={!isEmailValid}
                     size="small"
                     type="email"
-                    required
+                    disabled
                     fullWidth
                     id="email"
                     label="Email Address"
@@ -405,7 +405,7 @@ useEffect(()=> {
                   <TextField
                     error={!isPwValid}
                     size="small"
-                    required
+                    disabled
                     fullWidth
                     name="password1"
                     label="Password"
@@ -420,23 +420,7 @@ useEffect(()=> {
                     // onChange={(e) => setPassword1(e.target.value)}
                   />
                 </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    error={!isPwValid}
-                    size="small"
-                    required
-                    fullWidth
-                    name="password2"
-                    label="Confirm Password"
-                    type="password"
-                    id="password2"
-                    autoComplete="new-password"
-                    value={
-                      editedUserData.password2 ? editedUserData.password2 : ""
-                    }
-                    onChange={handleInputValueChange}
-                  />
-                </Grid>
+               
               </Grid>
               <div
                 className="btn-con"
