@@ -1,3 +1,5 @@
+import { addDoc, collection } from "firebase/firestore";
+import { auth, db } from "../firebase/config";
 import { createContext, useContext, useEffect, useState } from "react";
 import {
   createUserWithEmailAndPassword,
@@ -6,8 +8,6 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
-
-import { auth } from "../firebase/config";
 
 const AuthContext = createContext<any>({});
 
@@ -112,8 +112,25 @@ export const AuthContextProvider = ({
       });
   };
   // --------------- Delete User ------------- ends //
+
+  // ------------- Delete User ------------- start //
+
+
+  const insertGame = async (collect: any, data: any) => {
+    console.log("data-insert-game: ", data);
+    console.log("collection-insertGame: ", collect);
+    try {
+      const docRef = await addDoc(collection(db, collect), data);
+      console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+  };
+
+
+
+
   console.log("user", user);
-  console.log("openAlert: ", openAlert);
   console.log("isEmailAlreadyExists: ", isEmailAlreadyExists);
   return (
     <AuthContext.Provider
@@ -133,6 +150,7 @@ export const AuthContextProvider = ({
         openSnackBar,
         setOpenSnackBar,
         delUser,
+        insertGame,
       }}
     >
       {loading ? null : children}

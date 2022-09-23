@@ -19,7 +19,7 @@ function InsertGame() {
 
   const handleSubmit = async (e: any) => {
     console.log('handleSubmit');
-    e.preventDefault();
+    // e.preventDefault();
     insertGame("games", gameData);
   };
   //   const [gameData, setGameData] = useState({});
@@ -40,7 +40,7 @@ function InsertGame() {
 
   return (
     <div>
-      <form onSubmit={handleSubmit} className={styles.insertGame_container}>
+      <form className={styles.insertGame_container}>
         <input type="file" />
         <TextField
           className={styles.insertGame_container_textField}
@@ -68,6 +68,16 @@ function InsertGame() {
           label="Genre"
           variant="outlined"
           onChange={handleChange}
+        />
+         <TextField
+          type="number"
+          sx={{ backgroundColor: "#fff" }}
+          id="year"
+          name="year"
+          label="Year"
+          variant="outlined"
+          onChange={handleChange}
+          required
         />
         <TextField
           sx={{ backgroundColor: "#fff" }}
@@ -99,6 +109,7 @@ function InsertGame() {
           required
         />
         <TextField
+
           sx={{ backgroundColor: "#fff" }}
           id="creator"
           name="creator"
@@ -112,7 +123,7 @@ function InsertGame() {
           type="submit"
           size="large"
           style={{ backgroundColor: "#e63946", color: "#fff" }}
-          // onClick={insertGame}
+          onClick={handleSubmit}
         >
           <AddIcon />
         </IconButton>
