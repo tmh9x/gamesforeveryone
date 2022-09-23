@@ -52,7 +52,7 @@ const NavBar = () => {
     } else if (e === "Insert") {
       router.push(`/game/${e.toLowerCase()}`);
     } else {
-      router.push(`/${e.toLowerCase()}`);
+      router.push(`/user/${e.toLowerCase()}`);
     }
   };
 

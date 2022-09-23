@@ -1,9 +1,9 @@
 import { deleteUser, getAuth } from "firebase/auth";
 
-import AlertDialogSlide from "../components/alerts/AlertDialogSlide";
+import AlertDialogSlide from "../../components/alerts/AlertDialogSlide";
 import { Button } from "@mui/material";
 import React from "react";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 
 const Dashboard = () => {
   const auth = getAuth();
@@ -19,6 +19,9 @@ const Dashboard = () => {
   return (
     <>
       <Button onClick={openDeleteAlert}>Delete User</Button>
+<br/>
+      <Button href="/user/edit-profile">Edit Profile</Button>
+
       <AlertDialogSlide
         text1={"Are you sure?"}
         dialogTitle={"Delete User"}
