@@ -31,7 +31,6 @@ import { useAuth } from "../../context/AuthContext";
 import { useRouter } from "next/router";
 import { number, string } from "prop-types";
 import { db } from "../../firebase/config";
-console.log("db: ", db);
 import {
   collection,
   getDocs,
@@ -53,6 +52,7 @@ const EditUser: React.FC<any> = () => {
   const [isPwValid, setIsPwValid] = useState<boolean>(true);
   const [isPwEquivalent, setIsPwEquivalent] = useState<boolean>(false);
   const [isPwCharcGreatThan, setIsPwCharcGreatThan] = useState<boolean>(true);
+  const [isEmailValid, setIsEmailValid] = React.useState<boolean>(true);
   const [selectedImage, setSelectedImage] = useState<any>(null);
   const [dbUsers, setDbUsers] = useState<any>(null);
   const [FSUsers, setFSUsers] = useState<any>(null);
@@ -60,17 +60,6 @@ const EditUser: React.FC<any> = () => {
 
   // const inputFile = useRef<HTMLInputElement>(null);
   // const inputFile = useRef<HTMLInputElement>();
-
-  //   const inputFile = useRef<HTMLInputElement | null> (null);
-  // ------------ Onbutton Select Picture  -----------
-  //   const onButtonSelectPictureClick = () => {
-  //     // inputFile.current.click();
-  //     if(null !== inputFile.current){
-  //         const { current } = inputFile;
-  //       current.click();
-
-  //     }
-  //   };
 
   const {
     user,
@@ -102,7 +91,7 @@ const EditUser: React.FC<any> = () => {
     // password1: string;
     // password2: string;
   };
-  const [editedUserData, setEditedUserData] = React.useState<TEditedUserData>({
+  const [editedUserData, setEditedUserData] = useState<TEditedUserData>({
     username: "",
     first_name: "",
     last_name: "",
@@ -116,8 +105,6 @@ const EditUser: React.FC<any> = () => {
     // password1: "",
     // password2: "",
   });
-  console.log("editedUserData: ", editedUserData);
-  const [isEmailValid, setIsEmailValid] = React.useState<boolean>(true);
 
   const router = useRouter();
 
@@ -125,7 +112,7 @@ const EditUser: React.FC<any> = () => {
     try {
       const colRef = collection(db, "users");
       // queries
-      const q =  query(colRef, where("email", "==", user.email));
+      const q = query(colRef, where("email", "==", user.email));
 
       onSnapshot(q, (snapshot) => {
         let us: [] = [];
@@ -133,7 +120,6 @@ const EditUser: React.FC<any> = () => {
           us.push({ ...doc.data(), id: doc.id });
         });
         setDbUsers(us);
-        console.log("us: ", us);
       });
     } catch (err) {
       console.log("error in updateProfile:", err);
@@ -208,7 +194,6 @@ const EditUser: React.FC<any> = () => {
     });
   };
   // -------- Handle Input Value   ends -------
-
 
   useEffect(() => {
     getDBUsers();
