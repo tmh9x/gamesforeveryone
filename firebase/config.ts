@@ -1,10 +1,5 @@
-<<<<<<< HEAD
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-=======
-import { deleteUser, getAuth } from "firebase/auth";
-
->>>>>>> main
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 
@@ -19,11 +14,6 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-<<<<<<< HEAD
-const app = initializeApp(firebaseConfig);
+export const app = initializeApp(firebaseConfig);
 export const auth = getAuth();
 export const db = getFirestore(app);
-=======
-export const app = initializeApp(firebaseConfig);
-export const auth= getAuth(app);
->>>>>>> main

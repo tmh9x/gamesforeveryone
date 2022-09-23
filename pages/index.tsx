@@ -1,13 +1,8 @@
-<<<<<<< HEAD
 import { collection, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
-import Carousel from "../components/Carousel/Carousel";
-import GameCard from "../components/GameCard/GameCard";
-=======
 import Carousel from "../components/Carousel";
-import GameCard from "../components/Card";
->>>>>>> main
+import GameCard from "../components/GameCard";
 import type { NextPage } from "next";
 import { db } from "../firebase/config";
 import styles from "../styles/Home.module.css";
