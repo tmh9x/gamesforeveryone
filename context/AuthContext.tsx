@@ -116,9 +116,9 @@ export const AuthContextProvider = ({
 
 
   
-  console.log("user", user);
-  console.log("openAlert: ", openAlert);
-  console.log("isEmailAlreadyExists: ", isEmailAlreadyExists);
+  // console.log("user", user);
+  // console.log("openAlert: ", openAlert);
+  // console.log("isEmailAlreadyExists: ", isEmailAlreadyExists);
   return (
     <AuthContext.Provider
       value={{

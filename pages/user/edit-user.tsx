@@ -118,8 +118,8 @@ const EditUser: React.FC<any> = () => {
         let us: [] = [];
         snapshot.docs.forEach((doc) => {
           us.push({ ...doc.data(), id: doc.id });
+          setDbUsers({ ...doc.data(), id: doc.id });
         });
-        setDbUsers(us);
       });
     } catch (err) {
       console.log("error in updateProfile:", err);
@@ -141,11 +141,11 @@ const EditUser: React.FC<any> = () => {
     // setDbUsers(() => us.map((id) => id.id));
     const newUser = {
       ...editedUserData,
-      uid: user.uid,
+      authId: user.uid,
     };
-    const dbUserId = dbUsers.map((id: any) => id.id);
-    console.log("dbUserId: ", dbUserId[0]);
-    const usersRef = doc(db, "users", dbUserId[0]);
+    // const dbUserId = dbUsers.map((id: any) => id.id);
+    console.log("newUser: ", newUser);
+    const usersRef = doc(db, "users", dbUsers.id);
     setDoc(usersRef, newUser, { merge: true });
 
     /* ---- Email Check ---- starts*/
