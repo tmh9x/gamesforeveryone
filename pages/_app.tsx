@@ -13,7 +13,7 @@ import { useRouter } from "next/router";
 const noAuthRequired = ["/", "/user/login", "/user/signup"];
 
 function MyApp({ Component, pageProps }: AppProps) {
-const router = useRouter();
+  const router = useRouter();
   return (
     <>
       <AuthContextProvider>
