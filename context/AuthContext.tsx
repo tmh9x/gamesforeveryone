@@ -55,6 +55,10 @@ export const AuthContextProvider = ({
         email,
         password
       );
+      insertDoc("users", {
+        authId: userCredential.user.uid,
+        email: userCredential.user.email,
+      });
       console.log("userCredential: ", userCredential);
     } catch (err: any) {
       if (err.message === "Firebase: Error (auth/email-already-in-use).") {
@@ -77,7 +81,7 @@ export const AuthContextProvider = ({
         email,
         password
       );
-      setUser(userCredential.user);
+      // setUser(userCredential.user);
     } catch (err: any) {
       if (err.message === "Firebase: Error (auth/user-not-found).") {
         setIsEmailAlreadyExists(false);
