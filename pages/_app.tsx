@@ -10,7 +10,7 @@ import NavBar from "../components/NavBar";
 import ProtectedRoute from "../components/ProtectedRoute";
 import { useRouter } from "next/router";
 
-const noAuthRequired = ["/", "/login", "/signup"];
+const noAuthRequired = ["/", "/user/login", "/user/signup"];
 
 function MyApp({ Component, pageProps }: AppProps) {
 const router = useRouter();

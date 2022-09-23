@@ -16,7 +16,7 @@ const Signup = () => {
     e.preventDefault();
     try {
       await signup(data.email, data.password);
-      router.push("/login");
+      router.push("/user/login");
     } catch (err) {
       console.log("error in handleSignup:", err);
     }

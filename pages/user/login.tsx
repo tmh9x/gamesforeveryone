@@ -18,7 +18,7 @@ const Login = () => {
     console.log(user);
     try {
       await login(data.email, data.password);
-      router.push("/dashboard");
+      router.push("/user/dashboard");
     } catch (err) {
       console.log(err);
     }
