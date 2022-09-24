@@ -54,7 +54,6 @@ const EditUser: React.FC<any> = () => {
   const [isPwCharcGreatThan, setIsPwCharcGreatThan] = useState<boolean>(true);
   const [isEmailValid, setIsEmailValid] = React.useState<boolean>(true);
   const [selectedImage, setSelectedImage] = useState<any>(null);
-  const [dbUsers, setDbUsers] = useState<any>(null);
   const [FSUsers, setFSUsers] = useState<any>(null);
   const inputFile = useRef<HTMLInputElement | null>;
 
@@ -71,66 +70,23 @@ const EditUser: React.FC<any> = () => {
     setAlertText2,
     alerTxt1,
     setAlerTxt1,
+    getDBUsers,
+    seteditedUserData,
+    editedUserData,
+    handleInputValueChange,
+    dbUsers,
+    setDbUsers,
   } = useAuth();
 
   const [userData, setUserData] = useState({
     email: "",
     password1: "",
   });
-  type TEditedUserData = {
-    username?: string;
-    first_name?: string;
-    last_name?: string;
-    birthday?: string;
-    gender?: string;
-    street?: string;
-    postcode?: number;
-    city?: string;
-    phone?: number;
-    email?: string;
-    authId?: string;
-    id?: string;
-    // password1: string;
-    // password2: string;
-  };
-  const [editedUserData, setEditedUserData] = useState<TEditedUserData>({
-    username: "",
-    first_name: "",
-    last_name: "",
-    birthday: '',
-    gender: "",
-    street: "",
-    postcode: 0,
-    city: "",
-    phone: 0,
-    email: "",
-    authId: '',
-    id: '',
-    // password1: "",
-    // password2: "",
-  });
+  
 
   const router = useRouter();
 
-  const getDBUsers = async () => {
-    try {
-      const colRef = collection(db, "users");
-      // queries
-      const q = query(colRef, where("email", "==", user.email));
-
-      onSnapshot(q, (snapshot) => {
-        // let us: string[] = [];
-        snapshot.docs.forEach((doc) => {
-          console.log("doc.data(): ", doc.data());
-          // us.push({ ...doc.data(), id: doc.id });
-          setDbUsers({ ...doc.data(), id: doc.id });
-          setEditedUserData({...doc.data(), id: doc.id})
-        });
-      });
-    } catch (err) {
-      console.log("error in updateProfile:", err);
-    }
-  };
+  
 
   //   --------- Submit Changes to Firebase ---- starts
   const handleEditSubmit = async (e: any) => {
@@ -181,14 +137,14 @@ const EditUser: React.FC<any> = () => {
     setSelectedImage(null);
   };
 
-  // -------- Handle Input Value   starts -------
-  const handleInputValueChange = (e: any) => {
-    setEditedUserData({
-      ...editedUserData,
-      [e.target.name]: e.target.value,
-    });
-  };
-  // -------- Handle Input Value   ends -------
+  // // -------- Handle Input - only used in edit-user.tsx   starts -------
+  // const handleInputValueChange = (e: any) => {
+  //   setEditedUserData({
+  //     ...editedUserData,
+  //     [e.target.name]: e.target.value,
+  //   });
+  // };
+  // // -------- Handle Input - only used in edit-user.tsx   ends -------
 
   useEffect(() => {
     getDBUsers();
