@@ -170,10 +170,10 @@ export const AuthContextProvider = ({
   };
   // --------------- Delete User (FB & FS) ------------- ends //
   // ------------- Delete Game -FS ------------- starts //
-  const delGame = async (e: any) => {
+  const delGame = async (id: any) => {
     try {
       // delete FS game
-      await deleteDoc(doc(db, "games", dbUsers.id));
+      await deleteDoc(doc(db, "games", id));
       console.log("Game deleted");
     } catch (err) {
       console.log("error game deleting: ", err);
@@ -244,6 +244,7 @@ export const AuthContextProvider = ({
         editedUserData,
         setEditedUserData,
         handleInputValueChange,
+        delGame,
       }}
     >
       {loading ? null : children}

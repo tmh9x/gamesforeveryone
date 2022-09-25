@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
   collection,
+  doc,
   getFirestore,
   onSnapshot,
   query,
@@ -33,8 +34,8 @@ import { useCollection } from "react-firebase-hooks/firestore";
 const Dashboard = () => {
   const auth = getAuth();
   const user: any = auth.currentUser;
-  const { setOpenAlert, delUser } = useAuth();
-  // const [games, setGames] = useState<{}>({});
+  const { setOpenAlert, delUser, delGame } = useAuth();
+  const [games, setGames] = useState<{}>({});
   // const [games, setGames] = useState<any>(null);
 
   const openDeleteAlert = () => {
@@ -45,9 +46,24 @@ const Dashboard = () => {
     snapshotListenOptions: { includeMetadataChanges: true },
   });
 
-  console.log("auth.currentUser: ", auth.currentUser);
+  // ----------- Get Gamses data -------------- starts
+  const [gamesData] = useCollection(collection(db, "games"), {
+    snapshotListenOptions: { includeMetadataChanges: true },
+  });
+  // ----------- Get Gamses data -------------- ends
 
+  const deleteGame =(id:any)=>{
+    console.log('id', id)
+    delGame(id)
+  }
+  
   // console.log("games: ", games);
+  // console.log("value: ", value?.docs.map(doc => (doc.data())));
+  console.log("auth.currentUser: ", auth.currentUser);
+  console.log(
+    "games: ",
+    gamesData?.docs.map((doc) => doc.data())
+  );
   console.log("user: ", user);
   return (
     <>
@@ -66,83 +82,52 @@ const Dashboard = () => {
         allowFunction={delUser}
         // rejectFunction={}
       />
-      {/* { value && value.docs.map((game: any, i: number) => {
-          console.log("game: ", JSON.stringify(doc.data()));
-          return (
-            <div key={i} style={{ border: "solid 1px green", margin: "10px" }}>
-              <p>{game.title}</p>
-              <li>{game.genre}</li>
-              <li>{game.platform}</li>
-              <li>{game.fsk}</li>
-              <li>{game.title}</li>
-              <li>{game.title}</li>
-              <li>{game.title}</li>
-              <li>{game.title}</li>
-            </div>
-          );
-        })} */}
 
       <div>
-        <div>
-          {error && <strong>Error: {JSON.stringify(error)}</strong>}
-          {loading && <span> Loading...</span>}
-          <span>
-            Profile data:{" "}
-            {value?.docs.map((doc) =>
-              doc.data().authId === auth?.currentUser?.uid ? (
-                <div key={doc.id}>
-                  <h2>{doc.data()?.first_name}</h2>
-                  <h2>{doc.data()?.last_name}</h2>
-                  <h2>{doc.data()?.gender}</h2>
-                  <h2>{doc.data()?.street}</h2>
-                  <h2>{doc.data()?.postcode}</h2>
-                  <h2>{doc.data()?.city}</h2>
-                  <h2>{doc.data()?.email}</h2>
-                  <h2>{doc.data()?.phone}</h2>
-                  <h2>{doc.data()?.birthday}</h2>
-                </div>
-              ) : (
-                "hallo"
-              )
-            )}
-          </span>
-        </div>
+        {error && <strong>Error: {JSON.stringify(error)}</strong>}
+        {loading && <span> Loading...</span>}
+        <span>
+          Profile data:{" "}
+          {value?.docs.map((doc) =>
+            doc.data().authId === auth?.currentUser?.uid ? (
+              <div key={doc.id}>
+                <h2>{doc.data()?.first_name}</h2>
+                <h2>{doc.data()?.last_name}</h2>
+                <h2>{doc.data()?.gender}</h2>
+                <h2>{doc.data()?.street}</h2>
+                <h2>{doc.data()?.postcode}</h2>
+                <h2>{doc.data()?.city}</h2>
+                <h2>{doc.data()?.email}</h2>
+                <h2>{doc.data()?.phone}</h2>
+                <h2>{doc.data()?.birthday}</h2>
+              </div>
+            ) : (
+              "hallo"
+            )
+          )}
+        </span>
       </div>
+      {gamesData &&
+        gamesData.docs.map((game: any) => {
+          return (
+            <div
+              key={game.data().authId}
+              style={{ border: "solid 1px green", margin: "10px" }}
+            >
+              <p>{game?.data().title}</p>
+              <li>{game?.data().creator}</li>
+              <li>{game?.data().description}</li>
+              <li>{game?.data().genre}</li>
+              <li>{game?.data().platform}</li>
+              <li>{game?.data().authId}</li>
+              <Button onClick={(e) => deleteGame(game.id)}>Delete Game</Button>
+            </div>
+          );
+        })}
     </>
   );
 };
 
 export default Dashboard;
 
-/* 
-data &&
-        data.map((game: any, i: number) => {
-          return (
-            <div key={i} style={{ border: "solid 1px green", margin: "10px" }}>
-              <p>{game.title}</p>
-              <li>{game.genre}</li>
-              <li>{game.platform}</li>
-              <li>{game.fsk}</li>
-              <li>{game.title}</li>
-              <li>{game.title}</li>
-              <li>{game.title}</li>
-              <li>{game.title}</li>
-            </div>
-          );
-        })
-        
- const getGames = async () => {
-    const q = await query(collection(db, "games"));
-    const unsubscribe = await onSnapshot(q, (querySnapshot) => {
-      const games: {}[] = [];
-      querySnapshot.forEach((doc) => {
-        console.log("doc: ", doc);
-        games.push(doc.data());
-        // setGames({ ...doc.data(), id: doc.id });
-      });
-      setGames(games);
-    });
-  };
-  useEffect(() => {
-    getGames();
-  }, []); */
+
