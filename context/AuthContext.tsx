@@ -155,21 +155,31 @@ export const AuthContextProvider = ({
   };
   // ------------- Logout User ------------- ends //
 
-  // ------------- Delete User ------------- start //
+  // ------------- Delete User (FB & FS) ------------- start //
   const delUser = async (e: any) => {
     const user: any = auth.currentUser;
     try {
       // delete FB user
       const deleteU: any = deleteUser(user);
       // delete FS user
-
-     await deleteDoc(doc(db, "users", dbUsers.id));
+      await deleteDoc(doc(db, "users", dbUsers.id));
       console.log("User deleted");
     } catch (err) {
       console.log("error user deleting: ", err);
     }
   };
-  // --------------- Delete User ------------- ends //
+  // --------------- Delete User (FB & FS) ------------- ends //
+  // ------------- Delete Game -FS ------------- starts //
+  const delGame = async (e: any) => {
+    try {
+      // delete FS game
+      await deleteDoc(doc(db, "games", dbUsers.id));
+      console.log("Game deleted");
+    } catch (err) {
+      console.log("error game deleting: ", err);
+    }
+  };
+  // ------------- Delete Game -FS ------------- ends //
 
   // ------------- insertDoc FS ------------- start //
   const insertDoc = async (collect: any, data: any) => {
@@ -191,7 +201,7 @@ export const AuthContextProvider = ({
       onSnapshot(q, (snapshot) => {
         snapshot.docs.forEach((doc) => {
           setDbUserId(doc.id);
-          console.log("doc.data(): ", doc.data());
+          // console.log("doc.data(): ", doc.data());
           setDbUsers({ ...doc.data(), id: doc.id });
           setEditedUserData({ ...doc.data(), id: doc.id });
         });
