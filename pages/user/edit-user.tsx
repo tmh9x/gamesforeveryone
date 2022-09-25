@@ -82,11 +82,8 @@ const EditUser: React.FC<any> = () => {
     email: "",
     password1: "",
   });
-  
 
   const router = useRouter();
-
-  
 
   //   --------- Submit Changes to Firebase ---- starts
   const handleEditSubmit = async (e: any) => {
@@ -332,7 +329,7 @@ const EditUser: React.FC<any> = () => {
                     type="text"
                     name="phone"
                     fullWidth
-                    autoComplete='true'
+                    autoComplete="true"
                     id="phone"
                     label="Phone"
                     value={editedUserData.phone ? editedUserData.phone : ""}

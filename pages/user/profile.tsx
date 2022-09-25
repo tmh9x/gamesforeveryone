@@ -1,8 +1,8 @@
+import React, { useEffect } from "react";
 import { deleteUser, getAuth } from "firebase/auth";
 
 import AlertDialogSlide from "../../components/alerts/AlertDialogSlide";
 import { Button } from "@mui/material";
-import React from "react";
 import { useAuth } from "../../context/AuthContext";
 
 const Dashboard = () => {
@@ -19,7 +19,7 @@ const Dashboard = () => {
   return (
     <>
       <Button onClick={openDeleteAlert}>Delete User</Button>
-<br/>
+      <br />
       <Button href="/user/edit-user">Edit Profile</Button>
 
       <AlertDialogSlide

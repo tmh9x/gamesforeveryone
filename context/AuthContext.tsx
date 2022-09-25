@@ -38,7 +38,7 @@ export const AuthContextProvider = ({
   const [dialogTitle, setDialogTitle] = useState<string>("");
   const [openSnackBar, setOpenSnackBar] = useState(false);
   const [dbUsers, setDbUsers] = useState<any>(null);
-
+  const [dbUserId, setDbUserId] = useState<string>("");
   // ------------- used in edit-user.tsx ---- -- starts
   type TEditedUserData = {
     username?: string;
@@ -53,8 +53,6 @@ export const AuthContextProvider = ({
     email?: string;
     authId?: string;
     id?: string;
-    // password1: string;
-    // password2: string;
   };
   const [editedUserData, setEditedUserData] = useState<TEditedUserData>({
     username: "",
@@ -69,8 +67,6 @@ export const AuthContextProvider = ({
     email: "",
     authId: "",
     id: "",
-    // password1: "",
-    // password2: "",
   });
   // ------------- used in edit-user.tsx ---- -- starts
   // -------- Handle Input - only used in edit-user.tsx   starts -------
@@ -160,12 +156,14 @@ export const AuthContextProvider = ({
   // ------------- Logout User ------------- ends //
 
   // ------------- Delete User ------------- start //
-  const delUser = (e: any) => {
+  const delUser = async (e: any) => {
     const user: any = auth.currentUser;
     try {
+      // delete FB user
       const deleteU: any = deleteUser(user);
+      // delete FS user
 
-      console.log("deleteU: ", deleteU);
+     await deleteDoc(doc(db, "users", dbUsers.id));
       console.log("User deleted");
     } catch (err) {
       console.log("error user deleting: ", err);
@@ -188,10 +186,11 @@ export const AuthContextProvider = ({
     try {
       const colRef = collection(db, "users");
       // queries
-      const q = query(colRef, where("email", "==", user.email));
+      const q = query(colRef, where("email", "==", user && user.email));
 
       onSnapshot(q, (snapshot) => {
         snapshot.docs.forEach((doc) => {
+          setDbUserId(doc.id);
           console.log("doc.data(): ", doc.data());
           setDbUsers({ ...doc.data(), id: doc.id });
           setEditedUserData({ ...doc.data(), id: doc.id });
@@ -202,9 +201,14 @@ export const AuthContextProvider = ({
     }
   };
 
-  console.log("user", user);
+  useEffect(() => {
+    getDBUsers();
+  }, []);
+
+  // console.log("user", user);
   // console.log("openAlert: ", openAlert);
   // console.log("isEmailAlreadyExists: ", isEmailAlreadyExists);
+  console.log("dbUsers", dbUsers);
 
   return (
     <AuthContext.Provider
@@ -226,6 +230,7 @@ export const AuthContextProvider = ({
         delUser,
         insertDoc,
         getDBUsers,
+        dbUsers,
         editedUserData,
         setEditedUserData,
         handleInputValueChange,
