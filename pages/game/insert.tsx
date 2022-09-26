@@ -1,14 +1,12 @@
 import InsertGame from "../../components/InsertGame/InsertGame";
-import React from "react";
+import type { NextPage } from "next";
 
-type Props = {};
-
-function Insert({}: Props) {
+const Insert: NextPage = () => {
   return (
     <div>
       <InsertGame />
     </div>
   );
-}
+};
 
 export default Insert;
