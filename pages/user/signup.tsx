@@ -1,11 +1,12 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import AlertDialogSlide from "../../components/alerts/AlertDialogSlide";
+import Login from "./login";
 import { useAuth } from "../../context/AuthContext";
 import { useRouter } from "next/router";
 
 const Signup = () => {
-  const { user, signup, alerTxt1 } = useAuth();
+  const { signup, alerTxt1 } = useAuth();
   const [data, setData] = useState({
     email: "",
     password: "",
@@ -16,14 +17,13 @@ const Signup = () => {
     e.preventDefault();
     try {
       await signup(data.email, data.password);
-      router.push("/login");
+      router.push("/user/login");
     } catch (err) {
       console.log("error in handleSignup:", err);
     }
   };
 
-  console.log("user", user);
-  console.log(data);
+  // console.log('data', data);
   return (
     <div
       style={{

@@ -1,3 +1,15 @@
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  onSnapshot,
+  query,
+  setDoc,
+  where,
+} from "firebase/firestore";
+import { auth, db } from "../firebase/config";
 import { createContext, useContext, useEffect, useState } from "react";
 import {
   createUserWithEmailAndPassword,
@@ -6,8 +18,6 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
-
-import { auth } from "../firebase/config";
 
 const AuthContext = createContext<any>({});
 
@@ -27,6 +37,46 @@ export const AuthContextProvider = ({
   const [alerTxt1, setAlerTxt1] = useState<string>("");
   const [dialogTitle, setDialogTitle] = useState<string>("");
   const [openSnackBar, setOpenSnackBar] = useState(false);
+  const [dbUsers, setDbUsers] = useState<any>(null);
+  const [dbUserId, setDbUserId] = useState<string>("");
+  // ------------- used in edit-user.tsx ---- -- starts
+  type TEditedUserData = {
+    username?: string;
+    first_name?: string;
+    last_name?: string;
+    birthday?: string;
+    gender?: string;
+    street?: string;
+    postcode?: number;
+    city?: string;
+    phone?: number;
+    email?: string;
+    authId?: string;
+    id?: string;
+  };
+  const [editedUserData, setEditedUserData] = useState<TEditedUserData>({
+    username: "",
+    first_name: "",
+    last_name: "",
+    birthday: "",
+    gender: "",
+    street: "",
+    postcode: 0,
+    city: "",
+    phone: 0,
+    email: "",
+    authId: "",
+    id: "",
+  });
+  // ------------- used in edit-user.tsx ---- -- starts
+  // -------- Handle Input - only used in edit-user.tsx   starts -------
+  const handleInputValueChange = (e: any) => {
+    setEditedUserData({
+      ...editedUserData,
+      [e.target.name]: e.target.value,
+    });
+  };
+  // -------- Handle Input - only used in edit-user.tsx   ends -------
 
   // ------------- Check if User Online / Logged in ------------- start //
   useEffect(() => {
@@ -47,7 +97,7 @@ export const AuthContextProvider = ({
   }, []);
   // ------------- Check if User Online / Logged in ------------- ends //
 
-  // ------------- Login Sign Up ------------- start //
+  // -------------  Sign Up  FB & FS) ------------- start //
   const signup = async (email: string, password: string) => {
     try {
       const userCredential = await createUserWithEmailAndPassword(
@@ -55,6 +105,10 @@ export const AuthContextProvider = ({
         email,
         password
       );
+      insertDoc("users", {
+        authId: userCredential.user.uid,
+        email: userCredential.user.email,
+      });
       console.log("userCredential: ", userCredential);
     } catch (err: any) {
       if (err.message === "Firebase: Error (auth/email-already-in-use).") {
@@ -67,9 +121,9 @@ export const AuthContextProvider = ({
       console.log("error in signup in Context: ", err);
     }
   };
-  // ------------- Login Sign Up ------------- ends //
+  // -------------  Sign Up  FB & FS) ------------- ends //
 
-  // ------------- Login User ------------- start //
+  // ------------- Login User (FB) ------------- start //
   const login = async (email: string, password: string) => {
     try {
       const userCredential = await signInWithEmailAndPassword(
@@ -77,7 +131,7 @@ export const AuthContextProvider = ({
         email,
         password
       );
-      setUser(userCredential.user);
+      // setUser(userCredential.user);
     } catch (err: any) {
       if (err.message === "Firebase: Error (auth/user-not-found).") {
         setIsEmailAlreadyExists(false);
@@ -101,20 +155,71 @@ export const AuthContextProvider = ({
   };
   // ------------- Logout User ------------- ends //
 
-  // ------------- Delete User ------------- start //
-  const delUser = (e: any) => {
-    deleteUser(user)
-      .then(() => {
-        console.log("User deleted");
-      })
-      .catch((err) => {
-        console.log("error user deleting: ", err);
-      });
+  // ------------- Delete User (FB & FS) ------------- start //
+  const delUser = async (e: any) => {
+    const user: any = auth.currentUser;
+    try {
+      // delete FB user
+      const deleteU: any = deleteUser(user);
+      // delete FS user
+      await deleteDoc(doc(db, "users", dbUsers.id));
+      console.log("User deleted");
+    } catch (err) {
+      console.log("error user deleting: ", err);
+    }
   };
-  // --------------- Delete User ------------- ends //
-  console.log("user", user);
-  console.log("openAlert: ", openAlert);
-  console.log("isEmailAlreadyExists: ", isEmailAlreadyExists);
+  // --------------- Delete User (FB & FS) ------------- ends //
+  // ------------- Delete Game -FS ------------- starts //
+  const delGame = async (id: any) => {
+    try {
+      // delete FS game
+      await deleteDoc(doc(db, "games", id));
+      console.log("Game deleted");
+    } catch (err) {
+      console.log("error game deleting: ", err);
+    }
+  };
+  // ------------- Delete Game -FS ------------- ends //
+
+  // ------------- insertDoc FS ------------- start //
+  const insertDoc = async (collect: any, data: any) => {
+    try {
+      const docRef = await addDoc(collection(db, collect), data);
+      console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+  };
+  // ------------- insertDoc FS ------------- ends //
+
+  const getDBUsers = async () => {
+    try {
+      const colRef = collection(db, "users");
+      // queries
+      const q = query(colRef, where("email", "==", user && user.email));
+
+      onSnapshot(q, (snapshot) => {
+        snapshot.docs.forEach((doc) => {
+          setDbUserId(doc.id);
+          // console.log("doc.data(): ", doc.data());
+          setDbUsers({ ...doc.data(), id: doc.id });
+          setEditedUserData({ ...doc.data(), id: doc.id });
+        });
+      });
+    } catch (err) {
+      console.log("error in updateProfile:", err);
+    }
+  };
+
+  useEffect(() => {
+    getDBUsers();
+  }, []);
+
+  // console.log("user", user);
+  // console.log("openAlert: ", openAlert);
+  // console.log("isEmailAlreadyExists: ", isEmailAlreadyExists);
+  console.log("dbUsers", dbUsers);
+
   return (
     <AuthContext.Provider
       value={{
@@ -133,6 +238,13 @@ export const AuthContextProvider = ({
         openSnackBar,
         setOpenSnackBar,
         delUser,
+        insertDoc,
+        getDBUsers,
+        dbUsers,
+        editedUserData,
+        setEditedUserData,
+        handleInputValueChange,
+        delGame,
       }}
     >
       {loading ? null : children}
