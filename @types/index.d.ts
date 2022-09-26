@@ -9,6 +9,7 @@ interface Game {
   image: string;
   genre: string;
   amount: number;
+  gameId?: string;
 }
 
 type Games = Game[];

@@ -8,10 +8,13 @@ import { Typography } from "@mui/material";
 import styles from "../styles/Card.module.css";
 
 export default function GameCard(game: Game) {
+  console.log("game: ", game);
   return (
     <Card sx={{ maxWidth: 345 }} className={styles.card}>
       <CardHeader title="PLATFORM" className={styles.card_header} />
-      <Link href="/game/details">
+      <Link href={`/game/${game.gameId}`}>
+        {/* <Link href={'/game/[id]'} as={`/game/${game.gameId}`}> */}
+
         <CardMedia
           component="img"
           height="200"
