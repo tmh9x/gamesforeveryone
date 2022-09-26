@@ -5,11 +5,12 @@ interface Game {
   description: string;
   fsk: number;
   platform: string;
-  year: Date;
+  year?: number;
   image: string;
   genre: string;
   amount: number;
   gameId?: string;
+  img?: string;
 }
 
 type Games = Game[];

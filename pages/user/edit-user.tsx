@@ -78,10 +78,10 @@ const EditUser: React.FC<any> = () => {
     setDbUsers,
   } = useAuth();
 
-  const [userData, setUserData] = useState({
-    email: "",
-    password1: "",
-  });
+  // const [userData, setUserData] = useState({
+  //   email: "",
+  //   password1: "",
+  // });
 
   const router = useRouter();
 
@@ -134,17 +134,11 @@ const EditUser: React.FC<any> = () => {
     setSelectedImage(null);
   };
 
-  // // -------- Handle Input - only used in edit-user.tsx   starts -------
-  // const handleInputValueChange = (e: any) => {
-  //   setEditedUserData({
-  //     ...editedUserData,
-  //     [e.target.name]: e.target.value,
-  //   });
-  // };
-  // // -------- Handle Input - only used in edit-user.tsx   ends -------
+ 
 
   useEffect(() => {
     getDBUsers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   //   console.log("user", user);
@@ -405,42 +399,3 @@ const EditUser: React.FC<any> = () => {
 };
 
 export default EditUser;
-
-/* 
-                  <img
-                    src={
-                      selectedImage
-                        ? URL.createObjectURL(selectedImage)
-                        : editedUserData.avatar_picture
-                        ? editedUserData.avatar_picture
-                        : ""
-                    }
-                    alt="avatar"
-                  />
-
-                  {!editedUserData.avatar_picture && !selectedImage && (
-                    <span>Please choose a profile image (optional)</span>
-                  )}
-                </div>
-                <div className="image-events-con">
-                  
-                  <input
-                    accept="image/*"
-                    type="file"
-                    id="file"
-                    onChange={handleSelectFileChange}
-                    // ref={el => {inputFile.current = el;}}
-                    ref={inputFile}
-                    style={{ display: "none" }}
-                  />{" "}
-                  {selectedImage && (
-                    <Button
-                      size="small"
-                      onClick={removeSelectedImage}
-                      className="remove-image-btn"
-                    >
-                      Remove This Image
-                    </Button>
-                  )}
-                </div>
-              </div> */
