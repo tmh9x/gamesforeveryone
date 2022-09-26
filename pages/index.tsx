@@ -1,15 +1,19 @@
 import { collection, getDocs } from "firebase/firestore";
+import { db, storage } from "../firebase/config";
+import { getDownloadURL, listAll, ref } from "firebase/storage";
 import { useEffect, useState } from "react";
 
 import Carousel from "../components/Carousel";
 import GameCard from "../components/GameCard";
 import type { NextPage } from "next";
-import { db } from "../firebase/config";
 import styles from "../styles/Home.module.css";
 
 const Home: NextPage = () => {
   console.log("db", db);
   const [games, setGames] = useState<Games>([]);
+  const [imageList, setImageList] = useState<string[]>([]);
+
+  const imageListRef = ref(storage, "/game-images");
 
   const getGames = async () => {
     let dataArray: Games = [];
@@ -31,6 +35,14 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     getGames();
+    listAll(imageListRef).then((response) => {
+      console.log("response", response);
+      response.items.forEach((item) => {
+        getDownloadURL(item).then((url: string) => {
+          setImageList((prev: any) => [...prev, url]);
+        });
+      });
+    });
   }, []);
 
   console.log("games", games);

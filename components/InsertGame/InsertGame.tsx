@@ -1,47 +1,57 @@
 import { IconButton, TextField, TextareaAutosize } from "@mui/material";
 import React, { useState } from "react";
 import { addDoc, collection } from "firebase/firestore";
+import { ref, uploadBytes } from "firebase/storage";
 
 import AddIcon from "@mui/icons-material/Add";
 import { db } from "../../firebase/config";
+import { storage } from "../../firebase/config";
 import styles from "./InsertGame.module.css";
 import { useAuth } from "../../context/AuthContext";
+import { v4 } from "uuid";
 
-function InsertGame() {
-  const { insertDoc } = useAuth();
-
+const InsertGame = () => {
   const [gameData, setGameData] = useState({});
+  const [imageUpload, setImageUpload] = useState<any>(null);
+
+  const { user } = useAuth();
+  console.log("user", user);
+
   console.log("gameData", gameData);
   const handleChange = (e: any) => {
     console.log("e.target.value", e.target.value);
-    setGameData({ ...gameData, [e.target.name]: e.target.value });
+    setGameData({
+      ...gameData,
+      userId: user.uid,
+      [e.target.name]: e.target.value,
+    });
   };
 
-  const handleSubmit = async (e: any) => {
-    console.log("handleSubmit");
-    // e.preventDefault();
-    insertDoc("games", gameData);
+  const insertGame = async () => {
+    // IMAGE UPLOAD
+    try {
+      if (imageUpload == null) return;
+      const imageRef = ref(storage, `game-images/${imageUpload.name + v4()}`);
+      uploadBytes(imageRef, imageUpload).then(() => {
+        alert("image uploaded");
+      });
+      // GAME DATA UPLOAD
+      const docRef = await addDoc(collection(db, "games"), gameData);
+      console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
   };
-  //   const [gameData, setGameData] = useState({});
-  //   console.log("gameData", gameData);
-  //   const handleChange = (e: any) => {
-  //     console.log("e.target.value", e.target.value);
-  //     setGameData({ ...gameData, [e.target.name]: e.target.value });
-  //   };
-
-  //   const insertDoc = async (e: any) => {
-  //     try {
-  //       const docRef = await addDoc(collection(db, "games"), gameData);
-  //       console.log("Document written with ID: ", docRef.id);
-  //     } catch (e) {
-  //       console.error("Error adding document: ", e);
-  //     }
-  //   };
 
   return (
     <div>
       <form className={styles.insertGame_container}>
-        <input type="file" />
+        <input
+          type="file"
+          onChange={(e: any) => {
+            setImageUpload(e.target.files[0]);
+          }}
+        />
         <TextField
           className={styles.insertGame_container_textField}
           sx={{ backgroundColor: "#fff" }}
@@ -122,13 +132,13 @@ function InsertGame() {
           type="submit"
           size="large"
           style={{ backgroundColor: "#e63946", color: "#fff" }}
-          onClick={handleSubmit}
+          onClick={insertGame}
         >
           <AddIcon />
         </IconButton>
       </div>
     </div>
   );
-}
+};
 
 export default InsertGame;
