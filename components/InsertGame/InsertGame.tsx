@@ -8,14 +8,14 @@ import { db } from "../../firebase/config";
 import { storage } from "../../firebase/config";
 import styles from "./InsertGame.module.css";
 import { useAuth } from "../../context/AuthContext";
-import { v4 } from "uuid";
+import { v4 as uuidv4 } from "uuid";
 
 const InsertGame = () => {
   const [gameData, setGameData] = useState({});
   const [imageUpload, setImageUpload] = useState<any>(null);
 
   const { user } = useAuth();
-  console.log("user", user);
+  let myuuid = uuidv4();
 
   console.log("gameData", gameData);
   const handleChange = (e: any) => {
@@ -31,7 +31,7 @@ const InsertGame = () => {
     // IMAGE UPLOAD
     try {
       if (imageUpload == null) return;
-      const imageRef = ref(storage, `game-images/${imageUpload.name + v4()}`);
+      const imageRef = ref(storage, `game-images/${imageUpload.name + myuuid}`);
       uploadBytes(imageRef, imageUpload).then(() => {
         alert("image uploaded");
       });
@@ -42,6 +42,8 @@ const InsertGame = () => {
       console.error("Error adding document: ", e);
     }
   };
+
+  console.log("user", user);
 
   return (
     <div>
