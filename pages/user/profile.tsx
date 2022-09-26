@@ -10,8 +10,8 @@ import { deleteUser, getAuth } from "firebase/auth";
 
 import AlertDialogSlide from "../../components/alerts/AlertDialogSlide";
 import { Button } from "@mui/material";
+import Link from "next/link";
 import { db } from "../../firebase/config";
-import swr from "swr";
 import { useAuth } from "../../context/AuthContext";
 import { useCollection } from "react-firebase-hooks/firestore";
 
@@ -47,19 +47,22 @@ const Dashboard = () => {
   });
 
   // ----------- Get Gamses data -------------- starts
-  const [gamesData] = useCollection(collection(db, "games"), {
-    snapshotListenOptions: { includeMetadataChanges: true },
-  });
+  const [gamesData, gamesDataLoading, gamesDataError] = useCollection(
+    collection(db, "games"),
+    {
+      snapshotListenOptions: { includeMetadataChanges: true },
+    }
+  );
   // ----------- Get Gamses data -------------- ends
 
-  const deleteGame =(id:any)=>{
-    console.log('id', id)
-    delGame(id)
-  }
-  
+  const deleteGame = (id: any) => {
+    console.log("id", id);
+    delGame(id);
+  };
+
   // console.log("games: ", games);
   // console.log("value: ", value?.docs.map(doc => (doc.data())));
-  console.log("auth.currentUser: ", auth.currentUser);
+  // console.log("auth.currentUser: ", auth.currentUser);
   console.log(
     "games: ",
     gamesData?.docs.map((doc) => doc.data())
@@ -70,6 +73,9 @@ const Dashboard = () => {
       <Button onClick={openDeleteAlert}>Delete User</Button>
       <br />
       <Button href="/user/edit-user">Edit Profile</Button>
+      <br />
+      <Button href="/game/edit">Edit Game</Button>
+
       <AlertDialogSlide
         text1={"Are you sure?"}
         dialogTitle={"Delete User"}
@@ -89,7 +95,7 @@ const Dashboard = () => {
         <span>
           Profile data:{" "}
           {value?.docs.map((doc) =>
-            doc.data().authId === auth?.currentUser?.uid ? (
+            doc.data().authId === auth?.currentUser?.uid && (
               <div key={doc.id}>
                 <h2>{doc.data()?.first_name}</h2>
                 <h2>{doc.data()?.last_name}</h2>
@@ -101,33 +107,13 @@ const Dashboard = () => {
                 <h2>{doc.data()?.phone}</h2>
                 <h2>{doc.data()?.birthday}</h2>
               </div>
-            ) : (
-              "hallo"
-            )
+            ) 
           )}
         </span>
       </div>
-      {gamesData &&
-        gamesData.docs.map((game: any) => {
-          return (
-            <div
-              key={game.data().authId}
-              style={{ border: "solid 1px green", margin: "10px" }}
-            >
-              <p>{game?.data().title}</p>
-              <li>{game?.data().creator}</li>
-              <li>{game?.data().description}</li>
-              <li>{game?.data().genre}</li>
-              <li>{game?.data().platform}</li>
-              <li>{game?.data().authId}</li>
-              <Button onClick={(e) => deleteGame(game.id)}>Delete Game</Button>
-            </div>
-          );
-        })}
+     
     </>
   );
 };
 
 export default Dashboard;
-
-

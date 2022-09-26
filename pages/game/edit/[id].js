@@ -1,67 +1,83 @@
 import { IconButton, TextField, TextareaAutosize } from "@mui/material";
 import React, { useState } from "react";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, getDocs, setDoc } from "firebase/firestore";
+import { db, storage } from "../../../firebase/config";
 import { ref, uploadBytes } from "firebase/storage";
 
 import AddIcon from "@mui/icons-material/Add";
-import { db } from "../../firebase/config";
-import { storage } from "../../firebase/config";
-import styles from "./InsertGame.module.css";
-import { useAuth } from "../../context/AuthContext";
-import { v4 as uuidv4 } from "uuid";
+import styles from "../../../styles/EditGame.module.css";
+import { useAuth } from "../../../context/AuthContext";
 
-const InsertGame = () => {
-  const [gameData, setGameData] = useState({});
-  const [imageUpload, setImageUpload] = useState<any>(null);
+const EditGame = (gm) => {
+  const game = JSON.parse(gm.game);
+
+  const [gameData, setGameData] = useState(game);
+  const [imageUpload, setImageUpload] = useState(null);
 
   const { user } = useAuth();
-  let myuuid = uuidv4();
 
-  console.log("gameData", gameData);
-  const handleChange = (e: any) => {
+  const handleChange = (e) => {
     console.log("e.target.value", e.target.value);
     setGameData({
       ...gameData,
-      userId: user.uid,
       [e.target.name]: e.target.value,
     });
+    //  setGameData({
+    //    ...gameData,
+    //    userId: user.uid,
+    //    [e.target.name]: e.target.value,
+    //  });
   };
 
-  const insertGame = async () => {
+  const updateGame = async () => {
     // IMAGE UPLOAD
+    console.log("game.gameId: ", game.gameId);
     try {
-      if (imageUpload == null) return;
-      const imageRef = ref(storage, `game-images/${imageUpload.name + myuuid}`);
+      if (imageUpload == null){
+       setGameData({
+         ...gameData,
+         img: "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png",
+       });
+    }else{
+      const imageRef = ref(storage, `game-images/${imageUpload.name}`);
       uploadBytes(imageRef, imageUpload).then(() => {
         alert("image uploaded");
       });
+    }
+      
       // GAME DATA UPLOAD
-      const docRef = await addDoc(collection(db, "games"), gameData);
-      console.log("Document written with ID: ", docRef.id);
+      const gameRef = doc(db, "games", game.gameId);
+      setDoc(gameRef, gameData, { merge: true });
+      
+      // const docRef = await addDoc(collection(db, "games"), gameData);
+      console.log("Document written with ID: ", gameRef.id);
     } catch (e) {
-      console.error("Error adding document: ", e);
+      console.error("Error adding games: ", e);
     }
   };
 
-  console.log("user", user);
-
+  //  console.log("user", user);
+  console.log("gameData", gameData);
+  console.log("game: ", game);
   return (
     <div>
-      <form className={styles.insertGame_container}>
+      <form className={styles.editGame_container}>
+        <h1>Edit Game</h1>
         <input
           type="file"
-          onChange={(e: any) => {
+          onChange={(e) => {
             setImageUpload(e.target.files[0]);
           }}
         />
         <TextField
-          className={styles.insertGame_container_textField}
+          // className={styles.insertGame_container_textField}
           sx={{ backgroundColor: "#fff" }}
           id="platform"
           name="platform"
           label="Platform"
           variant="outlined"
           onChange={handleChange}
+          value={gameData?.platform ? gameData?.platform : ""}
           required
         />
         <TextField
@@ -71,6 +87,7 @@ const InsertGame = () => {
           label="Title"
           variant="outlined"
           onChange={handleChange}
+          value={gameData?.title ? gameData?.title : ""}
           required
         />
         <TextField
@@ -80,15 +97,17 @@ const InsertGame = () => {
           label="Genre"
           variant="outlined"
           onChange={handleChange}
+          value={gameData?.genre ? gameData?.genre : ""}
         />
         <TextField
           type="number"
           sx={{ backgroundColor: "#fff" }}
           id="year"
           name="year"
-          label="Year"
+          label={"Year"}
           variant="outlined"
           onChange={handleChange}
+          value={gameData?.year ? gameData?.year : ""}
           required
         />
         <TextField
@@ -98,6 +117,7 @@ const InsertGame = () => {
           label="Description"
           variant="outlined"
           onChange={handleChange}
+          value={gameData?.description ? gameData?.description : ""}
           required
         />
         <TextField
@@ -108,6 +128,7 @@ const InsertGame = () => {
           label="FSK"
           variant="outlined"
           onChange={handleChange}
+          value={gameData?.fsk ? gameData?.fsk : ""}
           required
         />
         <TextField
@@ -118,6 +139,7 @@ const InsertGame = () => {
           label="Price"
           variant="outlined"
           onChange={handleChange}
+          value={gameData?.price ? gameData?.price : ""}
           required
         />
         <TextField
@@ -127,6 +149,7 @@ const InsertGame = () => {
           label="Creator"
           variant="outlined"
           onChange={handleChange}
+          value={gameData?.creator ? gameData?.creator : ""}
         />
       </form>
       <div className={styles.iconButton}>
@@ -134,7 +157,7 @@ const InsertGame = () => {
           type="submit"
           size="large"
           style={{ backgroundColor: "#e63946", color: "#fff" }}
-          onClick={insertGame}
+          onClick={updateGame}
         >
           <AddIcon />
         </IconButton>
@@ -143,4 +166,24 @@ const InsertGame = () => {
   );
 };
 
-export default InsertGame;
+export async function getServerSideProps({ params }) {
+  // export async function getServerSideProps( {params}: {} ) {
+  console.log("params: ", params);
+  const docRef = doc(db, "games", params.id);
+  const docSnap = await getDoc(docRef);
+
+  if (docSnap.exists()) {
+    const newGame = {
+      ...docSnap.data(),
+      gameId: docSnap.id,
+    };
+    const game = JSON.stringify(newGame);
+    console.log("Document data:", docSnap.data());
+    return { props: { game } };
+  } else {
+    console.log("No such document!");
+    return { props: {} };
+  }
+}
+
+export default EditGame;
