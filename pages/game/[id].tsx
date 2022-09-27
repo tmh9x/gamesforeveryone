@@ -3,16 +3,25 @@ import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import React from "react";
 import { db } from "../../firebase/config";
 
-const GameDetails = (game) => {
+type GameString = {
+  game: string,
+};
+
+const GameDetails = (game: GameString) => {
+  console.log("game: ", game);
 
   const parseIt = JSON.parse(game.game);
   console.log("GAME : ", parseIt);
   return <div>GameDetails</div>;
 };
 
-export async function getServerSideProps({ params }) {
+// type idString = {
+//   id?: any,
+// };
+
+export async function getServerSideProps({ params }: any) {
   // export async function getServerSideProps( {params}: {} ) {
-  console.log("params: ", params);
+  console.log("paramsCons: ", params);
   const docRef = doc(db, "games", params.id);
   const docSnap = await getDoc(docRef);
 
