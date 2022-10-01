@@ -12,8 +12,7 @@ export default function GameCard(game: Game) {
   return (
     <Card sx={{ maxWidth: 345 }} className={styles.card}>
       <CardHeader title="PLATFORM" className={styles.card_header} />
-      <Link href={`/game/[id]`} as={`/game/${game.gameId}`}>
-
+      <Link href={`/game/details/[id]`} as={`/game/details/${game.gameId}`}>
         <CardMedia
           component="img"
           height="200"

@@ -1,13 +1,18 @@
-import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import { doc, getDoc, } from "firebase/firestore";
 
+import GameDetails from "../../../components/GameDetails";
+import type { NextPage } from "next";
 import React from "react";
-import { db } from "../../firebase/config";
+import { db } from "../../../firebase/config";
 
-const GameDetails = (game) => {
-
-  const parseIt = JSON.parse(game.game);
-  console.log("GAME : ", parseIt);
-  return <div>GameDetails</div>;
+const Details = (game) => {
+  const gme: Game = game ? JSON.parse(game.game) : null;
+  console.log("GAME : ", gme);
+  return (
+    <div>
+      <GameDetails game={gme} />
+    </div>
+  );
 };
 
 export async function getServerSideProps({ params }) {
@@ -30,4 +35,4 @@ export async function getServerSideProps({ params }) {
   }
 }
 
-export default GameDetails;
+export default Details;

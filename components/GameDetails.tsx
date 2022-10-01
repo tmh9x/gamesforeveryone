@@ -1,46 +1,50 @@
 import Image from "next/image";
 import React from "react";
 import { Typography } from "@mui/material";
-import styles from "./GameDetails.module.css";
+import styles from "../styles/GameDetails.module.css";
 
-const GameDetails = () => {
+const GameDetails = ({ game }: any) => {
+  console.log("game: ", game);
   return (
-    <div className={styles.gameDetails_container}>
-      <Image
-        src="/images/defaultImageGame.jpeg"
-        alt=""
-        width="300px"
-        height="400px"
-      />
+    <>
+      {game ? (
+        <div className={styles.gameDetails_container}>
+          <Image
+            src="/images/defaultImageGame.jpeg"
+            alt=""
+            width="300px"
+            height="400px"
+          />
 
-      <Typography paragraph>Title:</Typography>
+          <Typography paragraph>{game.title}</Typography>
 
-      <Typography paragraph color="text.secondary">
-        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Officia, alias
-        mollitia earum molestias corporis nobis adipisci suscipit saepe culpa
-        vero esse reiciendis debitis incidunt delectus sunt ducimus praesentium
-        porro vitae.
-      </Typography>
+          <Typography paragraph color="text.secondary">
+            {game.description ? game.description :  ' Lorem ipsum dolor sit amet consectetur, adipisicing elit. Officia, alias mollitia earum molestias corporis nobis adipisci suscipitsaepe culpa vero esse reiciendis debitis incidunt delectus sunt ducimus praesentium porro vitae.'}
+          </Typography>
 
-      <div className={styles.gameDetails_container_text}>
-        <div>
-          <Typography paragraph>Genre:</Typography>
-          <Typography paragraph>Genre:</Typography>
+          <div className={styles.gameDetails_container_text}>
+            <div>
+              <Typography paragraph>Genre:</Typography>
+              <Typography paragraph>{game.genre}</Typography>
+            </div>
+            <div>
+              <Typography paragraph>Creator:</Typography>
+              <Typography paragraph>{game.creator}</Typography>
+            </div>
+            <div>
+              <Typography paragraph>Year:</Typography>
+              <Typography paragraph>{game.year}</Typography>
+            </div>
+            <div>
+              <Typography paragraph>FSK:</Typography>
+              <Typography paragraph>{game.fsk}</Typography>
+            </div>
+          </div>
         </div>
-        <div>
-          <Typography paragraph>Creator:</Typography>
-          <Typography paragraph>Creator:</Typography>
-        </div>
-        <div>
-          <Typography paragraph>Year:</Typography>
-          <Typography paragraph>Year:</Typography>
-        </div>
-        <div>
-          <Typography paragraph>Amount:</Typography>
-          <Typography paragraph>Amount:</Typography>
-        </div>
-      </div>
-    </div>
+      ) : (
+        <h3>Failed!!!</h3>
+      )}
+    </>
   );
 };
 
