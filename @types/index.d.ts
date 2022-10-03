@@ -4,7 +4,7 @@ interface Game {
   creator: string;
   description: string;
   fsk: number;
-  platform: string;
+  platform?: string[];
   year?: number;
   image: string;
   genre?: string[];

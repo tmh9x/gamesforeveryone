@@ -7,7 +7,6 @@ import {
   MenuItem,
   OutlinedInput,
   TextField,
-  TextareaAutosize,
 } from "@mui/material";
 import React, { useState } from "react";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
@@ -51,22 +50,33 @@ const genres = [
   "Rhythm",
   "Battle Royale",
   "Role-Playing",
+  "Strategy",
 ].sort();
 
-function getStyles(name: string, personName: readonly string[], theme: Theme) {
+function getStyles(name: string, values: readonly string[], theme: Theme) {
   return {
     fontWeight:
-      personName.indexOf(name) === -1
+      values.indexOf(name) === -1
         ? theme.typography.fontWeightRegular
         : theme.typography.fontWeightMedium,
   };
 }
 // Genre starts ends
 
+const platforms = [
+  "PS-3",
+  "PS-4",
+  "PS-5",
+  "Xbox S",
+  "Xbox X",
+  "Google Stadia",
+  "Nintedo Super NES Classic",
+].sort();
+
 const InsertGame = () => {
-  const [gameData, setGameData] = useState<Game>({});
+  const [gameData, setGameData] = useState<Game | any>({});
   const [imageUpload, setImageUpload] = useState<any>(null);
-  const [genreInput, setGenreInput] = React.useState<string[]>([]);
+  const [inputValues, SetInputValues] = useState<string[]>([]);
 
   const { user } = useAuth();
   let myuuid = uuidv4();
@@ -87,7 +97,6 @@ const InsertGame = () => {
     });
   };
 
-  const storage = getStorage();
   const handleInsertGameClick = async () => {
     // IMAGE UPLOAD
     try {
@@ -135,16 +144,20 @@ const InsertGame = () => {
             // https://firebase.google.com/docs/storage/web/handle-errors
             switch (error.code) {
               case "storage/unauthorized":
-                // User doesn't have permission to access the object
+                console.log(
+                  "User doesn't have permission to access the object"
+                );
                 break;
               case "storage/canceled":
-                // User canceled the upload
+                console.log("User canceled the upload");
                 break;
 
               // ...
 
               case "storage/unknown":
-                // Unknown error occurred, inspect error.serverResponse
+                console.log(
+                  "Unknown error occurred, inspect error.serverResponse"
+                );
                 break;
             }
           },
@@ -176,7 +189,6 @@ const InsertGame = () => {
   };
 
   // console.log("user", user);
-  // console.log("genreInput: ", genreInput);
   console.log("gameData", gameData);
 
   return (
@@ -188,7 +200,7 @@ const InsertGame = () => {
             setImageUpload(e.target.files[0]);
           }}
         />
-        <TextField
+        {/* <TextField
           className={styles.insertGame_container_textField}
           sx={{ backgroundColor: "#fff" }}
           id="platform"
@@ -200,7 +212,47 @@ const InsertGame = () => {
           }
           // onChange={handleChange}
           required
-        />
+        /> */}
+        <FormControl
+          required
+          sx={{ backgroundColor: "#fff", width: "100%", margin: "auto" }}
+        >
+          <InputLabel id="platform">Platform</InputLabel>
+          <Select
+            labelId="multiple-platform-label"
+            id="multiple-platform"
+            multiple
+            required
+            name="platform"
+            value={gameData.platform ? gameData.platform : inputValues}
+            onChange={(event: SelectChangeEvent<typeof gameData.platform>) =>
+              handleChange(event)
+            }
+            // onChange={handleChange}
+            input={
+              <OutlinedInput id="select-multiple-platform" label="Platform" />
+            }
+            renderValue={(selected) => (
+              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                {selected.map((value: any) => (
+                  <Chip key={value} label={value} />
+                ))}
+              </Box>
+            )}
+            MenuProps={MenuProps}
+          >
+            {platforms.map((name) => (
+              <MenuItem
+                key={name}
+                value={name}
+                style={getStyles(name, inputValues, theme)}
+              >
+                {name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
         <TextField
           sx={{ backgroundColor: "#fff" }}
           id="title"
@@ -223,15 +275,15 @@ const InsertGame = () => {
             multiple
             required
             name="genre"
-            value={gameData.genre ? gameData.genre : genreInput}
-            onChange={(event: SelectChangeEvent<typeof genreInput>) =>
+            value={gameData.genre ? gameData.genre : inputValues}
+            onChange={(event: SelectChangeEvent<typeof gameData.genre>) =>
               handleChange(event)
             }
             // onChange={handleChange}
             input={<OutlinedInput id="select-multiple-genre" label="Genre" />}
             renderValue={(selected) => (
               <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                {selected.map((value) => (
+                {selected.map((value: any) => (
                   <Chip key={value} label={value} />
                 ))}
               </Box>
@@ -242,7 +294,7 @@ const InsertGame = () => {
               <MenuItem
                 key={name}
                 value={name}
-                style={getStyles(name, genreInput, theme)}
+                style={getStyles(name, inputValues, theme)}
               >
                 {name}
               </MenuItem>
