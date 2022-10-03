@@ -1,49 +1,183 @@
-import { IconButton, TextField, TextareaAutosize } from "@mui/material";
+import {
+  Box,
+  Chip,
+  FormControl,
+  IconButton,
+  InputLabel,
+  MenuItem,
+  OutlinedInput,
+  TextField,
+  TextareaAutosize,
+} from "@mui/material";
 import React, { useState } from "react";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import { Theme, useTheme } from "@mui/material/styles";
 import { addDoc, collection } from "firebase/firestore";
-import { ref, uploadBytes } from "firebase/storage";
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
 
 import AddIcon from "@mui/icons-material/Add";
 import { db } from "../../firebase/config";
 import { storage } from "../../firebase/config";
-import styles from "./InsertGame.module.css";
+import styles from "../../styles/InsertGame.module.css";
 import { useAuth } from "../../context/AuthContext";
 import { v4 as uuidv4 } from "uuid";
 
+// Genre starts
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
+const genres = [
+  "Ego-Shooter",
+  "Open-World-Spiel",
+  "Action-Adventure",
+  "Action",
+  "Nichtlineares Gameplay",
+  "Adventure",
+  "Fighting",
+  "Survival",
+  "Rhythm",
+  "Battle Royale",
+  "Role-Playing",
+].sort();
+
+function getStyles(name: string, personName: readonly string[], theme: Theme) {
+  return {
+    fontWeight:
+      personName.indexOf(name) === -1
+        ? theme.typography.fontWeightRegular
+        : theme.typography.fontWeightMedium,
+  };
+}
+// Genre starts ends
+
 const InsertGame = () => {
-  const [gameData, setGameData] = useState({});
+  const [gameData, setGameData] = useState<Game>({});
   const [imageUpload, setImageUpload] = useState<any>(null);
+  const [genreInput, setGenreInput] = React.useState<string[]>([]);
 
   const { user } = useAuth();
   let myuuid = uuidv4();
 
-  console.log("gameData", gameData);
-  const handleChange = (e: any) => {
-    console.log("e.target.value", e.target.value);
+  const theme = useTheme();
+
+  const handleChange = (event: any) => {
+    console.log("-typof: ", typeof event);
+    const {
+      target: { value },
+    } = event;
+    console.log("value: ", value);
+
     setGameData({
       ...gameData,
       userId: user.uid,
-      [e.target.name]: e.target.value,
+      [event.target.name]: typeof value !== "string" ? value : value.trim(),
     });
   };
 
-  const insertGame = async () => {
+  const storage = getStorage();
+  const handleInsertGameClick = async () => {
     // IMAGE UPLOAD
     try {
-      if (imageUpload == null) return;
-      const imageRef = ref(storage, `game-images/${imageUpload.name + myuuid}`);
-      uploadBytes(imageRef, imageUpload).then(() => {
-        alert("image uploaded");
-      });
-      // GAME DATA UPLOAD
-      const docRef = await addDoc(collection(db, "games"), gameData);
-      console.log("Document written with ID: ", docRef.id);
+      // if (imageUpload == null) return;
+      if (!imageUpload) {
+        setGameData({
+          ...gameData,
+          img: "https://cdn.pixabay.com/photo/2021/02/16/18/55/gamer-6022003_1280.png",
+        });
+      } else {
+        const metadata = {
+          contentType: "image/jpeg",
+        };
+
+        // Upload file and metadata to the object 'images/mountains.jpg'
+        const storageRef = ref(
+          storage,
+          "game-images/" + imageUpload.name + myuuid
+        );
+        const uploadTask = uploadBytesResumable(
+          storageRef,
+          imageUpload,
+          metadata
+        );
+
+        // Listen for state changes, errors, and completion of the upload.
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+            // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+            const progress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log("Upload is " + progress + "% done");
+            switch (snapshot.state) {
+              case "paused":
+                console.log("Upload is paused");
+                break;
+              case "running":
+                console.log("Upload is running");
+                break;
+            }
+          },
+          (error) => {
+            // A full list of error codes is available at
+            // https://firebase.google.com/docs/storage/web/handle-errors
+            switch (error.code) {
+              case "storage/unauthorized":
+                // User doesn't have permission to access the object
+                break;
+              case "storage/canceled":
+                // User canceled the upload
+                break;
+
+              // ...
+
+              case "storage/unknown":
+                // Unknown error occurred, inspect error.serverResponse
+                break;
+            }
+          },
+          () => {
+            // Upload completed successfully, now we can get the download URL
+            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+              console.log("File available at", downloadURL);
+
+              // GAME DATA UPLOAD starts -------///
+              const newGame = {
+                ...gameData,
+                img: downloadURL,
+              };
+              console.log("newGame: ", newGame);
+
+              // const docRef =  addDoc(collection(db, "games"), newGame);
+              addDoc(collection(db, "games"), newGame).then((result) => {
+                console.log("Document written with ID: ", result.id);
+              });
+            });
+            console.log("getDownloadURL: ", getDownloadURL);
+          }
+          // GAME DATA UPLOAD ends -------///
+        );
+      }
     } catch (e) {
       console.error("Error adding document: ", e);
     }
   };
 
-  console.log("user", user);
+  // console.log("user", user);
+  // console.log("genreInput: ", genreInput);
+  console.log("gameData", gameData);
 
   return (
     <div>
@@ -61,7 +195,10 @@ const InsertGame = () => {
           name="platform"
           label="Platform"
           variant="outlined"
-          onChange={handleChange}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+            handleChange(event)
+          }
+          // onChange={handleChange}
           required
         />
         <TextField
@@ -70,17 +207,49 @@ const InsertGame = () => {
           name="title"
           label="Title"
           variant="outlined"
-          onChange={handleChange}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+            handleChange(event)
+          }
           required
         />
-        <TextField
-          sx={{ backgroundColor: "#fff" }}
-          id="genre"
-          name="genre"
-          label="Genre"
-          variant="outlined"
-          onChange={handleChange}
-        />
+        <FormControl
+          required
+          sx={{ backgroundColor: "#fff", width: "100%", margin: "auto" }}
+        >
+          <InputLabel id="genre">Genre</InputLabel>
+          <Select
+            labelId="multiple-genre-label"
+            id="multiple-genre"
+            multiple
+            required
+            name="genre"
+            value={gameData.genre ? gameData.genre : genreInput}
+            onChange={(event: SelectChangeEvent<typeof genreInput>) =>
+              handleChange(event)
+            }
+            // onChange={handleChange}
+            input={<OutlinedInput id="select-multiple-genre" label="Genre" />}
+            renderValue={(selected) => (
+              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                {selected.map((value) => (
+                  <Chip key={value} label={value} />
+                ))}
+              </Box>
+            )}
+            MenuProps={MenuProps}
+          >
+            {genres.map((name) => (
+              <MenuItem
+                key={name}
+                value={name}
+                style={getStyles(name, genreInput, theme)}
+              >
+                {name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
         <TextField
           type="number"
           sx={{ backgroundColor: "#fff" }}
@@ -88,16 +257,22 @@ const InsertGame = () => {
           name="year"
           label="Year"
           variant="outlined"
-          onChange={handleChange}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+            handleChange(event)
+          }
           required
         />
         <TextField
           sx={{ backgroundColor: "#fff" }}
+          multiline
+          maxRows={10}
           id="description"
           name="description"
           label="Description"
           variant="outlined"
-          onChange={handleChange}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+            handleChange(event)
+          }
           required
         />
         <TextField
@@ -107,7 +282,9 @@ const InsertGame = () => {
           name="fsk"
           label="FSK"
           variant="outlined"
-          onChange={handleChange}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+            handleChange(event)
+          }
           required
         />
         <TextField
@@ -117,7 +294,9 @@ const InsertGame = () => {
           name="price"
           label="Price"
           variant="outlined"
-          onChange={handleChange}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+            handleChange(event)
+          }
           required
         />
         <TextField
@@ -126,7 +305,9 @@ const InsertGame = () => {
           name="creator"
           label="Creator"
           variant="outlined"
-          onChange={handleChange}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+            handleChange(event)
+          }
         />
       </form>
       <div className={styles.iconButton}>
@@ -134,7 +315,7 @@ const InsertGame = () => {
           type="submit"
           size="large"
           style={{ backgroundColor: "#e63946", color: "#fff" }}
-          onClick={insertGame}
+          onClick={handleInsertGameClick}
         >
           <AddIcon />
         </IconButton>

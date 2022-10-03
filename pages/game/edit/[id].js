@@ -33,10 +33,10 @@ const EditGame = (gm) => {
     // IMAGE UPLOAD
     console.log("game.gameId: ", game.gameId);
     try {
-      if (imageUpload == null){
+      if (imageUpload === null){
        setGameData({
          ...gameData,
-         img: "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png",
+         img: "https://cdn.pixabay.com/photo/2021/02/16/18/55/gamer-6022003_1280.png",
        });
     }else{
       const imageRef = ref(storage, `game-images/${imageUpload.name}`);

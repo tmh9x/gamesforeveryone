@@ -7,10 +7,11 @@ interface Game {
   platform: string;
   year?: number;
   image: string;
-  genre: string;
+  genre?: string[];
   amount: number;
   gameId?: string;
   img?: string;
+  userId?: string;
 }
 
 type Games = Game[];

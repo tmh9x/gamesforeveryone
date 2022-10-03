@@ -19,17 +19,27 @@ const GameDetails = ({ game }: any) => {
           <Typography paragraph>{game.title}</Typography>
 
           <Typography paragraph color="text.secondary">
-            {game.description ? game.description :  ' Lorem ipsum dolor sit amet consectetur, adipisicing elit. Officia, alias mollitia earum molestias corporis nobis adipisci suscipitsaepe culpa vero esse reiciendis debitis incidunt delectus sunt ducimus praesentium porro vitae.'}
+            {game.description
+              ? game.description
+              : " Lorem ipsum dolor sit amet consectetur, adipisicing elit. Officia, alias mollitia earum molestias corporis nobis adipisci suscipitsaepe culpa vero esse reiciendis debitis incidunt delectus sunt ducimus praesentium porro vitae."}
           </Typography>
 
           <div className={styles.gameDetails_container_text}>
             <div>
               <Typography paragraph>Genre:</Typography>
-              <Typography paragraph>{game.genre}</Typography>
+              <Typography paragraph>
+                {game.genre.map((item: string) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </Typography>
             </div>
             <div>
               <Typography paragraph>Creator:</Typography>
               <Typography paragraph>{game.creator}</Typography>
+            </div>
+            <div>
+              <Typography paragraph>Plattform:</Typography>
+              <Typography paragraph>{game.platform}</Typography>
             </div>
             <div>
               <Typography paragraph>Year:</Typography>
