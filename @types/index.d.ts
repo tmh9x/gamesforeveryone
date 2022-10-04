@@ -15,3 +15,10 @@ interface Game {
 }
 
 type Games = Game[];
+
+interface Params {
+  params: { id: string };
+}
+interface GameProps {
+  gameProp: string | null;
+}
