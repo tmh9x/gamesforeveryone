@@ -179,7 +179,6 @@ const InsertGame = () => {
                 console.log("Document written with ID: ", result.id);
               });
             });
-            console.log("getDownloadURL: ", getDownloadURL);
           }
           // GAME DATA UPLOAD ends -------///
         );
@@ -222,32 +221,17 @@ const InsertGame = () => {
           <Select
             labelId="multiple-platform-label"
             id="multiple-platform"
-            multiple
             required
             name="platform"
-            value={gameData.platform ? gameData.platform : inputValues}
+            label="platforms"
+            value={gameData.platform ? gameData.platform : ""}
             onChange={(event: SelectChangeEvent<typeof gameData.platform>) =>
               handleChange(event)
             }
             // onChange={handleChange}
-            input={
-              <OutlinedInput id="select-multiple-platform" label="Platform" />
-            }
-            renderValue={(selected) => (
-              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                {selected.map((value: any) => (
-                  <Chip key={value} label={value} />
-                ))}
-              </Box>
-            )}
-            MenuProps={MenuProps}
           >
             {platforms.map((name) => (
-              <MenuItem
-                key={name}
-                value={name}
-                style={getStyles(name, inputValues, theme)}
-              >
+              <MenuItem key={name} value={name}>
                 {name}
               </MenuItem>
             ))}
