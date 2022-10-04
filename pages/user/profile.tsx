@@ -61,12 +61,17 @@ const Dashboard = () => {
   };
 
   // console.log("games: ", games);
-  // console.log("value: ", value?.docs.map(doc => (doc.data())));
+  // console.log(
+  //   "value: ",
+  //   value?.docs.map((doc) => doc.data())
+  // );
   // console.log("auth.currentUser: ", auth.currentUser);
-  console.log(
-    "games: ",
-    gamesData?.docs.map((doc) => doc.data())
-  );
+  // console.log(
+  //   "games: ",
+  //   gamesData?.docs.map((doc) => doc.data())
+  // );
+ 
+
   console.log("user: ", user);
   return (
     <>
@@ -90,28 +95,32 @@ const Dashboard = () => {
       />
 
       <div>
-        {error && <strong>Error: {JSON.stringify(error)}</strong>}
-        {loading && <span> Loading...</span>}
-        <span>
-          Profile data:{" "}
-          {value?.docs.map((doc) =>
-            doc.data().authId === auth?.currentUser?.uid && (
-              <div key={doc.id}>
-                <h2>{doc.data()?.first_name}</h2>
-                <h2>{doc.data()?.last_name}</h2>
-                <h2>{doc.data()?.gender}</h2>
-                <h2>{doc.data()?.street}</h2>
-                <h2>{doc.data()?.postcode}</h2>
-                <h2>{doc.data()?.city}</h2>
-                <h2>{doc.data()?.email}</h2>
-                <h2>{doc.data()?.phone}</h2>
-                <h2>{doc.data()?.birthday}</h2>
-              </div>
-            ) 
-          )}
-        </span>
+        <>
+          {error && <strong>Error: {JSON.stringify(error)}</strong>}
+          {loading && <span> Loading...</span>}
+          <span>
+            Profile data:{" "}
+            {value?.docs.map((doc) => {
+              console.log("doc.data(): ", doc.data());
+              return (
+                doc.data().authId === auth?.currentUser?.uid && (
+                  <div key={doc.id}>
+                    <h2>{doc.data()?.first_name}</h2>
+                    <h2>{doc.data()?.last_name}</h2>
+                    <h2>{doc.data()?.gender}</h2>
+                    <h2>{doc.data()?.street}</h2>
+                    <h2>{doc.data()?.postcode}</h2>
+                    <h2>{doc.data()?.city}</h2>
+                    <h2>{doc.data()?.email}</h2>
+                    <h2>{doc.data()?.phone}</h2>
+                    <h2>{doc.data()?.birthday}</h2>
+                  </div>
+                )
+              );
+            })}
+          </span>
+        </>
       </div>
-     
     </>
   );
 };

@@ -3,14 +3,23 @@ import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 import { initializeApp } from "firebase/app";
 
+const apiKey: string = process.env.NEXT_PUBLIC_FIREBASE_API_KEY as string;
+const authDomain: string = process.env
+  .NEXT_PUBLIC_FIREBASE_AUTHDOMAIN as string;
+const projectId: string = process.env.NEXT_PUBLIC_FIREBASE_PROJECTID as string;
+const storageBucket: string = process.env
+  .NEXT_PUBLIC_FIREBASE_STORAGEBUCKET as string;
+const messagingSenderId: string = process.env
+  .NEXT_PUBLIC_FIREBASE_MESSAGINGSENDERID as string;
+const appId: string = process.env.NEXT_PUBLIC_FIREBASE_APPID as string;
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyAKgR6Ke9JMO61aRih5Z4O-xsp31IbW4Lo",
-  authDomain: "games-for-every-one.firebaseapp.com",
-  projectId: "games-for-every-one",
-  storageBucket: "games-for-every-one.appspot.com",
-  messagingSenderId: "50977796933",
-  appId: "1:50977796933:web:da3818e24a5f8cb0fe842c",
+  apiKey,
+  authDomain,
+  projectId,
+  storageBucket,
+  messagingSenderId,
+  appId,
 };
 
 // Initialize Firebase
