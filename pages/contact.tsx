@@ -21,10 +21,11 @@ const theme = createTheme();
 export default function Contact() {
   const form = React.useRef<HTMLFormElement>();
   const currentForm = form.current;
-  if (currentForm == null) return;
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (currentForm == null) return;
+
     const data = new FormData(event.currentTarget);
     console.log({
       email: data.get("email"),
