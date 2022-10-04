@@ -5,33 +5,36 @@ import type { NextPage } from "next";
 import React from "react";
 import { db } from "../../../firebase/config";
 
-const Details = (game) => {
-  const gme: Game = game ? JSON.parse(game.game) : null;
-  console.log("GAME : ", gme);
+const Details = ({gameProp}: GameProps) => {
+  console.log("game: ", gameProp);
+  const game: Game = gameProp ? JSON.parse(gameProp) : null;
+  console.log("GAME : ", game);
   return (
     <div>
-      <GameDetails game={gme} />
+     {game && <GameDetails game={game} />}
     </div>
   );
 };
 
-export async function getServerSideProps({ params }) {
+
+export async function getServerSideProps( {params}: Params) {
   // export async function getServerSideProps( {params}: {} ) {
   console.log("params: ", params);
   const docRef = doc(db, "games", params.id);
   const docSnap = await getDoc(docRef);
-
+ 
   if (docSnap.exists()) {
     const newGame = {
       ...docSnap.data(),
       gameId: docSnap.id,
     };
-    const game = JSON.stringify(newGame);
+    const gameProp = JSON.stringify(newGame);
+    console.log("gameJson: ", gameProp);
     console.log("Document data:", docSnap.data());
-    return { props: { game } };
+    return { props: { gameProp} };
   } else {
     console.log("No such document!");
-    return { props: {} };
+    return { props: {gameProp: null} };
   }
 }
 
