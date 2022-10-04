@@ -24,7 +24,7 @@ const Home: NextPage = () => {
         console.log(`${doc.id} => ${doc.data()}`);
         console.log("DATA", doc.data());
         const gamesData = doc.data() as Game;
-        dataArray.push({...gamesData, gameId: doc.id});
+        dataArray.push({ ...gamesData, gameId: doc.id });
         setGames(dataArray);
       });
     } catch (error) {

@@ -16,7 +16,7 @@ export default function GameCard(game: Game) {
         <CardMedia
           component="img"
           height="200"
-          image="/images/defaultImageGame.jpeg"
+          image={game.image}
           alt="game image"
         />
       </Link>

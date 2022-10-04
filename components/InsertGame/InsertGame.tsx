@@ -104,7 +104,8 @@ const InsertGame = () => {
       if (!imageUpload) {
         setGameData({
           ...gameData,
-          img: "https://cdn.pixabay.com/photo/2021/02/16/18/55/gamer-6022003_1280.png",
+          image:
+            "https://cdn.pixabay.com/photo/2021/02/16/18/55/gamer-6022003_1280.png",
         });
       } else {
         const metadata = {

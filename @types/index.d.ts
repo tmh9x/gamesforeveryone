@@ -10,7 +10,7 @@ interface Game {
   genre?: string[];
   amount: number;
   gameId?: string;
-  img?: string;
+  image?: string;
   userId?: string;
 }
 
