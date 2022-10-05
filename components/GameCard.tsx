@@ -8,7 +8,7 @@ import { Typography } from "@mui/material";
 import styles from "../styles/Card.module.css";
 
 export default function GameCard(game: Game) {
-  console.log("game: ", game);
+  // console.log("game: ", game);
   return (
     <Card sx={{ maxWidth: 345 }} className={styles.card}>
       <CardHeader title="PLATFORM" className={styles.card_header} />

@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { IconButton, Snackbar } from "@mui/material";
+import { Alert, IconButton, Snackbar } from "@mui/material";
 
 import Button from "@mui/material/Button";
 import CloseIcon from "@mui/icons-material/Close";
@@ -22,20 +22,21 @@ interface IProps {
   duration?: number;
 
 }
+
 const SnackbarMui: React.FC<IProps> = ({
   text,
-  width,
-  height,
-  maxWidth,
-  bottom,
-  margin,
-  left,
-  right,
-  top,
+  width = "90%",
+  height = "30px",
+  maxWidth = "80%",
+  margin= 'auto auto',
+  left = "0",
+  right = "0",
+  top = "50%",
+  bottom= 'unset',
   border,
   borderRadius,
   background,
-  duration,
+  duration = 3000,
 }) => {
   const { openSnackBar, setOpenSnackBar } = useAuth();
 
@@ -62,7 +63,7 @@ const SnackbarMui: React.FC<IProps> = ({
     }
     setOpenSnackBar(false);
   };
-  
+
   const action = (
     <React.Fragment>
       <Button color="secondary" size="small" onClick={handleClose}>
@@ -92,11 +93,11 @@ const SnackbarMui: React.FC<IProps> = ({
         style={SnackbarStyle}
       />
       {/* <Alert
-        onClose={handleSnackBarClose}
+        onClose={handleClose}
         severity="warning"
-        sx={{ width: "100%", textAlign: "center" }}
-        >
-        {snackBarText}
+        sx={{ width: "100%", textAlign: "center",backgroundColor:'blue' }}
+      >
+        {text}
       </Alert> */}
       {/* </Snackbar> */}
     </>
