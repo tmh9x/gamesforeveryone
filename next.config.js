@@ -4,8 +4,8 @@ const nextConfig = {
   swcMinify: true,
 
   images: {
-    domains: ["assets.nintendo.com"]
+    domains: ["assets.nintendo.com", "firebasestorage.googleapis.com"],
   },
 };
 
-module.exports = nextConfig
+module.exports = nextConfig;

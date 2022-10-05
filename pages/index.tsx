@@ -1,4 +1,3 @@
-import { collection, getDocs } from "firebase/firestore";
 import { db, storage } from "../firebase/config";
 import { getDownloadURL, listAll, ref } from "firebase/storage";
 import { useEffect, useState } from "react";
@@ -7,31 +6,16 @@ import Carousel from "../components/Carousel";
 import GameCard from "../components/GameCard";
 import type { NextPage } from "next";
 import styles from "../styles/Home.module.css";
+import { useAuth } from "../context/AuthContext";
 
 const Home: NextPage = () => {
   console.log("db", db);
-  const [games, setGames] = useState<Games>([]);
+
   const [imageList, setImageList] = useState<string[]>([]);
 
+  const { getGames, games } = useAuth();
+
   const imageListRef = ref(storage, "/game-images");
-
-  const getGames = async () => {
-    let dataArray: Games = [];
-
-    try {
-      const querySnapshot = await getDocs(collection(db, "games"));
-      querySnapshot.forEach((doc) => {
-        console.log(`${doc.id} => ${doc.data()}`);
-        console.log("DATA", doc.data());
-        const gamesData = doc.data() as Game;
-        dataArray.push({ ...gamesData, gameId: doc.id });
-        setGames(dataArray);
-      });
-    } catch (error) {
-      console.log("error getgames", error);
-    }
-    console.log("dataArray", dataArray);
-  };
 
   useEffect(() => {
     getGames();

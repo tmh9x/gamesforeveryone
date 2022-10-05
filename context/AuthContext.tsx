@@ -39,6 +39,8 @@ export const AuthContextProvider = ({
   const [openSnackBar, setOpenSnackBar] = useState(false);
   const [dbUsers, setDbUsers] = useState<any>(null);
   const [dbUserId, setDbUserId] = useState<string>("");
+  const [games, setGames] = useState<Games>([]);
+  const [like, setLike] = useState(true);
   // ------------- used in edit-user.tsx ---- -- starts
   type TEditedUserData = {
     username?: string;
@@ -181,6 +183,25 @@ export const AuthContextProvider = ({
   };
   // ------------- Delete Game -FS ------------- ends //
 
+  // ------------- get Games -FS ------------- starts //
+  const getGames = async () => {
+    let dataArray: Games = [];
+
+    try {
+      const querySnapshot = await getDocs(collection(db, "games"));
+      querySnapshot.forEach((doc) => {
+        console.log(`${doc.id} => ${doc.data()}`);
+        console.log("DATA", doc.data());
+        const gamesData = doc.data() as Game;
+        dataArray.push({ ...gamesData, gameId: doc.id });
+        setGames(dataArray);
+      });
+    } catch (error) {
+      console.log("error getgames", error);
+    }
+    console.log("dataArray", dataArray);
+  };
+  // ------------- Get Games -FS ------------- ends //
   // ------------- insertDoc FS ------------- start //
   const insertDoc = async (collect: any, data: any) => {
     try {
@@ -245,6 +266,8 @@ export const AuthContextProvider = ({
         setEditedUserData,
         handleInputValueChange,
         delGame,
+        getGames,
+        games,
       }}
     >
       {loading ? null : children}

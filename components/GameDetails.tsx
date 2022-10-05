@@ -9,12 +9,7 @@ const GameDetails = ({ game }: any) => {
     <>
       {game ? (
         <div className={styles.gameDetails_container}>
-          <Image
-            src="/images/defaultImageGame.jpeg"
-            alt=""
-            width="300px"
-            height="400px"
-          />
+          <Image src={game.image} alt="" width="300px" height="400px" />
 
           <Typography paragraph>{game.title}</Typography>
 
