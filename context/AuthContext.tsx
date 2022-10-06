@@ -1,5 +1,7 @@
 import {
   addDoc,
+  arrayRemove,
+  arrayUnion,
   collection,
   deleteDoc,
   doc,
@@ -7,6 +9,7 @@ import {
   onSnapshot,
   query,
   setDoc,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import { auth, db } from "../firebase/config";
@@ -40,7 +43,7 @@ export const AuthContextProvider = ({
   const [dbUsers, setDbUsers] = useState<any>(null);
   const [dbUserId, setDbUserId] = useState<string>("");
   const [games, setGames] = useState<Games>([]);
-  const [like, setLike] = useState(true);
+
   // ------------- used in edit-user.tsx ---- -- starts
   type TEditedUserData = {
     username?: string;
@@ -202,6 +205,22 @@ export const AuthContextProvider = ({
     console.log("dataArray", dataArray);
   };
   // ------------- Get Games -FS ------------- ends //
+  // ------------- set Like -FS ------------- starts //
+  const handleLike = async (gameId: string) => {
+    const userRef = doc(db, "users", dbUsers.id);
+    console.log("dbUsers", dbUsers);
+    if (!dbUsers.liked.includes(gameId)) {
+      await updateDoc(userRef, {
+        liked: arrayUnion(gameId),
+      });
+    } else {
+      await updateDoc(userRef, {
+        liked: arrayRemove(gameId),
+      });
+    }
+    getDBUsers();
+  };
+  // ------------- set Like -FS ------------- ends //
   // ------------- insertDoc FS ------------- start //
   const insertDoc = async (collect: any, data: any) => {
     try {
@@ -233,13 +252,13 @@ export const AuthContextProvider = ({
   };
 
   useEffect(() => {
-    getDBUsers();
-  }, []);
+    if (user) getDBUsers();
+  }, [user]);
 
   // console.log("user", user);
   // console.log("openAlert: ", openAlert);
   // console.log("isEmailAlreadyExists: ", isEmailAlreadyExists);
-  console.log("dbUsers", dbUsers);
+  // console.log("dbUsers", dbUsers);
 
   return (
     <AuthContext.Provider
@@ -268,6 +287,7 @@ export const AuthContextProvider = ({
         delGame,
         getGames,
         games,
+        handleLike,
       }}
     >
       {loading ? null : children}

@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 
 import Image from "next/image";
+import LikeButton from "./buttons/LikeButton";
 import { useAuth } from "../context/AuthContext";
 
 const styled = {
@@ -32,8 +33,13 @@ function WatchList() {
                   <Image src={game.image} alt="" width="130px" height="130px" />
                 </div>
                 <div>
-                  <h3>{game.title}</h3>
-                  <p>{game.price}</p>
+                  <div>
+                    <h3>{game.title}</h3>
+                    <p>{game.price}</p>
+                  </div>
+                  <div>
+                    <LikeButton gameId={game.gameId} />
+                  </div>
                 </div>
               </div>
             )
