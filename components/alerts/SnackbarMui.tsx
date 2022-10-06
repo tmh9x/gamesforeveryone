@@ -66,16 +66,14 @@ const SnackbarMui: React.FC<IProps> = ({
 
   const action = (
     <React.Fragment>
-      <Button color="secondary" size="small" onClick={handleClose}>
-        UNDO
-      </Button>
+      
       <IconButton
         size="small"
         aria-label="close"
         color="inherit"
         onClick={handleClose}
       >
-        <CloseIcon fontSize="small" />
+        <CloseIcon fontSize="large" />
       </IconButton>
     </React.Fragment>
   );

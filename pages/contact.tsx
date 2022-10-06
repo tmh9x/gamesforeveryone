@@ -5,37 +5,43 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Checkbox from "@mui/material/Checkbox";
 import Container from "@mui/material/Container";
 import CssBaseline from "@mui/material/CssBaseline";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import Grid from "@mui/material/Grid";
-import Link from "@mui/material/Link";
 import ReCAPTCHA from "react-google-recaptcha";
 import SnackbarMui from "../components/alerts/SnackbarMui";
 import SupportIcon from "@mui/icons-material/Support";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import emailjs from "@emailjs/browser";
+import formatData from "../utils/formatData";
 import { useAuth } from "../context/AuthContext";
 
 const theme = createTheme();
 
-export default function Contact() {
-  const { openSnackBar, setOpenSnackBar } = useAuth();
+interface IProps {}
+const Contact: React.FC<IProps> = ({}) => {
+  const { setOpenSnackBar } = useAuth();
+  const [alertText, setAlertText] = React.useState("");
+
   const form = React.useRef<HTMLFormElement>();
   const currentForm = form.current;
-  const [alertText, setAlertText] = React.useState("");
-  const [defaultValue, setDefaultValue] = React.useState('')
-  
-  const recaptchaRef = React.createRef<HTMLDivElement | null>();
-  // const currentFormRecaptchaRef = recaptchaRef.current;
-  // console.log("currentFormRecaptchaRef: ", currentFormRecaptchaRef);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  // const recaptchaRef = React.createRef<HTMLDivElement>();
+  // const recaptchaRef = React.useRef(null);
+  // const recaptchaRef = React.createRef<ReCAPTCHA | null>();
+  // const recaptchaRef: any = React.createRef<ReCAPTCHA | null>();
+
+  const recaptchaRef: any = React.createRef<ReCAPTCHA & HTMLDivElement>();
+
+
+
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
+    // --- check if the fields are empty -------
     if (!data.get("email") || !data.get("fullname") || !data.get("message")) {
       console.log("no email");
 
@@ -43,7 +49,7 @@ export default function Contact() {
       setOpenSnackBar(true);
       return null;
     } else {
-      recaptchaRef.current.execute();
+      const token = recaptchaRef?.current?.execute();
 
       if (currentForm == null) return;
 
@@ -65,12 +71,12 @@ export default function Contact() {
           console.log(result.text);
           setOpenSnackBar(true);
           setAlertText("Your message has been sent successfully");
+          resetForm();
         },
         (error) => {
           console.log(error.text);
         }
       );
-      resetForm()
     }
   };
 
@@ -82,15 +88,20 @@ export default function Contact() {
     }
     // Else reCAPTCHA was executed successfully so proceed with the
     // alert
-   
+
     // Reset the reCAPTCHA so that it can be executed again if user
     // submits another email.
-    recaptchaRef.current.reset();
+    recaptchaRef?.current?.reset();
+    // await recaptchaRef?.current?.executeAsync();
   };
 
-  function resetForm  () {
-    document.getElementById("contact-form").reset();
-  };
+  function resetForm() {
+    // const form = document.getElementById("contact-form") as HTMLTableElement;
+    const form = document.getElementById("contact-form") as HTMLFormElement;
+    if (form !== null) {
+      form.reset();
+    }
+  }
 
   console.log("alertText: ", alertText);
   return (
@@ -112,7 +123,7 @@ export default function Contact() {
             How Can We Help You?
           </Typography>
           <Box
-          id="contact-form"
+            id="contact-form"
             ref={form}
             component="form"
             noValidate
@@ -176,4 +187,5 @@ export default function Contact() {
       {alertText && <SnackbarMui text={alertText} top="10%" />}
     </ThemeProvider>
   );
-}
+};
+export default Contact;
