@@ -61,10 +61,10 @@ const Dashboard = () => {
   };
 
   // console.log("games: ", games);
-  // console.log(
-  //   "value: ",
-  //   value?.docs.map((doc) => doc.data())
-  // );
+  console.log(
+    "value: ",
+    value?.docs.map((doc) => doc.data())
+  );
   // console.log("auth.currentUser: ", auth.currentUser);
   // console.log(
   //   "games: ",
@@ -101,7 +101,6 @@ const Dashboard = () => {
           <span>
             Profile data:{" "}
             {value?.docs.map((doc) => {
-              console.log("doc.data(): ", doc.data());
               return (
                 doc.data().authId === auth?.currentUser?.uid && (
                   <div key={doc.id}>

@@ -20,8 +20,9 @@ const Home: NextPage = () => {
 
     try {
       const querySnapshot = await getDocs(collection(db, "games"));
+      console.log("querySnapshot: ", querySnapshot);
       querySnapshot.forEach((doc) => {
-        console.log(`${doc.id} => ${doc.data()}`);
+        console.log(`doc id: ${doc.id} => ${doc.data()}`);
         console.log("DATA", doc.data());
         const gamesData = doc.data() as Game;
         dataArray.push({ ...gamesData, gameId: doc.id });
@@ -43,6 +44,7 @@ const Home: NextPage = () => {
         });
       });
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   console.log("games", games);
