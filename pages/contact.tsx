@@ -34,9 +34,6 @@ const Contact: React.FC<IProps> = ({}) => {
 
   const recaptchaRef: any = React.createRef<ReCAPTCHA & HTMLDivElement>();
 
-
-
-
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -68,13 +65,13 @@ const Contact: React.FC<IProps> = ({}) => {
 
       emailjs.sendForm(serviceId, templateId, currentForm, publicKey).then(
         (result) => {
-          console.log(result.text);
+          console.log("result.text", result.text);
           setOpenSnackBar(true);
           setAlertText("Your message has been sent successfully");
           resetForm();
         },
         (error) => {
-          console.log(error.text);
+          console.log("error.text", error.text);
         }
       );
     }
@@ -103,7 +100,6 @@ const Contact: React.FC<IProps> = ({}) => {
     }
   }
 
-  console.log("alertText: ", alertText);
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
