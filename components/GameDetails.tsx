@@ -1,9 +1,20 @@
+import { AriaAttributes, DOMAttributes } from "react";
+import { Button, Typography } from "@mui/material";
+
 import Image from "next/image";
-import React from "react";
-import { Typography } from "@mui/material";
 import styles from "../styles/GameDetails.module.css";
 
+// Add attributes to HTML element in TypeScript
+declare module "react" {
+  interface HTMLAttributes<T> extends AriaAttributes, DOMAttributes<T> {
+    rel?: string;
+    width?: string;
+  }
+}
+
 const GameDetails = ({ game }: any) => {
+
+
   console.log("game: ", game);
   return (
     <>
@@ -50,12 +61,34 @@ const GameDetails = ({ game }: any) => {
               <Typography paragraph>{game.fsk}</Typography>
             </div>
           </div>
+          <hr data-size="1" width="100%" color="red" />
+          <div
+            className={styles.contact_con}
+            // style={{ position: "fixed", bottom: "3px", width: "95%" }}
+          >
+            <div
+              className={styles.contact_box}
+              style={{ display: "flex", margin: "auto", width: "90%" }}
+            >
+              <Button
+                className={styles.call_btn}
+                // style={{ marginRight: "10px" }}
+                variant="contained"
+                fullWidth
+              >
+                Call
+              </Button>
+              <Button className="message_btn" variant="contained" fullWidth>
+                Message
+              </Button>
+            </div>
+          </div>
         </div>
       ) : (
         <h3>Failed!!!</h3>
       )}
     </>
   );
-};
+};;
 
 export default GameDetails;
