@@ -170,7 +170,7 @@ const InsertGame = () => {
               // GAME DATA UPLOAD starts -------///
               const newGame = {
                 ...gameData,
-                img: downloadURL,
+                image: downloadURL,
               };
               console.log("newGame: ", newGame);
 

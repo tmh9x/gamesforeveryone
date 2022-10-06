@@ -1,6 +1,13 @@
 import { IconButton, TextField, TextareaAutosize } from "@mui/material";
 import React, { useState } from "react";
-import { addDoc, collection, doc, getDoc, getDocs, setDoc } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  setDoc,
+} from "firebase/firestore";
 import { db, storage } from "../../../firebase/config";
 import { ref, uploadBytes } from "firebase/storage";
 
@@ -33,22 +40,23 @@ const EditGame = (gm) => {
     // IMAGE UPLOAD
     console.log("game.gameId: ", game.gameId);
     try {
-      if (imageUpload === null){
-       setGameData({
-         ...gameData,
-         img: "https://cdn.pixabay.com/photo/2021/02/16/18/55/gamer-6022003_1280.png",
-       });
-    }else{
-      const imageRef = ref(storage, `game-images/${imageUpload.name}`);
-      uploadBytes(imageRef, imageUpload).then(() => {
-        alert("image uploaded");
-      });
-    }
-      
+      if (imageUpload === null) {
+        setGameData({
+          ...gameData,
+          image:
+            "https://cdn.pixabay.com/photo/2021/02/16/18/55/gamer-6022003_1280.png",
+        });
+      } else {
+        const imageRef = ref(storage, `game-images/${imageUpload.name}`);
+        uploadBytes(imageRef, imageUpload).then(() => {
+          alert("image uploaded");
+        });
+      }
+
       // GAME DATA UPLOAD
       const gameRef = doc(db, "games", game.gameId);
       setDoc(gameRef, gameData, { merge: true });
-      
+
       // const docRef = await addDoc(collection(db, "games"), gameData);
       console.log("Document written with ID: ", gameRef.id);
     } catch (e) {

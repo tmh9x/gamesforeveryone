@@ -16,8 +16,9 @@ import Typography from "@mui/material/Typography";
 import { useAuth } from "../context/AuthContext";
 import { useRouter } from "next/router";
 
-const pages = ["Home", "Insert", "Login", "SignUp"];
-const settings = ["Profile", "Account", "Dashboard", "Contact", "Logout"];
+const pages = ["Home", "Insert", "Watch", "Login", "SignUp"];
+const settings = ["Profile", "Account", "Dashboard", "Logout"];
+
 const NavBar = () => {
   const { user, logout } = useAuth();
   const router = useRouter();

@@ -1,14 +1,14 @@
 interface Game {
-  title: string;
-  price: number;
-  creator: string;
-  description: string;
-  fsk: number;
+  title?: string;
+  price?: number;
+  creator?: string;
+  description?: string;
+  fsk?: number;
   platform?: string[];
   year?: number;
   image: string;
   genre?: string[];
-  amount: number;
+  amount?: number;
   gameId?: string;
   image?: string;
   userId?: string;
