@@ -18,6 +18,7 @@ import { useRouter } from "next/router";
 
 const pages = ["Home", "Insert", "Watch", "Login", "SignUp"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
+
 const NavBar = () => {
   const { user, logout } = useAuth();
   const router = useRouter();
@@ -51,6 +52,8 @@ const NavBar = () => {
       router.push(`/`);
     } else if (e === "Insert") {
       router.push(`/game/${e.toLowerCase()}`);
+    } else if (e === "Contact") {
+      router.push(`/${e.toLowerCase()}`);
     } else {
       router.push(`/user/${e.toLowerCase()}`);
     }

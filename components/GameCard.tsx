@@ -16,10 +16,6 @@ export default function GameCard(game: Game) {
   console.log("user", user);
   console.log("dbUsers", dbUsers);
 
-  // useEffect(() => {
-  //   getDBUsers();
-  // }, []);
-
   return (
     <Card sx={{ maxWidth: 345 }} className={styles.card}>
       <CardHeader title={game.platform} className={styles.card_header} />
