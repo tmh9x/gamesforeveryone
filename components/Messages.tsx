@@ -25,7 +25,7 @@ type Props = {
   message: any;
 };
 
-const Messages: React.FC<Props> = ({ message,  }) => {
+const Messages: React.FC<Props> = ({ message }) => {
   const { dbUsers, getDBUsers, user, dbUserId, messagedGameId } = useAuth();
   const gameId = localStorage.getItem("gameId");
 
@@ -35,7 +35,7 @@ const Messages: React.FC<Props> = ({ message,  }) => {
   const [inputs, setInputs] = useState({
     chatText: "",
   });
-  const messages = message.messages;
+  // const messages = message.messages;
   const [chatMessages, setChatMessages] = useState<[]>([]);
 
   const scrollToElement = () => {
@@ -79,8 +79,6 @@ const Messages: React.FC<Props> = ({ message,  }) => {
           messages: arrayUnion(newChatMsg),
         });
       }
-
-      // setChatMessages([]);
     } catch (e) {
       console.error("Error adding document: ", e);
       setInputs({ ...inputs, chatText: "" });
@@ -105,16 +103,33 @@ const Messages: React.FC<Props> = ({ message,  }) => {
     return dateAndTime;
   };
 
-  const getMessages = () => {
-    onSnapshot(doc(db, "messages", dbUserId), (doc) => {
-      console.log("dbUserId: ", dbUserId && dbUserId);
-      const data = doc.data();
-      return setChatMessages(data.messages);
-    });
+  const getMessages = async () => {
+    try {
+      onSnapshot(doc(db, "messages", dbUserId), (doc) => {
+        console.log("dbUserId: ", dbUserId);
+        const data = doc.data();
+        console.log("data.messages: ", data);
+
+        console.log("doc.exists(): ", doc.exists());
+        if (doc.exists()) {
+          return setChatMessages(data.messages);
+        } else {
+          setChatMessages([]);
+        }
+      });
+    } catch (e) {
+      console.error("Error adding document: ", e);
+      setInputs({ ...inputs, chatText: "" });
+    } finally {
+      scrollToElement();
+    }
   };
 
   useEffect(() => {
-    dbUserId ? getMessages() : setChatMessages(messages);
+    console.log("useEffect fired!");
+    // dbUserId ? getMessages() : setChatMessages(messages);
+    console.log("dbUserId: ", dbUserId);
+    dbUserId && getMessages();
 
     if (currentRef) {
       scrollToElement();
@@ -133,7 +148,7 @@ const Messages: React.FC<Props> = ({ message,  }) => {
   // console.log("UserId: ", dbUserId);
   // console.log("gameId: ", gameId);
   // console.log("inputs: ", inputs);
-  console.log("messages: ", messages);
+  // console.log("messages: ", messages);
   console.log("chatMessages: ", chatMessages);
 
   return (
@@ -142,9 +157,9 @@ const Messages: React.FC<Props> = ({ message,  }) => {
         className="text-con"
         sx={{ border: "solid 1px", margin: "1rem auto 0 auto" }}
       >
-        {chatMessages &&
+        {chatMessages.length > 0 ? (
           chatMessages.map((message, i) => {
-            return (
+            return (message.gameId === gameId) ? (
               <div
                 className="message-box"
                 key={i}
@@ -172,11 +187,18 @@ const Messages: React.FC<Props> = ({ message,  }) => {
                   {message.message}
                 </p>
               </div>
-            );
-          })}
+            ) : <div style={{background:'red'}}>No Data</div>
+          })
+        ) :   <div style={{background:'grey'}}>No Data</div>
+            
+        
+        }
       </Box>
-      <div style={{ height: "4rem" }} ></div>
+
+      <div className="place-holder" style={{ height: "4rem" }}></div>
+
       <div ref={chatSendConRef}></div>
+
       <Box
         className="chat-send-con"
         sx={{
