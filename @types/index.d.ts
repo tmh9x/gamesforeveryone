@@ -24,5 +24,6 @@ interface GameProps {
 }
 
 interface IMessageProps {
+  userIdProp: string;
   messageProp: string;
 }
