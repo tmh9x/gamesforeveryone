@@ -1,5 +1,5 @@
 import { Box, Container } from "@mui/system";
-import { Button, TextField } from "@mui/material";
+import { Button, IconButton, TextField } from "@mui/material";
 import {
   Timestamp,
   addDoc,
@@ -15,25 +15,39 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
-import { createContext, useContext, useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-import { InputSharp } from "@mui/icons-material";
+import SendIcon from "@mui/icons-material/Send";
 import { db } from "../firebase/config";
 import { useAuth } from "../context/AuthContext";
 
-type Props = {};
+type Props = {
+  message: any;
+  children: any;
+};
 
-const Messages = (props: Props) => {
+const Messages: React.FC<Props> = ({ message, children }) => {
   const { dbUsers, getDBUsers, user, dbUserId, messagedGameId } = useAuth();
   const gameId = localStorage.getItem("gameId");
+
+  const chatSendConRef = useRef<HTMLDivElement>(null);
+  const currentRef = chatSendConRef.current;
+
   const [inputs, setInputs] = useState({
     chatText: "",
   });
-  const messages = props.message.messages;
+  const messages = message.messages;
   const [chatMessages, setChatMessages] = useState<[]>([]);
 
-
-
+  const scrollToElement = () => {
+    if (currentRef) {
+      console.log("currentRef: ", currentRef);
+      currentRef.scrollIntoView({
+        behavior: "smooth",
+      });
+    }
+  };
+  
   const handleInputsChange = (e: any) => {
     // const value = e.target.value;
     const { value, name } = e.target;
@@ -48,12 +62,14 @@ const Messages = (props: Props) => {
   };
   // ------------- insertDoc FS ------------- start //
   const handleSubmitClick = async () => {
+ 
+     
     if (!inputs.chatText || !gameId || !dbUserId) {
       console.log("no text");
       return null;
     }
 
-    const messagesRef = await doc(db, "messages", dbUserId);
+    const messagesRef = doc(db, "messages", dbUserId);
     const docSnap = await getDoc(messagesRef);
 
     try {
@@ -74,6 +90,7 @@ const Messages = (props: Props) => {
     } finally {
       getMessages();
       setInputs({ ...inputs, chatText: "" });
+      scrollToElement();
     }
   };
   // ------------- handleSubmitClick FS ------------- ends //
@@ -92,18 +109,21 @@ const Messages = (props: Props) => {
   };
 
   const getMessages = () => {
-     console.log("selim");
-
-     onSnapshot(doc(db, "messages", dbUserId), (doc) => {
-       console.log("dbUserId: ", dbUserId && dbUserId);
-       const data = doc.data();
-       return setChatMessages(data.messages);
-     });
+    onSnapshot(doc(db, "messages", dbUserId), (doc) => {
+      console.log("dbUserId: ", dbUserId && dbUserId);
+      const data = doc.data();
+      return setChatMessages(data.messages);
+    });
   };
-  useEffect(() => {
-    console.log("dbUserId: ", dbUserId);
 
+  useEffect(() => {
     dbUserId ? getMessages() : setChatMessages(messages);
+    
+    if (currentRef) {
+     scrollToElement();
+      
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // console.log("dbUsers: ", dbUsers && dbUsers);
@@ -116,7 +136,10 @@ const Messages = (props: Props) => {
 
   return (
     <Container className="chat_con">
-      <Box sx={{ border: "solid 1px", margin: "1rem auto" }}>
+      <Box
+        className="text-con"
+        sx={{ border: "solid 1px", margin: "1rem auto 4rem auto" }}
+      >
         {chatMessages &&
           chatMessages.map((message, i) => {
             return (
@@ -150,21 +173,37 @@ const Messages = (props: Props) => {
             );
           })}
       </Box>
-      <Box className="chat_field">
+      <div ref={chatSendConRef}></div>
+      <Box
+        className="chat-send-con"
+        sx={{
+          width: "100%",
+          position: "fixed",
+          bottom: "0",
+          backgroundColor: "white",
+          borderTop: "0.3 solid black",
+          padding: "4px 0 0 0",
+        }}
+      >
         <TextField
           size="small"
           multiline
-          minRows={2}
-          maxRows={10}
+          maxRows={4}
           name="chatText"
           value={inputs.chatText}
           onChange={handleInputsChange}
-          sx={{ width: "100%" }}
+          sx={{ width: "85%" }}
         ></TextField>
+        {
+          <IconButton
+            className="send-btn"
+            onClick={handleSubmitClick}
+            sx={{ width: "10%", color: !inputs.chatText ? "inherit" : "red" }}
+          >
+            <SendIcon />
+          </IconButton>
+        }
       </Box>
-      <Button variant="outlined" onClick={handleSubmitClick}>
-        insert message
-      </Button>
     </Container>
   );
 };
