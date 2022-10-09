@@ -47,7 +47,7 @@ const Messages: React.FC<Props> = ({ message, children }) => {
       });
     }
   };
-  
+
   const handleInputsChange = (e: any) => {
     // const value = e.target.value;
     const { value, name } = e.target;
@@ -62,8 +62,6 @@ const Messages: React.FC<Props> = ({ message, children }) => {
   };
   // ------------- insertDoc FS ------------- start //
   const handleSubmitClick = async () => {
- 
-     
     if (!inputs.chatText || !gameId || !dbUserId) {
       console.log("no text");
       return null;
@@ -118,11 +116,16 @@ const Messages: React.FC<Props> = ({ message, children }) => {
 
   useEffect(() => {
     dbUserId ? getMessages() : setChatMessages(messages);
-    
+
     if (currentRef) {
-     scrollToElement();
-      
+      scrollToElement();
     }
+    window.scrollTo({
+      top: 1000000,
+      behavior: "smooth",
+    });
+    console.log("currentRef: ", currentRef);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -138,7 +141,7 @@ const Messages: React.FC<Props> = ({ message, children }) => {
     <Container className="chat_con">
       <Box
         className="text-con"
-        sx={{ border: "solid 1px", margin: "1rem auto 4rem auto" }}
+        sx={{ border: "solid 1px", margin: "1rem auto 0 auto" }}
       >
         {chatMessages &&
           chatMessages.map((message, i) => {
@@ -173,6 +176,7 @@ const Messages: React.FC<Props> = ({ message, children }) => {
             );
           })}
       </Box>
+      <div style={{ height: "4rem" }} ></div>
       <div ref={chatSendConRef}></div>
       <Box
         className="chat-send-con"
@@ -186,6 +190,7 @@ const Messages: React.FC<Props> = ({ message, children }) => {
         }}
       >
         <TextField
+          id="chat-send-con"
           size="small"
           multiline
           maxRows={4}
