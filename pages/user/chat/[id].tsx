@@ -6,23 +6,18 @@ import React from "react";
 import { db } from "../../../firebase/config";
 import { useAuth } from "../../../context/AuthContext";
 
-interface IMessageProps {
-  messageId: string;
-  messages;
-}
+const Chat: React.FC<IMessageProps> = ({
+  messageProp,
+}) => {
+  const { dbUserId } = useAuth();
 
-const Chat = ({ messageProp }: any) => {
+  const message: Game = messageProp ? JSON.parse(messageProp) : null;
+
+  console.log("dbUserId: ", dbUserId);
+  console.log("Message : ", message);
   console.log("messageProp: ", messageProp);
-const { dbUserId,  } = useAuth();
 
-const message: Game = messageProp ? JSON.parse(messageProp) : null;
-
-
-console.log("dbUserId: ", dbUserId);
-console.log("Message : ", message);
-  return (
-    <div>{message && <Messages message={message} />}</div>
-  );
+  return <div>{message && <Messages message={message} />}</div>;
 };
 
 export async function getServerSideProps({ params }: Params) {

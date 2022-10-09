@@ -23,10 +23,9 @@ import { useAuth } from "../context/AuthContext";
 
 type Props = {
   message: any;
-  children: any;
 };
 
-const Messages: React.FC<Props> = ({ message, children }) => {
+const Messages: React.FC<Props> = ({ message,  }) => {
   const { dbUsers, getDBUsers, user, dbUserId, messagedGameId } = useAuth();
   const gameId = localStorage.getItem("gameId");
 
@@ -81,7 +80,7 @@ const Messages: React.FC<Props> = ({ message, children }) => {
         });
       }
 
-      setChatMessages([]);
+      // setChatMessages([]);
     } catch (e) {
       console.error("Error adding document: ", e);
       setInputs({ ...inputs, chatText: "" });
@@ -185,7 +184,7 @@ const Messages: React.FC<Props> = ({ message, children }) => {
           position: "fixed",
           bottom: "0",
           backgroundColor: "white",
-          borderTop: "0.3 solid black",
+          borderTop: "0.9px solid black",
           padding: "4px 0 0 0",
         }}
       >

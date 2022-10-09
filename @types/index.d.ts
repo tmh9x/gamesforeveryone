@@ -22,3 +22,7 @@ interface Params {
 interface GameProps {
   gameProp: string | null;
 }
+
+interface IMessageProps {
+  messageProp: string;
+}
