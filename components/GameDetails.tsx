@@ -1,8 +1,9 @@
-import { AriaAttributes, DOMAttributes } from "react";
 import { Button, Typography } from "@mui/material";
 
 import Image from "next/image";
+import Link from "next/link";
 import styles from "../styles/GameDetails.module.css";
+import { useAuth } from "../context/AuthContext";
 
 // Add attributes to HTML element in TypeScript
 declare module "react" {
@@ -13,15 +14,20 @@ declare module "react" {
 }
 
 const GameDetails = ({ game }: any) => {
+  const { dbUserId,  } = useAuth();
 
-
+const handleMessageGame =()=> {
+  localStorage.setItem('gameId', game.gameId)
+}
+  console.log("dbUserId: ", dbUserId);
   console.log("game: ", game);
   return (
     <>
       {game ? (
         <div className={styles.gameDetails_container}>
           <Image
-            src="/images/defaultImageGame.jpeg"
+            // src="/images/defaultImageGame.jpeg"
+            src={game?.img ? game?.img : game.image}
             alt=""
             width="300px"
             height="400px"
@@ -78,9 +84,20 @@ const GameDetails = ({ game }: any) => {
               >
                 Call
               </Button>
-              <Button className="message_btn" variant="contained" fullWidth>
-                Message
-              </Button>
+              <Link href= "/user/chat/[id]"
+              as={`/user/chat/${dbUserId}`}
+             >
+              {/* <Link
+                href={{
+                  pathname: "/user/chat/[id]",
+                  query: { name: "halil", id: dbUserId },
+                }}
+              > */}
+                <Button className="message_btn" variant="contained" fullWidth
+                onClick={handleMessageGame}>
+                  Message
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
@@ -89,6 +106,6 @@ const GameDetails = ({ game }: any) => {
       )}
     </>
   );
-};;
+};
 
 export default GameDetails;

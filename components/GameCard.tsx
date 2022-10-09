@@ -6,9 +6,12 @@ import IconButton from "@mui/material/IconButton";
 import Link from "next/link";
 import { Typography } from "@mui/material";
 import styles from "../styles/Card.module.css";
+import { useAuth } from "../context/AuthContext";
 
 export default function GameCard(game: Game) {
-  // console.log("game: ", game);
+ const { dbUsers, getDBUsers, user, dbUserId } = useAuth();
+ console.log("dbUserId: ", dbUserId);
+ 
   return (
     <Card sx={{ maxWidth: 345 }} className={styles.card}>
       <CardHeader title="PLATFORM" className={styles.card_header} />

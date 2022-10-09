@@ -4,7 +4,12 @@ const nextConfig = {
   swcMinify: true,
 
   images: {
-    domains: ["assets.nintendo.com"]
+    domains: [
+      "assets.nintendo.com",
+      "nintendo.com",
+      "firebasestorage.googleapis.com",
+      "cdn.pixabay.com",
+    ],
   },
 };
 

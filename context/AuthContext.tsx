@@ -39,6 +39,7 @@ export const AuthContextProvider = ({
   const [openSnackBar, setOpenSnackBar] = useState(false);
   const [dbUsers, setDbUsers] = useState<any>(null);
   const [dbUserId, setDbUserId] = useState<string>("");
+
   // ------------- used in edit-user.tsx ---- -- starts
   type TEditedUserData = {
     username?: string;
@@ -200,6 +201,7 @@ export const AuthContextProvider = ({
 
       onSnapshot(q, (snapshot) => {
         snapshot.docs.forEach((doc) => {
+          console.log("doc: ", doc);
           setDbUserId(doc.id);
           // console.log("doc.data(): ", doc.data());
           setDbUsers({ ...doc.data(), id: doc.id });
@@ -212,13 +214,15 @@ export const AuthContextProvider = ({
   };
 
   useEffect(() => {
-    getDBUsers();
-  }, []);
+    if (user) getDBUsers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
-  // console.log("user", user);
+  console.log("user", user && user);
   // console.log("openAlert: ", openAlert);
   // console.log("isEmailAlreadyExists: ", isEmailAlreadyExists);
-  console.log("dbUsers", dbUsers);
+  console.log("UserId: ", dbUserId);
+  console.log("dbUsers", dbUsers && dbUsers);
 
   return (
     <AuthContext.Provider
@@ -245,6 +249,7 @@ export const AuthContextProvider = ({
         setEditedUserData,
         handleInputValueChange,
         delGame,
+        dbUserId,
       }}
     >
       {loading ? null : children}
