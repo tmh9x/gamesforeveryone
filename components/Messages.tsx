@@ -5,6 +5,7 @@ import {
   addDoc,
   arrayUnion,
   collection,
+  collectionGroup,
   deleteDoc,
   doc,
   getDoc,
@@ -20,13 +21,14 @@ import { useEffect, useRef, useState } from "react";
 import SendIcon from "@mui/icons-material/Send";
 import { db } from "../firebase/config";
 import { useAuth } from "../context/AuthContext";
+import { useRouter } from "next/router";
 
 type Props = {
   message: any;
 };
 
 const Messages: React.FC<Props> = ({ message }) => {
-  const { dbUsers, getDBUsers, user, dbUserId, messagedGameId } = useAuth();
+  const { dbUsers, getDBUsers, user, dbUserId } = useAuth();
   const gameId = localStorage.getItem("gameId");
 
   const chatSendConRef = useRef<HTMLDivElement>(null);
@@ -37,6 +39,70 @@ const Messages: React.FC<Props> = ({ message }) => {
   });
   // const messages = message.messages;
   const [chatMessages, setChatMessages] = useState<[]>([]);
+
+  //
+  const getMultipleDocs = async () => {
+    const messageRef = collection(db, "chat");
+
+    // await Promise.all([
+    //   addDoc(collection(messageRef, gameId, "messages"), {
+    //     gameId: gameId,
+    //     creatorId: user.uid,
+    //     creatorEmail: user.email,
+    //     time: Timestamp.fromDate(new Date()),
+    //     messages: chatMessages.chatText ? chatMessages.chatText : "Text message-1",
+    //   }),
+    // ]);
+
+    var queryWords = ["Text message-1", "Text message-2"];
+
+    const museums = query(
+      collectionGroup(db, "messages"),
+      where("messages", "in", queryWords)
+    );
+    const querySnapshot = await getDocs(museums);
+    querySnapshot.forEach((doc) => {
+      console.log("querySnapshot", doc.id, " => ", doc.data());
+    });
+
+    // const museums = query(
+    //   collectionGroup(db, "messages"),
+    //   where("messages", "==", "Text message-1"),
+    // );
+    // const querySnapshot = await getDocs(museums);
+    // querySnapshot.forEach((doc) => {
+    //   console.log('querySnapshot',doc.id, " => ", doc.data());
+    // });
+
+    console.log("messageRef: ", messageRef);
+
+    // const q = query(
+    //   messageRef,
+    //   where('messages.${', 'array-contains', {gameId: '7tvoPyYllWTqiW40UdB5'} )
+    // );
+    //   console.log("query: ", q);
+
+    // const unsubscribe = onSnapshot(q, (querySnapshot) => {
+    //   const cities = [];
+    //   const newMessage = [];
+    //   querySnapshot.forEach((doc) => {
+    //     cities.push(doc.data());
+    //   });
+
+    //  cities.forEach(message => {
+    // message.messages.forEach((mes) => {
+    //    newMessage.push(mes.gameId === "7tvoPyYllWTqiW40UdB5");
+    //    newMessage.push(mes.gameId.includes("7tvoPyYllWTqiW40UdB5"));
+    // return cities.push(mes.gameId === "7tvoPyYllWTqiW40UdB5");
+    // console.log("getMultipleDocs: ", cities );
+    // });
+
+    // return cities.push(message);
+  };
+
+  // console.log("getMultipleDocs2: ", newMessage);
+
+  //
 
   const scrollToElement = () => {
     if (currentRef) {
@@ -58,6 +124,7 @@ const Messages: React.FC<Props> = ({ message }) => {
     creatorId: dbUserId,
     time: Timestamp.fromDate(new Date()),
     message: inputs.chatText,
+    creatorEmail: user.email,
   };
   // ------------- insertDoc FS ------------- start //
   const handleSubmitClick = async () => {
@@ -126,9 +193,10 @@ const Messages: React.FC<Props> = ({ message }) => {
   };
 
   useEffect(() => {
-    console.log("useEffect fired!");
-    // dbUserId ? getMessages() : setChatMessages(messages);
     console.log("dbUserId: ", dbUserId);
+    console.log("useEffect fired!");
+    dbUserId && getMultipleDocs();
+    // dbUserId ? getMessages() : setChatMessages(messages);
     dbUserId && getMessages();
 
     if (currentRef) {
@@ -141,11 +209,11 @@ const Messages: React.FC<Props> = ({ message }) => {
     console.log("currentRef: ", currentRef);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [dbUserId]);
 
   // console.log("dbUsers: ", dbUsers && dbUsers);
   // console.log("user: ", user);
-  // console.log("UserId: ", dbUserId);
+  console.log("UserId: ", dbUserId);
   // console.log("gameId: ", gameId);
   // console.log("inputs: ", inputs);
   // console.log("messages: ", messages);
@@ -159,7 +227,7 @@ const Messages: React.FC<Props> = ({ message }) => {
       >
         {chatMessages.length > 0 ? (
           chatMessages.map((message, i) => {
-            return (message.gameId === gameId) ? (
+            return message.gameId === gameId ? (
               <div
                 className="message-box"
                 key={i}
@@ -187,12 +255,13 @@ const Messages: React.FC<Props> = ({ message }) => {
                   {message.message}
                 </p>
               </div>
-            ) : <div style={{background:'red'}}>No Data</div>
+            ) : (
+              <div style={{ background: "red" }}>No Data</div>
+            );
           })
-        ) :   <div style={{background:'grey'}}>No Data</div>
-            
-        
-        }
+        ) : (
+          <div style={{ background: "grey" }}>No Data</div>
+        )}
       </Box>
 
       <div className="place-holder" style={{ height: "4rem" }}></div>
