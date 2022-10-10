@@ -42,7 +42,7 @@ export async function getServerSideProps({ params }: Params) {
       messages: doc.data(),
     };
     newMessages.push(messagesObj);
-    console.log("querySnapshots", doc.id, " => ", doc.data());
+    // console.log("querySnapshots", doc.id, " => ", doc.data());
   });
   console.log("newMessages: ", newMessages);
 
