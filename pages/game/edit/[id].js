@@ -12,7 +12,7 @@ import { db, storage } from "../../../firebase/config";
 import { ref, uploadBytes } from "firebase/storage";
 
 import AddIcon from "@mui/icons-material/Add";
-import styles from "../../../styles/EditGame.module.css";
+import { Container } from "@mui/system";
 import { useAuth } from "../../../context/AuthContext";
 
 const EditGame = (gm) => {
@@ -68,8 +68,19 @@ const EditGame = (gm) => {
   console.log("gameData", gameData);
   console.log("game: ", game);
   return (
-    <div>
-      <form className={styles.editGame_container}>
+    <Container
+      sx={{
+        backgroundColor: "rgba(180, 180, 180, 0.1)",
+        width: "345px",
+        padding: "1em",
+        display: "flex",
+        flexDirection: "column",
+        margin: "1.5em auto",
+        gap: "1em",
+        borderRadius: "5px",
+      }}
+    >
+      <form>
         <h1>Edit Game</h1>
         <input
           type="file"
@@ -78,7 +89,6 @@ const EditGame = (gm) => {
           }}
         />
         <TextField
-          // className={styles.insertGame_container_textField}
           sx={{ backgroundColor: "#fff" }}
           id="platform"
           name="platform"
@@ -160,8 +170,9 @@ const EditGame = (gm) => {
           value={gameData?.creator ? gameData?.creator : ""}
         />
       </form>
-      <div className={styles.iconButton}>
+      <Container>
         <IconButton
+          sx={{ textAlign: "center" }}
           type="submit"
           size="large"
           style={{ backgroundColor: "#e63946", color: "#fff" }}
@@ -169,8 +180,8 @@ const EditGame = (gm) => {
         >
           <AddIcon />
         </IconButton>
-      </div>
-    </div>
+      </Container>
+    </Container>
   );
 };
 

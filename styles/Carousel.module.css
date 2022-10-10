@@ -1,12 +1,8 @@
-/* body {
-  background: #ccc;
-} */
-
-/* .App {
+.App {
   width: 70%;
   margin: 0 auto;
   margin-top: 50px;
-} */
+}
 
 .slick_slide > div {
   margin: 0 10px;

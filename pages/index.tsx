@@ -3,9 +3,9 @@ import { getDownloadURL, listAll, ref } from "firebase/storage";
 import { useEffect, useState } from "react";
 
 import Carousel from "../components/Carousel";
+import { Container } from "@mui/material";
 import GameCard from "../components/GameCard";
 import type { NextPage } from "next";
-import styles from "../styles/Home.module.css";
 import { useAuth } from "../context/AuthContext";
 
 const Home: NextPage = () => {
@@ -33,7 +33,7 @@ const Home: NextPage = () => {
   console.log("games", games);
 
   return (
-    <div className={styles.container}>
+    <Container sx={{ padding: "0 2rem" }}>
       <Carousel />
       {games &&
         games.map((game: Game, i: number) => (
@@ -53,7 +53,7 @@ const Home: NextPage = () => {
             />
           </div>
         ))}
-    </div>
+    </Container>
   );
 };
 
