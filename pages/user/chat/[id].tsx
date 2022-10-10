@@ -1,50 +1,60 @@
-import { doc, getDoc } from "firebase/firestore";
+import {
+  collectionGroup,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 
 import Messages from "../../../components/Messages";
-import type { NextPage } from "next";
 import React from "react";
 import { db } from "../../../firebase/config";
-import { useAuth } from "../../../context/AuthContext";
 
-const Chat: React.FC<IMessageProps> = ({ userIdProp, messageProp }) => {
-  const { dbUserId } = useAuth();
+const Chat: React.FC<IMessageProps> = ({ gameIdProp, messageProp }) => {
+  const messageProps: Game = messageProp ? JSON.parse(messageProp) : null;
 
-  const message: Game = messageProp ? JSON.parse(messageProp) : null;
-  const userId: Game = userIdProp ? JSON.parse(userIdProp) : null;
-
-  console.log("userIdProp: ", userIdProp);
-  console.log("dbUserId: ", dbUserId);
-  console.log("Message : ", message);
-  // console.log("userIdProp: ", userIdProp);
+  // console.log("gameIdProp: ", gameIdProp);
+  // console.log("dbUserId: ", dbUserId);
+  // console.log("MessageProps : ", messageProps);
+  // console.log("gameIdProp: ", gameIdProp);
 
   return (
     <div>
- <Messages message={message}/>
-      {/* {message && <Messages message={message}  />} */}
+      <Messages message={messageProps} />
     </div>
   );
 };
 
 export async function getServerSideProps({ params }: Params) {
-  console.log("user param: ", params);
-  const docRef = doc(db, "messages", params.id);
-  const docSnap = await getDoc(docRef);
+  console.log("userParam: ", params);
+  // const docRef = doc(db, "messages", params.id);
+  // const docSnap = await getDoc(docRef);
 
-  if (docSnap.exists()) {
-    const newMessage = {
-      ...docSnap.data(),
-      messageId: docSnap.id,
+  const messages = query(
+    collectionGroup(db, "messages"),
+    where("gameId", "==", params.id)
+  );
+
+  const newMessages: [] = [];
+  const querySnapshots = await getDocs(messages);
+  querySnapshots.forEach((doc) => {
+    const messagesObj: ImessageObj = {
+      messageId: doc.id,
+      messages: doc.data(),
     };
-    const messageProp = JSON.stringify(newMessage);
+    newMessages.push(messagesObj);
+    console.log("querySnapshots", doc.id, " => ", doc.data());
+  });
+  console.log("newMessages: ", newMessages);
 
-    console.log("messageProp: ", messageProp);
-    console.log("Document data:", docSnap.data());
+  if (newMessages.length > 0) {
+    const messageProp = JSON.stringify(newMessages);
+
     return { props: { messageProp } };
   } else {
     console.log("No such document!");
-    const userIdProp = JSON.stringify(params);
-    console.log("userIdProp: ", userIdProp);
-    return { props: { userIdProp } };
+    const gameIdProp = JSON.stringify(params);
+    console.log("gameIdProp: ", gameIdProp);
+    return { props: { gameIdProp } };
   }
 }
 

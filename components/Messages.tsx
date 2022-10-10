@@ -30,6 +30,7 @@ type Props = {
 const Messages: React.FC<Props> = ({ message }) => {
   const { dbUsers, getDBUsers, user, dbUserId } = useAuth();
   const gameId = localStorage.getItem("gameId");
+  const sellerId = localStorage.getItem("sellerId");
 
   const chatSendConRef = useRef<HTMLDivElement>(null);
   const currentRef = chatSendConRef.current;
@@ -37,76 +38,10 @@ const Messages: React.FC<Props> = ({ message }) => {
   const [inputs, setInputs] = useState({
     chatText: "",
   });
-  // const messages = message.messages;
   const [chatMessages, setChatMessages] = useState<[]>([]);
-
-  //
-  const getMultipleDocs = async () => {
-    const messageRef = collection(db, "chat");
-
-    // await Promise.all([
-    //   addDoc(collection(messageRef, gameId, "messages"), {
-    //     gameId: gameId,
-    //     creatorId: user.uid,
-    //     creatorEmail: user.email,
-    //     time: Timestamp.fromDate(new Date()),
-    //     messages: chatMessages.chatText ? chatMessages.chatText : "Text message-1",
-    //   }),
-    // ]);
-
-    var queryWords = ["Text message-1", "Text message-2"];
-
-    const museums = query(
-      collectionGroup(db, "messages"),
-      where("messages", "in", queryWords)
-    );
-    const querySnapshot = await getDocs(museums);
-    querySnapshot.forEach((doc) => {
-      console.log("querySnapshot", doc.id, " => ", doc.data());
-    });
-
-    // const museums = query(
-    //   collectionGroup(db, "messages"),
-    //   where("messages", "==", "Text message-1"),
-    // );
-    // const querySnapshot = await getDocs(museums);
-    // querySnapshot.forEach((doc) => {
-    //   console.log('querySnapshot',doc.id, " => ", doc.data());
-    // });
-
-    console.log("messageRef: ", messageRef);
-
-    // const q = query(
-    //   messageRef,
-    //   where('messages.${', 'array-contains', {gameId: '7tvoPyYllWTqiW40UdB5'} )
-    // );
-    //   console.log("query: ", q);
-
-    // const unsubscribe = onSnapshot(q, (querySnapshot) => {
-    //   const cities = [];
-    //   const newMessage = [];
-    //   querySnapshot.forEach((doc) => {
-    //     cities.push(doc.data());
-    //   });
-
-    //  cities.forEach(message => {
-    // message.messages.forEach((mes) => {
-    //    newMessage.push(mes.gameId === "7tvoPyYllWTqiW40UdB5");
-    //    newMessage.push(mes.gameId.includes("7tvoPyYllWTqiW40UdB5"));
-    // return cities.push(mes.gameId === "7tvoPyYllWTqiW40UdB5");
-    // console.log("getMultipleDocs: ", cities );
-    // });
-
-    // return cities.push(message);
-  };
-
-  // console.log("getMultipleDocs2: ", newMessage);
-
-  //
 
   const scrollToElement = () => {
     if (currentRef) {
-      console.log("currentRef: ", currentRef);
       currentRef.scrollIntoView({
         behavior: "smooth",
       });
@@ -114,7 +49,6 @@ const Messages: React.FC<Props> = ({ message }) => {
   };
 
   const handleInputsChange = (e: any) => {
-    // const value = e.target.value;
     const { value, name } = e.target;
     setInputs({ ...inputs, [name]: value });
   };
@@ -122,30 +56,24 @@ const Messages: React.FC<Props> = ({ message }) => {
   const newChatMsg = {
     gameId,
     creatorId: dbUserId,
+    sellerId: sellerId,
+    buyerId: dbUserId,
     time: Timestamp.fromDate(new Date()),
     message: inputs.chatText,
     creatorEmail: user.email,
   };
   // ------------- insertDoc FS ------------- start //
   const handleSubmitClick = async () => {
+    console.log("newChatMsg: ", newChatMsg);
     if (!inputs.chatText || !gameId || !dbUserId) {
       console.log("no text");
       return null;
     }
-
-    const messagesRef = doc(db, "messages", dbUserId);
-    const docSnap = await getDoc(messagesRef);
-
+    const messagesRef = collection(db, "chat");
     try {
-      if (docSnap.exists()) {
-        await updateDoc(doc(db, "messages", dbUserId), {
-          messages: arrayUnion(newChatMsg),
-        });
-      } else {
-        await setDoc(doc(db, "messages", dbUserId), {
-          messages: arrayUnion(newChatMsg),
-        });
-      }
+      await Promise.all([
+        addDoc(collection(messagesRef, gameId, "messages"), newChatMsg),
+      ]);
     } catch (e) {
       console.error("Error adding document: ", e);
       setInputs({ ...inputs, chatText: "" });
@@ -163,7 +91,6 @@ const Messages: React.FC<Props> = ({ message }) => {
       time.seconds * 1000 + time.nanoseconds / 1000000
     );
 
-    // const date = fireBaseTime.toDateString();
     const date = fireBaseTime.toLocaleDateString();
     const atTime = fireBaseTime.toLocaleTimeString();
     const dateAndTime = { date, atTime };
@@ -172,18 +99,27 @@ const Messages: React.FC<Props> = ({ message }) => {
 
   const getMessages = async () => {
     try {
-      onSnapshot(doc(db, "messages", dbUserId), (doc) => {
-        console.log("dbUserId: ", dbUserId);
-        const data = doc.data();
-        console.log("data.messages: ", data);
-
-        console.log("doc.exists(): ", doc.exists());
-        if (doc.exists()) {
-          return setChatMessages(data.messages);
-        } else {
-          setChatMessages([]);
-        }
+      const messages = query(
+        collectionGroup(db, "messages"),
+        where("buyerId", "==", dbUserId),
+        where("gameId", "==", gameId),
+        where("sellerId", "==", sellerId)
+      );
+      const newMessages: [] = [];
+      const querySnapshots = await getDocs(messages);
+      querySnapshots.forEach((doc) => {
+        const messagesObj: ImessageObj = {
+          messageId: doc.id,
+          messages: doc.data(),
+        };
+        newMessages.push(messagesObj);
       });
+
+      if (newMessages.length > 0) {
+        return setChatMessages(newMessages);
+      } else {
+        setChatMessages([]);
+      }
     } catch (e) {
       console.error("Error adding document: ", e);
       setInputs({ ...inputs, chatText: "" });
@@ -195,29 +131,25 @@ const Messages: React.FC<Props> = ({ message }) => {
   useEffect(() => {
     console.log("dbUserId: ", dbUserId);
     console.log("useEffect fired!");
-    dbUserId && getMultipleDocs();
-    // dbUserId ? getMessages() : setChatMessages(messages);
     dbUserId && getMessages();
 
     if (currentRef) {
       scrollToElement();
     }
+
     window.scrollTo({
       top: 1000000,
       behavior: "smooth",
     });
-    console.log("currentRef: ", currentRef);
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dbUserId]);
 
   // console.log("dbUsers: ", dbUsers && dbUsers);
   // console.log("user: ", user);
   console.log("UserId: ", dbUserId);
-  // console.log("gameId: ", gameId);
+  console.log("gameId: ", gameId);
   // console.log("inputs: ", inputs);
   // console.log("messages: ", messages);
-  console.log("chatMessages: ", chatMessages);
 
   return (
     <Container className="chat_con">
@@ -226,8 +158,10 @@ const Messages: React.FC<Props> = ({ message }) => {
         sx={{ border: "solid 1px", margin: "1rem auto 0 auto" }}
       >
         {chatMessages.length > 0 ? (
-          chatMessages.map((message, i) => {
-            return message.gameId === gameId ? (
+          chatMessages.map((message: ImessageObj, i) => {
+            const { messages } = message;
+
+            return messages.gameId === gameId ? (
               <div
                 className="message-box"
                 key={i}
@@ -235,24 +169,18 @@ const Messages: React.FC<Props> = ({ message }) => {
                   display: "flex",
                   border: "solid 1px",
                   borderRight: "unset",
-
                   alignItems: "center",
                   justifyContent: "end",
                   paddingRight: "0.6rem",
                 }}
               >
-                <p
-                  className="message-paragraph"
-                  // style={{width:'fit-content', position}}
-                >
-                  {" "}
-                  {console.log("dataAndTime", convertTime(message.time).date)}
-                  {/* {message.time.seconds} */}
-                  {convertTime(message.time).date}
+                <p className="message-paragraph">
+                  {console.log("dataAndTime", convertTime(messages.time).date)}
+                  {convertTime(messages.time).date}
                   <br />
-                  {convertTime(message.time).atTime}
+                  {convertTime(messages.time).atTime}
                   <br />
-                  {message.message}
+                  {messages.message}
                 </p>
               </div>
             ) : (

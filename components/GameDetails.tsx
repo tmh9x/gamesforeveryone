@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import styles from "../styles/GameDetails.module.css";
 import { useAuth } from "../context/AuthContext";
+import { userAgent } from "next/server";
 
 // Add attributes to HTML element in TypeScript
 declare module "react" {
@@ -14,13 +15,16 @@ declare module "react" {
 }
 
 const GameDetails = ({ game }: any) => {
-  const { dbUserId,  } = useAuth();
+  const { dbUserId, user } = useAuth();
+  const sellerId = localStorage.getItem("sellerId");
 
-const handleMessageGame =()=> {
-  localStorage.setItem('gameId', game.gameId)
-}
+  const handleMessageGame = () => {
+    localStorage.setItem("gameId", game.gameId);
+    localStorage.setItem("sellerId", game.userId);
+  };
   console.log("dbUserId: ", dbUserId);
   console.log("game: ", game);
+
   return (
     <>
       {game ? (
@@ -72,33 +76,43 @@ const handleMessageGame =()=> {
             className={styles.contact_con}
             // style={{ position: "fixed", bottom: "3px", width: "95%" }}
           >
-            <div
-              className={styles.contact_box}
-              style={{ display: "flex", margin: "auto", width: "90%" }}
-            >
-              <Button
-                className={styles.call_btn}
-                // style={{ marginRight: "10px" }}
-                variant="contained"
-                fullWidth
+            {game.userId !== user.uid ? (
+              <div
+                className={styles.contact_box}
+                style={{ display: "flex", margin: "auto", width: "90%" }}
               >
-                Call
-              </Button>
-              <Link href= "/user/chat/[id]"
-              as={`/user/chat/${dbUserId}`}
-             >
-              {/* <Link
-                href={{
-                  pathname: "/user/chat/[id]",
-                  query: { name: "halil", id: dbUserId },
-                }}
-              > */}
-                <Button className="message_btn" variant="contained" fullWidth
-                onClick={handleMessageGame}>
-                  Message
+                <Button
+                  className={styles.call_btn}
+                  // style={{ marginRight: "10px" }}
+                  variant="contained"
+                  fullWidth
+                >
+                  Call
                 </Button>
-              </Link>
-            </div>
+                <Link href="/user/chat/[id]" as={`/user/chat/${game.gameId}`}>
+               
+                  <Button
+                    className="message_btn"
+                    variant="contained"
+                    fullWidth
+                    onClick={handleMessageGame}
+                  >
+                    Message
+                  </Button>
+                </Link>
+              </div>
+            ) : (
+              <div className="edit-btn">
+                <Button
+                  href="game/edit"
+                  className="message_btn"
+                  variant="contained"
+                  fullWidth
+                >
+                  Edit Game
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       ) : (

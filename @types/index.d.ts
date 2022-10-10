@@ -24,6 +24,20 @@ interface GameProps {
 }
 
 interface IMessageProps {
-  userIdProp: string;
+  gameIdProp: string;
   messageProp: string;
+}
+
+interface ImessageObj {
+  messageId: string;
+  messages: {
+    creatorEmail: string;
+    creatorId: string;
+    gameId: string;
+    message: string;
+    time: any;
+
+    buyerId: string;
+    sellerId: string;
+  };
 }

@@ -201,7 +201,6 @@ export const AuthContextProvider = ({
 
       onSnapshot(q, (snapshot) => {
         snapshot.docs.forEach((doc) => {
-          console.log("doc: ", doc);
           setDbUserId(doc.id);
           // console.log("doc.data(): ", doc.data());
           setDbUsers({ ...doc.data(), id: doc.id });
