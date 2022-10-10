@@ -1,37 +1,16 @@
-import React, { useEffect, useState } from "react";
-import {
-  collection,
-  doc,
-  getFirestore,
-  onSnapshot,
-  query,
-} from "firebase/firestore";
+import { Button, Typography } from "@mui/material";
+import React, { useState } from "react";
 import { deleteUser, getAuth } from "firebase/auth";
 
 import AlertDialogSlide from "../../components/alerts/AlertDialogSlide";
-import { Button } from "@mui/material";
-import Link from "next/link";
+import Container from "@mui/material/Container";
+import Image from "next/image";
+import { collection } from "firebase/firestore";
 import { db } from "../../firebase/config";
 import { useAuth } from "../../context/AuthContext";
 import { useCollection } from "react-firebase-hooks/firestore";
 
-// const fetcher = async () => {
-//   const data: {}[] = [];
-//   const q = query(collection(db, "games"));
-//   const unsubscribe = await onSnapshot(q, (querySnapshot) => {
-//     querySnapshot.forEach((doc) => {
-//       // console.log("doc: ", doc);
-//       data.push(doc.data());
-//       // setGames({ ...doc.data(), id: doc.id });
-//     });
-//     // setGames(games);
-//   });
-//   console.log("data: ", data);
-
-//   return data;
-// };
-
-const Dashboard = () => {
+const Profile = () => {
   const auth = getAuth();
   const user: any = auth.currentUser;
   const { setOpenAlert, delUser, delGame } = useAuth();
@@ -70,17 +49,10 @@ const Dashboard = () => {
   //   "games: ",
   //   gamesData?.docs.map((doc) => doc.data())
   // );
- 
 
   console.log("user: ", user);
   return (
     <>
-      <Button onClick={openDeleteAlert}>Delete User</Button>
-      <br />
-      <Button href="/user/edit-user">Edit Profile</Button>
-      <br />
-      <Button href="/game/edit">Edit Game</Button>
-
       <AlertDialogSlide
         text1={"Are you sure?"}
         dialogTitle={"Delete User"}
@@ -98,30 +70,113 @@ const Dashboard = () => {
         <>
           {error && <strong>Error: {JSON.stringify(error)}</strong>}
           {loading && <span> Loading...</span>}
-          <span>
-            Profile data:{" "}
-            {value?.docs.map((doc) => {
-              return (
-                doc.data().authId === auth?.currentUser?.uid && (
-                  <div key={doc.id}>
-                    <h2>{doc.data()?.first_name}</h2>
-                    <h2>{doc.data()?.last_name}</h2>
-                    <h2>{doc.data()?.gender}</h2>
-                    <h2>{doc.data()?.street}</h2>
-                    <h2>{doc.data()?.postcode}</h2>
-                    <h2>{doc.data()?.city}</h2>
-                    <h2>{doc.data()?.email}</h2>
-                    <h2>{doc.data()?.phone}</h2>
-                    <h2>{doc.data()?.birthday}</h2>
-                  </div>
-                )
-              );
-            })}
-          </span>
+
+          {value?.docs.map((doc) => {
+            return (
+              doc.data().authId === auth?.currentUser?.uid && (
+                <Container
+                  key={doc.id}
+                  sx={{
+                    backgroundColor: "rgba(180, 180, 180, 0.1)",
+                    borderRadius: "5px",
+                    padding: "1em",
+                    width: "80%",
+                    margin: "2em auto",
+                  }}
+                >
+                  <Container
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      marginBottom: "2em",
+                    }}
+                  >
+                    <Image
+                      src="/images/defaultImage.jpg"
+                      alt=""
+                      width="100"
+                      height="100"
+                    />
+                  </Container>
+                  <Container
+                    sx={{ display: "flex", justifyContent: "space-between" }}
+                  >
+                    <Typography variant="body2">Firstname: </Typography>
+                    <Typography>{doc.data()?.first_name}</Typography>
+                  </Container>
+                  <Container
+                    sx={{ display: "flex", justifyContent: "space-between" }}
+                  >
+                    <Typography variant="body2">Lastname: </Typography>
+                    <Typography>{doc.data()?.last_name}</Typography>
+                  </Container>
+                  <Container
+                    sx={{ display: "flex", justifyContent: "space-between" }}
+                  >
+                    <Typography variant="body2">Gender: </Typography>
+                    <Typography>{doc.data()?.gender}</Typography>
+                  </Container>
+                  <Container
+                    sx={{ display: "flex", justifyContent: "space-between" }}
+                  >
+                    <Typography variant="body2">Street: </Typography>
+                    <Typography>{doc.data()?.street}</Typography>
+                  </Container>
+                  <Container
+                    sx={{ display: "flex", justifyContent: "space-between" }}
+                  >
+                    <Typography variant="body2">Post Code: </Typography>
+                    <Typography>{doc.data()?.postcode}</Typography>
+                  </Container>
+                  <Container
+                    sx={{ display: "flex", justifyContent: "space-between" }}
+                  >
+                    <Typography variant="body2">City: </Typography>
+                    <Typography>{doc.data()?.city}</Typography>
+                  </Container>
+                  <Container
+                    sx={{ display: "flex", justifyContent: "space-between" }}
+                  >
+                    <Typography variant="body2">Email: </Typography>
+                    <Typography>{doc.data()?.email}</Typography>
+                  </Container>
+                  <Container
+                    sx={{ display: "flex", justifyContent: "space-between" }}
+                  >
+                    <Typography variant="body2">Phone: </Typography>
+                    <Typography>{doc.data()?.Paragraphhone}</Typography>
+                  </Container>
+                  <Container
+                    sx={{ display: "flex", justifyContent: "space-between" }}
+                  >
+                    <Typography variant="body2">Birthday: </Typography>
+                    <Typography>{doc.data()?.birthday}</Typography>
+                  </Container>
+                </Container>
+              )
+            );
+          })}
+          <Container sx={{ display: "flex", flexDirection: "column" }}>
+            <Button variant="contained" href="/user/edit-user">
+              Edit Profile
+            </Button>
+            <br />
+            <Button variant="contained" href="/game/edit">
+              Edit Game
+            </Button>
+            <br />
+            <Button
+              sx={{ backgroundColor: "#e63946" }}
+              variant="contained"
+              onClick={openDeleteAlert}
+            >
+              Delete User
+            </Button>
+          </Container>
         </>
       </div>
     </>
   );
 };
 
-export default Dashboard;
+export default Profile;

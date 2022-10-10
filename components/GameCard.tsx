@@ -1,3 +1,4 @@
+import { Container, Typography } from "@mui/material";
 import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
@@ -6,9 +7,6 @@ import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 import LikeButton from "./buttons/LikeButton";
 import Link from "next/link";
-import { Typography } from "@mui/material";
-import { db } from "../firebase/config";
-import styles from "../styles/Card.module.css";
 import { useAuth } from "../context/AuthContext";
 
 export default function GameCard(game: Game) {
@@ -17,8 +15,11 @@ export default function GameCard(game: Game) {
   console.log("dbUsers", dbUsers);
 
   return (
-    <Card sx={{ maxWidth: 345 }} className={styles.card}>
-      <CardHeader title={game.platform} className={styles.card_header} />
+    <Card sx={{ maxWidth: 345, marginTop: "2em" }}>
+      <CardHeader
+        title={game.platform}
+        sx={{ backgroundColor: "#e63946", color: "white" }}
+      />
       <Link href={`/game/details/[id]`} as={`/game/details/${game.gameId}`}>
         <CardMedia
           component="img"
@@ -27,13 +28,19 @@ export default function GameCard(game: Game) {
           alt="game image"
         />
       </Link>
-      <div className={styles.card_content}>
-        <div>
+      <Container
+        sx={{
+          padding: "1em",
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
+        <Container>
           <Typography variant="h5">{game.title}</Typography>
           <Typography paragraph>${game.price}</Typography>
-        </div>
-        <div>{dbUsers && <LikeButton gameId={game.gameId} />}</div>
-      </div>
+        </Container>
+        <Container>{dbUsers && <LikeButton gameId={game.gameId} />}</Container>
+      </Container>
     </Card>
   );
 }

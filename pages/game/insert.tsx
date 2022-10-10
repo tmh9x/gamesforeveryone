@@ -1,4 +1,4 @@
-import InsertGame from "../../components/insertGame/InsertGame";
+import InsertGame from "../../components/InsertGame";
 import type { NextPage } from "next";
 
 const Insert: NextPage = () => {
