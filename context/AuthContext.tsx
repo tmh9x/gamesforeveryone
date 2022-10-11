@@ -253,12 +253,14 @@ export const AuthContextProvider = ({
 
   useEffect(() => {
     if (user) getDBUsers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
-  // console.log("user", user);
+  console.log("user", user && user);
   // console.log("openAlert: ", openAlert);
   // console.log("isEmailAlreadyExists: ", isEmailAlreadyExists);
-  // console.log("dbUsers", dbUsers);
+  console.log("UserId: ", dbUserId);
+  console.log("dbUsers", dbUsers && dbUsers);
 
   return (
     <AuthContext.Provider
@@ -285,6 +287,7 @@ export const AuthContextProvider = ({
         setEditedUserData,
         handleInputValueChange,
         delGame,
+        dbUserId,
         getGames,
         games,
         handleLike,

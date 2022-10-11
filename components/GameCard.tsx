@@ -1,6 +1,4 @@
 import { Container, Typography } from "@mui/material";
-import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
-import { useEffect, useState } from "react";
 
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
@@ -10,9 +8,8 @@ import Link from "next/link";
 import { useAuth } from "../context/AuthContext";
 
 export default function GameCard(game: Game) {
-  const { user, getDBUsers, dbUsers } = useAuth();
-  console.log("user", user);
-  console.log("dbUsers", dbUsers);
+  const { dbUsers, dbUserId } = useAuth();
+  console.log("dbUserId: ", dbUserId);
 
   return (
     <Card sx={{ maxWidth: 345, marginTop: "2em" }}>

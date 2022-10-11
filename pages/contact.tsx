@@ -27,12 +27,9 @@ const Contact: React.FC<IProps> = ({}) => {
   const form = React.useRef<HTMLFormElement>();
   const currentForm = form.current;
 
-  // const recaptchaRef = React.createRef<HTMLDivElement>();
-  // const recaptchaRef = React.useRef(null);
-  // const recaptchaRef = React.createRef<ReCAPTCHA | null>();
-  // const recaptchaRef: any = React.createRef<ReCAPTCHA | null>();
+ 
 
-  const recaptchaRef: any = React.createRef<ReCAPTCHA & HTMLDivElement>();
+  const recaptchaRef: any = React.useRef<ReCAPTCHA & HTMLDivElement>();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

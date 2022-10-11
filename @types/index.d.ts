@@ -22,3 +22,20 @@ interface Params {
 interface GameProps {
   gameProp: string | null;
 }
+
+interface IMessageProps {
+  gameIdProp: string;
+  messageProp: string;
+}
+
+interface Message {
+  messageId: string;
+  creatorEmail: string;
+  creatorId: string;
+  gameId: string;
+  message: string;
+  time: date | undefined;
+  buyerId: string;
+  sellerId: string;
+}
+type Messages = Message[];

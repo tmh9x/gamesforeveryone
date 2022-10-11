@@ -1,10 +1,32 @@
-import { Container, Typography } from "@mui/material";
+import {Button, Container, Typography} from "@mui/material";
 
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
+import styles from "../styles/GameDetails.module.css";
+import { useAuth } from "../context/AuthContext";
+import { userAgent } from "next/server";
+
+// Add attributes to HTML element in TypeScript
+declare module "react" {
+  interface HTMLAttributes<T> extends AriaAttributes, DOMAttributes<T> {
+    rel?: string;
+    width?: string;
+  }
+}
+
 
 const GameDetails = ({ game }: any) => {
+  const { dbUserId, user } = useAuth();
+  const sellerId = localStorage.getItem("sellerId");
+
+  const handleMessageGame = () => {
+    localStorage.setItem("gameId", game.gameId);
+    localStorage.setItem("sellerId", game.userId);
+  };
+  console.log("dbUserId: ", dbUserId);
   console.log("game: ", game);
+
   return (
     <>
       {game ? (

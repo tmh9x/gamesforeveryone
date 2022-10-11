@@ -9,7 +9,12 @@ const Details = ({ gameProp }: GameProps) => {
   console.log("game: ", gameProp);
   const game: Game = gameProp ? JSON.parse(gameProp) : null;
   console.log("GAME : ", game);
-  return <div>{game && <GameDetails game={game} />}</div>;
+  
+  return (
+    <div>
+     {game && <GameDetails game={game} />}
+    </div>
+  );
 };
 
 export async function getServerSideProps({ params }: Params) {
