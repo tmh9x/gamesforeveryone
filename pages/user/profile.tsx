@@ -1,11 +1,12 @@
-import { Button, Typography } from "@mui/material";
-import React, { useState } from "react";
+import { Button, IconButton, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { collection, doc, getDocs, query, where } from "firebase/firestore";
 import { deleteUser, getAuth } from "firebase/auth";
 
 import AlertDialogSlide from "../../components/alerts/AlertDialogSlide";
 import Container from "@mui/material/Container";
 import Image from "next/image";
-import { collection } from "firebase/firestore";
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import { db } from "../../firebase/config";
 import { useAuth } from "../../context/AuthContext";
 import { useCollection } from "react-firebase-hooks/firestore";
@@ -14,7 +15,7 @@ const Profile = () => {
   const auth = getAuth();
   const user: any = auth.currentUser;
   const { setOpenAlert, delUser, delGame } = useAuth();
-  const [games, setGames] = useState<{}>({});
+  const [games, setGames] = useState<Games>([]);
   // const [games, setGames] = useState<any>(null);
 
   const openDeleteAlert = () => {
@@ -34,9 +35,9 @@ const Profile = () => {
   );
   // ----------- Get Gamses data -------------- ends
 
-  const deleteGame = (id: any) => {
-    console.log("id", id);
-    delGame(id);
+  const deleteGame = async (gameId: string | undefined) => {
+    delGame(gameId);
+    console.log("game successfully deleted");
   };
 
   // console.log("games: ", games);
@@ -50,7 +51,28 @@ const Profile = () => {
   //   gamesData?.docs.map((doc) => doc.data())
   // );
 
+  const getGamesByUserId = async () => {
+    const gamesArray: Games = [];
+    const q = query(collection(db, "games"), where("userId", "==", user.uid));
+
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      console.log("doc.id", doc.id);
+      /* const gameObject: {} = { id: doc.id, data: doc.data() }; */
+      const gameObject: Game = { ...doc.data(), gameId: doc.id };
+      console.log("doc.data", doc.data());
+      gamesArray.push(gameObject);
+    });
+    console.log("gamesArray", gamesArray);
+    setGames(gamesArray);
+  };
+
+  useEffect(() => {
+    getGamesByUserId();
+  }, []);
+
   console.log("user: ", user);
+  console.log("GAMES", games);
   return (
     <>
       <AlertDialogSlide
@@ -156,6 +178,21 @@ const Profile = () => {
               )
             );
           })}
+
+          {games &&
+            games.map((game: Game, index: number) => (
+              <Container key={index} sx={{ display: "flex" }}>
+                <Image src={game.image} alt="" width="40px" height="40px" />
+                <Typography>{game.title}</Typography>
+                <IconButton
+                  sx={{ color: "#e63946" }}
+                  onClick={() => deleteGame(game.gameId)}
+                >
+                  <RemoveCircleOutlineIcon />
+                </IconButton>
+              </Container>
+            ))}
+
           <Container sx={{ display: "flex", flexDirection: "column" }}>
             <Button variant="contained" href="/user/edit-user">
               Edit Profile
