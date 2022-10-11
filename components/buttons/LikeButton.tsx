@@ -17,7 +17,7 @@ function LikeButton({ gameId }: Game) {
   return (
     <div>
       <IconButton onClick={handleOnClick}>
-        {dbUsers.liked.includes(gameId) ? (
+        {dbUsers.liked && dbUsers.liked.includes(gameId) ? (
           <FavoriteOutlinedIcon color="error" />
         ) : (
           <FavoriteBorderOutlinedIcon />
