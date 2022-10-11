@@ -38,7 +38,7 @@ const Messages: React.FC<Props> = ({ message }) => {
   const [inputs, setInputs] = useState({
     chatText: "",
   });
-  const [chatMessages, setChatMessages] = useState<[]>([]);
+  const [chatMessages, setChatMessages] = useState<Messages>([]);
 
   const scrollToElement = () => {
     if (currentRef) {
@@ -86,7 +86,7 @@ const Messages: React.FC<Props> = ({ message }) => {
   // ------------- handleSubmitClick FS ------------- ends //
 
   // -------- Convert Time ------------- ////
-  const convertTime = (time: {}) => {
+  const convertTime = (time: { seconds: number; nanoseconds: number }) => {
     const fireBaseTime = new Date(
       time.seconds * 1000 + time.nanoseconds / 1000000
     );
@@ -105,12 +105,12 @@ const Messages: React.FC<Props> = ({ message }) => {
         where("gameId", "==", gameId),
         where("sellerId", "==", sellerId)
       );
-      const newMessages: [] = [];
+      const newMessages: Messages = [];
       const querySnapshots = await getDocs(messages);
       querySnapshots.forEach((doc) => {
-        const messagesObj: ImessageObj = {
+        const messagesObj: Message = {
+          ...(doc.data() as Message),
           messageId: doc.id,
-          messages: doc.data(),
         };
         newMessages.push(messagesObj);
       });
@@ -149,7 +149,7 @@ const Messages: React.FC<Props> = ({ message }) => {
   console.log("UserId: ", dbUserId);
   console.log("gameId: ", gameId);
   // console.log("inputs: ", inputs);
-  // console.log("messages: ", messages);
+  console.log("chatMessages: ", chatMessages);
 
   return (
     <Container className="chat_con">
@@ -158,10 +158,8 @@ const Messages: React.FC<Props> = ({ message }) => {
         sx={{ border: "solid 1px", margin: "1rem auto 0 auto" }}
       >
         {chatMessages.length > 0 ? (
-          chatMessages.map((message: ImessageObj, i) => {
-            const { messages } = message;
-
-            return messages.gameId === gameId ? (
+          chatMessages.map((message, i) => {
+            return message.gameId === gameId ? (
               <div
                 className="message-box"
                 key={i}
@@ -175,12 +173,11 @@ const Messages: React.FC<Props> = ({ message }) => {
                 }}
               >
                 <p className="message-paragraph">
-                  {console.log("dataAndTime", convertTime(messages.time).date)}
-                  {convertTime(messages.time).date}
+                  {convertTime(message.time).date}
                   <br />
-                  {convertTime(messages.time).atTime}
+                  {convertTime(message.time).atTime}
                   <br />
-                  {messages.message}
+                  {message.message}
                 </p>
               </div>
             ) : (

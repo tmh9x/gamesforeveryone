@@ -1,9 +1,4 @@
-import {
-  collectionGroup,
-  getDocs,
-  query,
-  where,
-} from "firebase/firestore";
+import { collectionGroup, getDocs, query, where } from "firebase/firestore";
 
 import Messages from "../../../components/Messages";
 import React from "react";
@@ -26,23 +21,20 @@ const Chat: React.FC<IMessageProps> = ({ gameIdProp, messageProp }) => {
 
 export async function getServerSideProps({ params }: Params) {
   console.log("userParam: ", params);
-  // const docRef = doc(db, "messages", params.id);
-  // const docSnap = await getDoc(docRef);
 
   const messages = query(
     collectionGroup(db, "messages"),
     where("gameId", "==", params.id)
   );
 
-  const newMessages: [] = [];
+  const newMessages: {}[] = [];
   const querySnapshots = await getDocs(messages);
   querySnapshots.forEach((doc) => {
-    const messagesObj: ImessageObj = {
+    const messagesObj: {} = {
+      ...doc.data(),
       messageId: doc.id,
-      messages: doc.data(),
     };
     newMessages.push(messagesObj);
-    // console.log("querySnapshots", doc.id, " => ", doc.data());
   });
   console.log("newMessages: ", newMessages);
 

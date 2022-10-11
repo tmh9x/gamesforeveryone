@@ -28,16 +28,14 @@ interface IMessageProps {
   messageProp: string;
 }
 
-interface ImessageObj {
+interface Message {
   messageId: string;
-  messages: {
-    creatorEmail: string;
-    creatorId: string;
-    gameId: string;
-    message: string;
-    time: any;
-
-    buyerId: string;
-    sellerId: string;
-  };
+  creatorEmail: string;
+  creatorId: string;
+  gameId: string;
+  message: string;
+  time: date | undefined;
+  buyerId: string;
+  sellerId: string;
 }
+type Messages = Message[];
