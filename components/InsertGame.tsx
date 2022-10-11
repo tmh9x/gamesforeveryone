@@ -1,6 +1,7 @@
 import {
   Box,
   Chip,
+  Container,
   FormControl,
   IconButton,
   InputLabel,
@@ -12,18 +13,12 @@ import React, { useState } from "react";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { Theme, useTheme } from "@mui/material/styles";
 import { addDoc, collection } from "firebase/firestore";
-import {
-  getDownloadURL,
-  getStorage,
-  ref,
-  uploadBytesResumable,
-} from "firebase/storage";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
 import AddIcon from "@mui/icons-material/Add";
-import { db } from "../../firebase/config";
-import { storage } from "../../firebase/config";
-import styles from "../../styles/InsertGame.module.css";
-import { useAuth } from "../../context/AuthContext";
+import { db } from "../firebase/config";
+import { storage } from "../firebase/config";
+import { useAuth } from "../context/AuthContext";
 import { v4 as uuidv4 } from "uuid";
 
 // Genre starts
@@ -192,30 +187,28 @@ const InsertGame = () => {
   console.log("gameData", gameData);
 
   return (
-    <div>
-      <form className={styles.insertGame_container}>
+    <Container
+      sx={{
+        backgroundColor: "rgba(180, 180, 180, 0.1)",
+        width: "345px",
+        padding: "1em",
+        display: "flex",
+        flexDirection: "column",
+        margin: "1.5em auto",
+        /*    gap: "1em", */
+        borderRadius: "5px",
+      }}
+    >
+      <form>
         <input
           type="file"
           onChange={(e: any) => {
             setImageUpload(e.target.files[0]);
           }}
         />
-        {/* <TextField
-          className={styles.insertGame_container_textField}
-          sx={{ backgroundColor: "#fff" }}
-          id="platform"
-          name="platform"
-          label="Platform"
-          variant="outlined"
-          onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-            handleChange(event)
-          }
-          // onChange={handleChange}
-          required
-        /> */}
         <FormControl
           required
-          sx={{ backgroundColor: "#fff", width: "100%", margin: "auto" }}
+          sx={{ backgroundColor: "#fff", width: "100%", margin: "1em auto" }}
         >
           <InputLabel id="platform">Platform</InputLabel>
           <Select
@@ -239,7 +232,7 @@ const InsertGame = () => {
         </FormControl>
 
         <TextField
-          sx={{ backgroundColor: "#fff" }}
+          sx={{ backgroundColor: "#fff", marginBottom: "1em" }}
           id="title"
           name="title"
           label="Title"
@@ -248,10 +241,16 @@ const InsertGame = () => {
             handleChange(event)
           }
           required
+          fullWidth
         />
         <FormControl
           required
-          sx={{ backgroundColor: "#fff", width: "100%", margin: "auto" }}
+          sx={{
+            backgroundColor: "#fff",
+            width: "100%",
+            margin: "auto",
+            marginBottom: "1em",
+          }}
         >
           <InputLabel id="genre">Genre</InputLabel>
           <Select
@@ -289,7 +288,7 @@ const InsertGame = () => {
 
         <TextField
           type="number"
-          sx={{ backgroundColor: "#fff" }}
+          sx={{ backgroundColor: "#fff", marginBottom: "1em" }}
           id="year"
           name="year"
           label="Year"
@@ -298,9 +297,10 @@ const InsertGame = () => {
             handleChange(event)
           }
           required
+          fullWidth
         />
         <TextField
-          sx={{ backgroundColor: "#fff" }}
+          sx={{ backgroundColor: "#fff", marginBottom: "1em" }}
           multiline
           maxRows={10}
           id="description"
@@ -311,10 +311,11 @@ const InsertGame = () => {
             handleChange(event)
           }
           required
+          fullWidth
         />
         <TextField
           type="number"
-          sx={{ backgroundColor: "#fff" }}
+          sx={{ backgroundColor: "#fff", marginBottom: "1em" }}
           id="outlined"
           name="fsk"
           label="FSK"
@@ -323,10 +324,11 @@ const InsertGame = () => {
             handleChange(event)
           }
           required
+          fullWidth
         />
         <TextField
           type="number"
-          sx={{ backgroundColor: "#fff" }}
+          sx={{ backgroundColor: "#fff", marginBottom: "1em" }}
           id="price"
           name="price"
           label="Price"
@@ -335,9 +337,10 @@ const InsertGame = () => {
             handleChange(event)
           }
           required
+          fullWidth
         />
         <TextField
-          sx={{ backgroundColor: "#fff" }}
+          sx={{ backgroundColor: "#fff", marginBottom: "1em" }}
           id="creator"
           name="creator"
           label="Creator"
@@ -345,9 +348,11 @@ const InsertGame = () => {
           onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
             handleChange(event)
           }
+          fullWidth
         />
       </form>
-      <div className={styles.iconButton}>
+
+      <Container sx={{ display: "flex", justifyContent: "center" }}>
         <IconButton
           type="submit"
           size="large"
@@ -356,8 +361,8 @@ const InsertGame = () => {
         >
           <AddIcon />
         </IconButton>
-      </div>
-    </div>
+      </Container>
+    </Container>
   );
 };
 

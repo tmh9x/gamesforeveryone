@@ -1,11 +1,18 @@
 import { IconButton, TextField, TextareaAutosize } from "@mui/material";
 import React, { useState } from "react";
-import { addDoc, collection, doc, getDoc, getDocs, setDoc } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  setDoc,
+} from "firebase/firestore";
 import { db, storage } from "../../../firebase/config";
 import { ref, uploadBytes } from "firebase/storage";
 
 import AddIcon from "@mui/icons-material/Add";
-import styles from "../../../styles/EditGame.module.css";
+import { Container } from "@mui/system";
 import { useAuth } from "../../../context/AuthContext";
 
 const EditGame = (gm) => {
@@ -33,22 +40,23 @@ const EditGame = (gm) => {
     // IMAGE UPLOAD
     console.log("game.gameId: ", game.gameId);
     try {
-      if (imageUpload === null){
-       setGameData({
-         ...gameData,
-         img: "https://cdn.pixabay.com/photo/2021/02/16/18/55/gamer-6022003_1280.png",
-       });
-    }else{
-      const imageRef = ref(storage, `game-images/${imageUpload.name}`);
-      uploadBytes(imageRef, imageUpload).then(() => {
-        alert("image uploaded");
-      });
-    }
-      
+      if (imageUpload === null) {
+        setGameData({
+          ...gameData,
+          image:
+            "https://cdn.pixabay.com/photo/2021/02/16/18/55/gamer-6022003_1280.png",
+        });
+      } else {
+        const imageRef = ref(storage, `game-images/${imageUpload.name}`);
+        uploadBytes(imageRef, imageUpload).then(() => {
+          alert("image uploaded");
+        });
+      }
+
       // GAME DATA UPLOAD
       const gameRef = doc(db, "games", game.gameId);
       setDoc(gameRef, gameData, { merge: true });
-      
+
       // const docRef = await addDoc(collection(db, "games"), gameData);
       console.log("Document written with ID: ", gameRef.id);
     } catch (e) {
@@ -60,8 +68,19 @@ const EditGame = (gm) => {
   console.log("gameData", gameData);
   console.log("game: ", game);
   return (
-    <div>
-      <form className={styles.editGame_container}>
+    <Container
+      sx={{
+        backgroundColor: "rgba(180, 180, 180, 0.1)",
+        width: "345px",
+        padding: "1em",
+        display: "flex",
+        flexDirection: "column",
+        margin: "1.5em auto",
+        gap: "1em",
+        borderRadius: "5px",
+      }}
+    >
+      <form>
         <h1>Edit Game</h1>
         <input
           type="file"
@@ -70,7 +89,6 @@ const EditGame = (gm) => {
           }}
         />
         <TextField
-          // className={styles.insertGame_container_textField}
           sx={{ backgroundColor: "#fff" }}
           id="platform"
           name="platform"
@@ -152,8 +170,9 @@ const EditGame = (gm) => {
           value={gameData?.creator ? gameData?.creator : ""}
         />
       </form>
-      <div className={styles.iconButton}>
+      <Container>
         <IconButton
+          sx={{ textAlign: "center" }}
           type="submit"
           size="large"
           style={{ backgroundColor: "#e63946", color: "#fff" }}
@@ -161,8 +180,8 @@ const EditGame = (gm) => {
         >
           <AddIcon />
         </IconButton>
-      </div>
-    </div>
+      </Container>
+    </Container>
   );
 };
 

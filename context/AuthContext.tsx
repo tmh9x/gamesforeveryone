@@ -1,5 +1,7 @@
 import {
   addDoc,
+  arrayRemove,
+  arrayUnion,
   collection,
   deleteDoc,
   doc,
@@ -7,6 +9,7 @@ import {
   onSnapshot,
   query,
   setDoc,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import { auth, db } from "../firebase/config";
@@ -39,6 +42,7 @@ export const AuthContextProvider = ({
   const [openSnackBar, setOpenSnackBar] = useState(false);
   const [dbUsers, setDbUsers] = useState<any>(null);
   const [dbUserId, setDbUserId] = useState<string>("");
+  const [games, setGames] = useState<Games>([]);
 
   // ------------- used in edit-user.tsx ---- -- starts
   type TEditedUserData = {
@@ -182,6 +186,41 @@ export const AuthContextProvider = ({
   };
   // ------------- Delete Game -FS ------------- ends //
 
+  // ------------- get Games -FS ------------- starts //
+  const getGames = async () => {
+    let dataArray: Games = [];
+
+    try {
+      const querySnapshot = await getDocs(collection(db, "games"));
+      querySnapshot.forEach((doc) => {
+        console.log(`${doc.id} => ${doc.data()}`);
+        console.log("DATA", doc.data());
+        const gamesData = doc.data() as Game;
+        dataArray.push({ ...gamesData, gameId: doc.id });
+        setGames(dataArray);
+      });
+    } catch (error) {
+      console.log("error getgames", error);
+    }
+    console.log("dataArray", dataArray);
+  };
+  // ------------- Get Games -FS ------------- ends //
+  // ------------- set Like -FS ------------- starts //
+  const handleLike = async (gameId: string) => {
+    const userRef = doc(db, "users", dbUsers.id);
+    console.log("dbUsers", dbUsers);
+    if (!dbUsers.liked.includes(gameId)) {
+      await updateDoc(userRef, {
+        liked: arrayUnion(gameId),
+      });
+    } else {
+      await updateDoc(userRef, {
+        liked: arrayRemove(gameId),
+      });
+    }
+    getDBUsers();
+  };
+  // ------------- set Like -FS ------------- ends //
   // ------------- insertDoc FS ------------- start //
   const insertDoc = async (collect: any, data: any) => {
     try {
@@ -249,6 +288,9 @@ export const AuthContextProvider = ({
         handleInputValueChange,
         delGame,
         dbUserId,
+        getGames,
+        games,
+        handleLike,
       }}
     >
       {loading ? null : children}
