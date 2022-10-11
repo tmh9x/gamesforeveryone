@@ -209,7 +209,7 @@ export const AuthContextProvider = ({
   const handleLike = async (gameId: string) => {
     const userRef = doc(db, "users", dbUsers.id);
     console.log("dbUsers", dbUsers);
-    if (!dbUsers.liked.includes(gameId)) {
+    if (dbUsers.liked && !dbUsers.liked.includes(gameId)) {
       await updateDoc(userRef, {
         liked: arrayUnion(gameId),
       });

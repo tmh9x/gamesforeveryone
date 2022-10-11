@@ -1,4 +1,4 @@
-import {Button, Container, Typography} from "@mui/material";
+import { Button, Container, Typography } from "@mui/material";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -14,7 +14,6 @@ declare module "react" {
     width?: string;
   }
 }
-
 
 const GameDetails = ({ game }: any) => {
   const { dbUserId, user } = useAuth();
@@ -54,9 +53,8 @@ const GameDetails = ({ game }: any) => {
             <Container sx={{ display: "flex", justifyContent: "space-around" }}>
               <Typography paragraph>Genre:</Typography>
               <Typography paragraph>
-                {game.genre.map((item: string) => (
-                  <li key={item}>{item}</li>
-                ))}
+                {game.genre &&
+                  game.genre.map((item: string) => <li key={item}>{item}</li>)}
               </Typography>
             </Container>
             <Container sx={{ display: "flex", justifyContent: "space-around" }}>
