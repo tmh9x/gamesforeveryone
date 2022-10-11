@@ -3,9 +3,7 @@ import { Button, Container, Typography } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import styles from "../styles/GameDetails.module.css";
 import { useAuth } from "../context/AuthContext";
-import { userAgent } from "next/server";
 
 // Add attributes to HTML element in TypeScript
 declare module "react" {
@@ -17,7 +15,8 @@ declare module "react" {
 
 const GameDetails = ({ game }: any) => {
   const { dbUserId, user } = useAuth();
-  const sellerId = localStorage.getItem("sellerId");
+  const noImage =
+    "https://eingleses.com/wp-content/uploads/2019/07/no-image.jpg";
 
   const handleMessageGame = () => {
     localStorage.setItem("gameId", game.gameId);
@@ -25,11 +24,12 @@ const GameDetails = ({ game }: any) => {
   };
   console.log("dbUserId: ", dbUserId);
   console.log("game: ", game);
-
+  console.log("compare", game.userId, user.uid);
   return (
     <>
       {game ? (
         <Container
+          className="game-details-con"
           sx={{
             padding: "0.8em",
             display: "flex",
@@ -39,7 +39,12 @@ const GameDetails = ({ game }: any) => {
             maxWidth: "800px",
           }}
         >
-          <Image src={game.image} alt="" width="300px" height="400px" />
+          <Image
+            src={game.image ? game.image : noImage}
+            alt=""
+            width="300px"
+            height="400px"
+          />
 
           <Typography paragraph>{game.title}</Typography>
 
@@ -53,8 +58,9 @@ const GameDetails = ({ game }: any) => {
             <Container sx={{ display: "flex", justifyContent: "space-around" }}>
               <Typography paragraph>Genre:</Typography>
               <Typography paragraph>
-                {game.genre &&
-                  game.genre.map((item: string) => <li key={item}>{item}</li>)}
+                {game.genre.map((item: string) => (
+                  <li key={item}>{item}</li>
+                ))}
               </Typography>
             </Container>
             <Container sx={{ display: "flex", justifyContent: "space-around" }}>
@@ -78,6 +84,53 @@ const GameDetails = ({ game }: any) => {
       ) : (
         <h3>Failed!!!</h3>
       )}
+
+      <hr
+        data-size="1"
+        width="100%"
+        style={{ color: "grey", marginBottom: "3rem" }}
+      />
+      <Container
+        className="contact_con"
+        style={{ position: "fixed", bottom: "3px", width: "95%" }}
+      >
+        {game.userId !== user.uid ? (
+          <div
+            className="contact_box"
+            style={{ display: "flex", margin: "auto", width: "90%" }}
+          >
+            <Button
+              className="call_btn"
+              style={{ marginRight: "10px" }}
+              variant="contained"
+              fullWidth
+            >
+              Call
+            </Button>
+            <Link href="/user/chat/[id]" as={`/user/chat/${game.gameId}`}>
+              <Button
+                className="message_btn"
+                variant="contained"
+                fullWidth
+                onClick={handleMessageGame}
+              >
+                Message
+              </Button>
+            </Link>
+          </div>
+        ) : (
+          <div className="edit-btn">
+            <Button
+              href="game/edit"
+              className="message_btn"
+              variant="contained"
+              fullWidth
+            >
+              Edit Game
+            </Button>
+          </div>
+        )}
+      </Container>
     </>
   );
 };

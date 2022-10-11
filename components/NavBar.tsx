@@ -17,7 +17,7 @@ import { useAuth } from "../context/AuthContext";
 import { useRouter } from "next/router";
 
 const pages = ["Home", "Insert", "Watch", "Login", "SignUp"];
-const settings = ["Profile", "Account", "Logout"];
+const settings = ["Profile", "Messages"];
 
 const NavBar = () => {
   const { user, logout } = useAuth();
