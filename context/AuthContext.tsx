@@ -289,6 +289,7 @@ export const AuthContextProvider = ({
         delGame,
         dbUserId,
         getGames,
+        setGames,
         games,
         handleLike,
       }}
