@@ -50,16 +50,20 @@ const Home: NextPage = () => {
 
   const handlePlatformChange = async (event: SelectChangeEvent) => {
     setPlatform(event.target.value as string);
-    const games: Games = [];
-    const gamesRef = collection(db, "games");
-    const q = query(gamesRef, where("platform", "==", event.target.value));
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-      console.log(doc.id, " => ", doc.data());
-      games.push(doc.data());
-    });
-    console.log("games", games);
-    setGames(games);
+    if (event.target.value == "All") {
+      getGames();
+    } else {
+      const filteredGames: Games = [];
+      const gamesRef = collection(db, "games");
+      const q = query(gamesRef, where("platform", "==", event.target.value));
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        console.log(doc.id, " => ", doc.data());
+        filteredGames.push(doc.data());
+      });
+      console.log("filteredGames", filteredGames);
+      setGames(filteredGames);
+    }
   };
 
   const handleGenreChange = (event: SelectChangeEvent) => {
