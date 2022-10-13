@@ -3,55 +3,54 @@ import { Avatar, Box, Button, IconButton, Typography } from "@mui/material";
 import Image from "next/image";
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
 import React from "react";
-import styled from "@emotion/styled";
+import { collection } from "@firebase/firestore";
+import { db } from "../firebase/config";
+import getOtherEmail from "../utils/getOtherEmail";
 import { useAuth } from "../context/AuthContext";
+import { useCollection } from "react-firebase-hooks/firestore";
 
 type Props = {};
 
-const styles = () => ({
-  "@global": {
-    "*::-webkit-scrollbar": {
-      width: "0.4em",
-    },
-    "*::-webkit-scrollbar-track": {
-      "-webkit-box-shadow": "inset 0 0 6px rgba(0,0,0,0.00)",
-    },
-    "*::-webkit-scrollbar-thumb": {
-      backgroundColor: "rgba(0,0,0,.1)",
-      outline: "1px solid slategrey",
-    },
-  },
-});
-
-const ChatParticipants = () => {
-    const { user } = useAuth();
-
-  return (
-    <Box
-      className={"chat-list-box"}
-      sx={{ cursor: "pointer", display: "flex", alignItems: "center" }}
-    >
-      <Avatar src="https://i.pravatar.cc/100" />
-      <Box className={"chat-list-body"}>
-        <Typography
-          variant="body1"
-          component="div"
-          m={1}
-          mb={0}
-          mt={0}
-          fontSize={9}
-        >
-          {user.email}
-        </Typography>
-        <Typography m={1} mt={0} fontSize={8}>
-          Halil Esmer{" "}
-        </Typography>
-      </Box>
-    </Box>
-  );
-};
 const ChatSidebar = (props: Props) => {
-    const { user } = useAuth();
+  const { user } = useAuth();
+  const [snapshot, loading, error] = useCollection(collection(db, "chats"));
+  const chats = snapshot?.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+
+  console.log("chats: ", chats);
+  const ChatParticipants = () => {
+    return (
+      (chats &&
+      user) &&
+      chats.filter(chat => chat.users.includes(user.email)).map((chat) => {
+       
+        return (
+          
+            <Box
+              key={Math.random()}
+              className={"chat-list-box"}
+              sx={{ cursor: "pointer", display: "flex", alignItems: "center" }}
+            >
+              <Avatar src="https://i.pravatar.cc/100" />
+              <Box className={"chat-list-body"}>
+                <Typography
+                  variant="body1"
+                  component="div"
+                  m={1}
+                  mb={0}
+                  mt={0}
+                  fontSize={9}
+                >
+                  {getOtherEmail(chat.users, user)}
+                </Typography>
+                <Typography m={1} mt={0} fontSize={8}>
+                  messages texts
+                </Typography>
+              </Box>
+            </Box>
+        );
+      })
+    );
+  };
 
   return (
     <>
@@ -63,8 +62,7 @@ const ChatSidebar = (props: Props) => {
         borderRight={"solid 1px blue"}
         display={"flex"}
         flexDirection={"column"}
-        overflow={'auto'}
-
+        overflow={"auto"}
       >
         {user.email}
         <Box
@@ -91,26 +89,6 @@ const ChatSidebar = (props: Props) => {
           boxShadow={"16"}
           sx={{ scrollbarWidth: "none", overflowX: "auto" }}
         >
-          <ChatParticipants />
-          <ChatParticipants />
-          <ChatParticipants />
-          <ChatParticipants />
-          <ChatParticipants />
-          <ChatParticipants />
-          <ChatParticipants />
-          <ChatParticipants />
-          <ChatParticipants />
-          <ChatParticipants />
-          <ChatParticipants />
-          <ChatParticipants />
-          <ChatParticipants />
-          <ChatParticipants />
-          <ChatParticipants />
-          <ChatParticipants />
-          <ChatParticipants />
-          <ChatParticipants />
-          <ChatParticipants />
-          <ChatParticipants />
           <ChatParticipants />
         </Box>
       </Box>

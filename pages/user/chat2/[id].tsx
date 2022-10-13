@@ -13,6 +13,7 @@ import ChatSidebar from "../../../components/ChatSidebar";
 import Head from "next/head";
 import SendIcon from "@mui/icons-material/Send";
 import {auth} from '../../../firebase/config'
+import { useAuth } from "../../../context/AuthContext";
 import { useAuthState } from "react-firebase-hooks/auth";
 
 type Props = {};
@@ -21,8 +22,7 @@ const Chat2 = (props: Props) => {
   const [inputs, setInputs] = useState({
     chatText: "",
   });
-const [user,loading, errorr] = useAuthState(auth);
-
+const {user} = useAuth();
 
   const handleInputsChange = (e: any) => {
     const { value, name } = e.target;
@@ -30,9 +30,9 @@ const [user,loading, errorr] = useAuthState(auth);
   };
 
   const handleSubmitClick = () => {};
-
-  console.log("inputs: ", inputs);
-
+  
+  
+  //   console.log("inputs: ", inputs);
   return (
     <>
     <Head>

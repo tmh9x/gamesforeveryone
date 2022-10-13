@@ -15,6 +15,6 @@
     "jsx": "preserve",
     "incremental": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "components/Carousel.jsx", "pages/game/details/[id].tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "components/Carousel.jsx", "pages/game/details/[id].tsx", "components/utils/getOtherEmail.js"],
   "exclude": ["node_modules"]
 }
