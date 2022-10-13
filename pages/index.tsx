@@ -50,11 +50,11 @@ const Home: NextPage = () => {
 
   const handlePlatformChange = async (event: SelectChangeEvent) => {
     setPlatform(event.target.value as string);
+    const filteredGames: Games = [];
+    const gamesRef = collection(db, "games");
     if (event.target.value == "All") {
       getGames();
     } else {
-      const filteredGames: Games = [];
-      const gamesRef = collection(db, "games");
       const q = query(gamesRef, where("platform", "==", event.target.value));
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((doc) => {
