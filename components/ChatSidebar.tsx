@@ -4,6 +4,7 @@ import Image from "next/image";
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
 import React from "react";
 import styled from "@emotion/styled";
+import { useAuth } from "../context/AuthContext";
 
 type Props = {};
 
@@ -23,6 +24,8 @@ const styles = () => ({
 });
 
 const ChatParticipants = () => {
+    const { user } = useAuth();
+
   return (
     <Box
       className={"chat-list-box"}
@@ -38,7 +41,7 @@ const ChatParticipants = () => {
           mt={0}
           fontSize={9}
         >
-          Halil Esmer{" "}
+          {user.email}
         </Typography>
         <Typography m={1} mt={0} fontSize={8}>
           Halil Esmer{" "}
@@ -48,6 +51,8 @@ const ChatParticipants = () => {
   );
 };
 const ChatSidebar = (props: Props) => {
+    const { user } = useAuth();
+
   return (
     <>
       <Box
@@ -61,7 +66,7 @@ const ChatSidebar = (props: Props) => {
         overflow={'auto'}
 
       >
-        ChatSidebar
+        {user.email}
         <Box
           bgcolor="lightcoral"
           width={"100%"}
