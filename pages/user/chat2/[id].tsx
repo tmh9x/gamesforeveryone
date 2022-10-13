@@ -35,9 +35,9 @@ const {user} = useAuth();
   //   console.log("inputs: ", inputs);
   return (
     <>
-    <Head>
+      <Head>
         <title>Chat App</title>
-    </Head>
+      </Head>
       <Container className="chat-con" sx={{ display: "flex" }}>
         <ChatSidebar />
         <Box
@@ -77,6 +77,30 @@ const {user} = useAuth();
             display={"flex"}
             minWidth={"100px"}
             borderRadius="50px"
+            bgcolor={"#84ca97"}
+            padding="3px"
+            margin={"1px"}
+            width={"fit-content"}
+            sx={{ alignSelf: "flex-end" }}
+          >
+            <Typography variant="body2">Test chat message</Typography>
+          </Box>
+          <Box
+            display={"flex"}
+            minWidth={"100px"}
+            borderRadius="50px"
+            bgcolor={"#84ca97"}
+            padding="3px"
+            margin={"1px"}
+            width={"fit-content"}
+            sx={{ alignSelf: "flex-end" }}
+          >
+            <Typography variant="body2">Test chat message</Typography>
+          </Box>
+          <Box
+            display={"flex"}
+            minWidth={"100px"}
+            borderRadius="50px"
             bgcolor={"#b0daf0"}
             padding="3px"
             margin={"1px"}
@@ -84,6 +108,40 @@ const {user} = useAuth();
           >
             <Typography variant="body2">Test chat message</Typography>
           </Box>{" "}
+          <Box
+            display={"flex"}
+            minWidth={"100px"}
+            borderRadius="50px"
+            bgcolor={"#b0daf0"}
+            padding="3px"
+            margin={"1px"}
+            width={"fit-content"}
+          >
+            <Typography variant="body2">Test chat message</Typography>
+          </Box>{" "}
+          <Box
+            display={"flex"}
+            minWidth={"100px"}
+            borderRadius="50px"
+            bgcolor={"#b0daf0"}
+            padding="3px"
+            margin={"1px"}
+            width={"fit-content"}
+          >
+            <Typography variant="body2">Test chat message</Typography>
+          </Box>{" "}
+          <Box
+            display={"flex"}
+            minWidth={"100px"}
+            borderRadius="50px"
+            bgcolor={"#84ca97"}
+            padding="3px"
+            margin={"1px"}
+            width={"fit-content"}
+            sx={{ alignSelf: "flex-end" }}
+          >
+            <Typography variant="body2">Test chat message</Typography>
+          </Box>
           <Box
             display={"flex"}
             minWidth={"100px"}
@@ -132,57 +190,14 @@ const {user} = useAuth();
             display={"flex"}
             minWidth={"100px"}
             borderRadius="50px"
-            bgcolor={"#b0daf0"}
+            bgcolor={"#84ca97"}
             padding="3px"
             margin={"1px"}
             width={"fit-content"}
+            sx={{ alignSelf: "flex-end" }}
           >
             <Typography variant="body2">Test chat message</Typography>
-          </Box>{" "}
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#b0daf0"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>{" "}
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#b0daf0"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>{" "}
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#b0daf0"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>{" "}
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#b0daf0"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>{" "}
+          </Box>
           <Box
             display={"flex"}
             minWidth={"100px"}
