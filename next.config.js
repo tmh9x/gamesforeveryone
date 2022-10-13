@@ -9,6 +9,7 @@ const nextConfig = {
       "nintendo.com",
       "firebasestorage.googleapis.com",
       "cdn.pixabay.com",
+      "eingleses.com",
     ],
   },
 };

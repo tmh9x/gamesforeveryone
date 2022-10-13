@@ -32,6 +32,7 @@ interface Message {
   messageId: string;
   creatorEmail: string;
   creatorId: string;
+  receiverEmail: string;
   gameId: string;
   message: string;
   time: date | undefined;

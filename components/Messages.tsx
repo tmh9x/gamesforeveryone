@@ -31,6 +31,7 @@ const Messages: React.FC<Props> = ({ message }) => {
   const { dbUsers, getDBUsers, user, dbUserId } = useAuth();
   const gameId = localStorage.getItem("gameId");
   const sellerId = localStorage.getItem("sellerId");
+  const sellerEmail = localStorage.getItem("sellerEmail");
 
   const chatSendConRef = useRef<HTMLDivElement>(null);
   const currentRef = chatSendConRef.current;
@@ -55,12 +56,12 @@ const Messages: React.FC<Props> = ({ message }) => {
 
   const newChatMsg = {
     gameId,
-    creatorId: dbUserId,
+    chatCreatorId: dbUserId,
     sellerId: sellerId,
-    buyerId: dbUserId,
-    time: Timestamp.fromDate(new Date()),
+    // buyerId: dbUserId,
     message: inputs.chatText,
-    creatorEmail: user.email,
+    chatBeginnerEmail: user.email !== sellerEmail ? user.email : '',
+    time: Timestamp.fromDate(new Date()),
   };
   // ------------- insertDoc FS ------------- start //
   const handleSubmitClick = async () => {
@@ -101,10 +102,18 @@ const Messages: React.FC<Props> = ({ message }) => {
     try {
       const messages = query(
         collectionGroup(db, "messages"),
-        where("buyerId", "==", dbUserId),
-        where("gameId", "==", gameId),
-        where("sellerId", "==", sellerId)
+        where("gameId", "==", "V9aVj0sRcPh1QYwvjzTE"),
+        where("sellerId", "==", "pB6tqJugoHc2WcHmiZjDD4LFQD82"),
+        where("chatBeginnerEmail", "==", "test@mail.de"),
+        where("chatCreatorId", "==", dbUserId),
+        // where("gameId", "==", gameId),
+        // where("sellerEmail", "==", sellerEmail)
+        // where("sellerId", "==", sellerId)
       );
+      //delete it later!!
+      const check =
+        "V9aVj0sRcPh1QYwvjzTE 7tvoPyYllWTqiW40UdB5 LjYVCQDgV6dRffAVoUYShE5GsF22";
+        
       const newMessages: Messages = [];
       const querySnapshots = await getDocs(messages);
       querySnapshots.forEach((doc) => {
@@ -114,6 +123,7 @@ const Messages: React.FC<Props> = ({ message }) => {
         };
         newMessages.push(messagesObj);
       });
+      console.log("newMessages: ", newMessages);
 
       if (newMessages.length > 0) {
         return setChatMessages(newMessages);
@@ -144,7 +154,7 @@ const Messages: React.FC<Props> = ({ message }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dbUserId]);
 
-  // console.log("dbUsers: ", dbUsers && dbUsers);
+  console.log("dbUsers: ",  dbUsers);
   // console.log("user: ", user);
   console.log("UserId: ", dbUserId);
   console.log("gameId: ", gameId);
@@ -159,18 +169,38 @@ const Messages: React.FC<Props> = ({ message }) => {
       >
         {chatMessages.length > 0 ? (
           chatMessages.map((message, i) => {
+            console.log("message: ", message);
             return message.gameId === gameId ? (
               <div
                 className="message-box"
                 key={i}
-                style={{
-                  display: "flex",
-                  border: "solid 1px",
-                  borderRight: "unset",
-                  alignItems: "center",
-                  justifyContent: "end",
-                  paddingRight: "0.6rem",
-                }}
+                style={
+                  message.creatorId === dbUserId
+                    ? {
+                        display: "flex",
+                        border: "solid 1px",
+                        borderRight: "unset",
+                        alignItems: "center",
+                        justifyContent: "end",
+                        paddingRight: "0.6rem",
+                      }
+                    : {
+                        display: "flex",
+                        border: "solid 1px",
+                        borderRight: "unset",
+                        alignItems: "center",
+                        justifyContent: "flex-start",
+                        paddingRight: "0.6rem",
+                      }
+                }
+                // style={{
+                //   display: "flex",
+                //   border: "solid 1px",
+                //   borderRight: "unset",
+                //   alignItems: "center",
+                //   justifyContent: "end",
+                //   paddingRight: "0.6rem",
+                // }}
               >
                 <p className="message-paragraph">
                   {convertTime(message.time).date}

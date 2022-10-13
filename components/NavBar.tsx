@@ -45,7 +45,6 @@ const NavBar = () => {
   };
 
   const handleNavMenuClick = (e: string) => {
-    console.log("e: ", e);
 
     setAnchorElUser(null);
     if (e === "Home") {
@@ -54,6 +53,8 @@ const NavBar = () => {
       router.push(`/game/${e.toLowerCase()}`);
     } else if (e === "Contact") {
       router.push(`/${e.toLowerCase()}`);
+    } else if (e === "Messages") {
+      router.push(`/user/chat/messages-list`);
     } else {
       router.push(`/user/${e.toLowerCase()}`);
     }

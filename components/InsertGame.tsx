@@ -88,6 +88,7 @@ const InsertGame = () => {
     setGameData({
       ...gameData,
       userId: user.uid,
+      sellerEmail: user.email,
       [event.target.name]: typeof value !== "string" ? value : value.trim(),
     });
   };

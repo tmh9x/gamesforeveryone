@@ -7,10 +7,9 @@ import { db } from "../../../firebase/config";
 const Chat: React.FC<IMessageProps> = ({ gameIdProp, messageProp }) => {
   const messageProps: Game = messageProp ? JSON.parse(messageProp) : null;
 
-  // console.log("gameIdProp: ", gameIdProp);
-  // console.log("dbUserId: ", dbUserId);
-  // console.log("MessageProps : ", messageProps);
-  // console.log("gameIdProp: ", gameIdProp);
+  console.log("gameIdProp: ", gameIdProp);
+  console.log("MessageProps : ", messageProps);
+  console.log("gameIdProp: ", gameIdProp);
 
   return (
     <div>

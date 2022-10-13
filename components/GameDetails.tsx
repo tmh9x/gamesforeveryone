@@ -21,6 +21,7 @@ const GameDetails = ({ game }: any) => {
   const handleMessageGame = () => {
     localStorage.setItem("gameId", game.gameId);
     localStorage.setItem("sellerId", game.userId);
+    localStorage.setItem("sellerEmail", game.sellerEmail);
   };
   console.log("dbUserId: ", dbUserId);
   console.log("game: ", game);
