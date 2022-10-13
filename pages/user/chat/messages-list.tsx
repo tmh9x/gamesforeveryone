@@ -9,6 +9,7 @@ import {
   where,
 } from "firebase/firestore";
 
+import ChatSidebar from "../../../components/ChatSidebar";
 import Image from "next/image";
 import { db } from "../../../firebase/config";
 import { useAuth } from "../../../context/AuthContext";
@@ -66,41 +67,46 @@ const MessagesList = (props: Props) => {
         console.log("user: ", user);
 
   return (
-    <Container className="chat-list-con">
-      <Box
-        className="chat-list-box"
-        sx={{
-          display: "flex",
-          flexDirection: "row",
-          borderBottom: "gray solid 0.1px",
-          margin: "15px auto 10px auto",
-          paddingBottom: "15px",
-        }}
-      >
-        <div className="chat-list-box-photo" style={{ marginRight: "10px" }}>
-          <Image
-            src={noImage}
-            alt="game-photo"
-            width="50px"
-            height="50px"
-            style={{ borderRadius: "99999px" }}
-          />
-        </div>
+    <>
+      <Container className="chat-list-con">
+        <Box
+          className="chat-list-box"
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            borderBottom: "gray solid 0.1px",
+            margin: "15px auto 10px auto",
+            paddingBottom: "15px",
+          }}
+        >
+          <div className="chat-list-box-photo" style={{ marginRight: "10px" }}>
+            <Image
+              src={noImage}
+              alt="game-photo"
+              width="50px"
+              height="50px"
+              style={{ borderRadius: "99999px" }}
+            />
+          </div>
 
-        <div className="chat-list-box-body">
-          <div className="chat-list-box-header">
-            Header: Message receiver - last time
+          <div className="chat-list-box-body">
+            <div className="chat-list-box-header">
+              Header: Message receiver - last time
+            </div>
+            <div className="chat-list-box-title">Title</div>
+            <div
+              className="chat-list-box-message-box"
+              style={{ fontSize: "14px", color: "grey" }}
+            >
+              <p>Message box Message box Message box Message box</p>
+            </div>
           </div>
-          <div className="chat-list-box-title">Title</div>
-          <div
-            className="chat-list-box-message-box"
-            style={{ fontSize: "14px", color: "grey" }}
-          >
-            <p>Message box Message box Message box Message box</p>
-          </div>
-        </div>
-      </Box>
+        </Box>
+      </Container>
+    <Container>
+        <ChatSidebar/>
     </Container>
+    </>
   );
 };
 
