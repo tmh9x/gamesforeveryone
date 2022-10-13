@@ -10,6 +10,7 @@ const nextConfig = {
       "firebasestorage.googleapis.com",
       "cdn.pixabay.com",
       "eingleses.com",
+      "i.pravatar.cc",
     ],
   },
 };
