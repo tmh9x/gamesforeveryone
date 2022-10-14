@@ -1,612 +1,114 @@
 import { Box, Container } from "@mui/system";
-import {
-  Button,
-  CircularProgress,
-  FormControl,
-  IconButton,
-  TextField,
-  Typography,
-} from "@mui/material";
 import React, { useState } from "react";
+import { auth, db } from "../../../firebase/config";
+import {
+  collection,
+  doc,
+  orderBy,
+  query,
+} from "firebase/firestore";
+import {
+  useCollectionData,
+  useDocumentData,
+} from "react-firebase-hooks/firestore";
 
+import BottomBar from "../../../components/BottomBar";
 import ChatSidebar from "../../../components/ChatSidebar";
 import Head from "next/head";
-import SendIcon from "@mui/icons-material/Send";
-import {auth} from '../../../firebase/config'
-import { useAuth } from "../../../context/AuthContext";
+import {
+Typography,
+} from "@mui/material";
+import getOtherEmail from "../../../utils/getOtherEmail";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { useRouter } from "next/router";
 
 type Props = {};
 
-const Chat2 = (props: Props) => {
-  const [inputs, setInputs] = useState({
-    chatText: "",
-  });
-const {user} = useAuth();
 
-  const handleInputsChange = (e: any) => {
-    const { value, name } = e.target;
-    setInputs({ ...inputs, [name]: value });
+
+const Chat2 = (props: Props) => {
+  const router = useRouter();
+  const { id } = router.query;
+  const [user] = useAuthState(auth);
+  
+  const q = query(collection(db, `chats/${id}/messages`), orderBy("timestamp"));
+  const [messages] = useCollectionData(q);
+  const params = router.query;
+  
+  const [chat] = useDocumentData(doc(db, "chats", id));
+  
+  const getMessages = () => {
+      return messages?.map((message) => {
+          const sender = message.sender === user?.email;
+          
+          console.log("userChats2: ", user);
+    //   console.log("sender: ", sender);
+      return (
+        <Box
+          className="chat-text-box"
+          key={Math.random()}
+          display={"flex"}
+          sx={{ alignSelf: sender ? "flex-end" : "flex-start" }}
+          //   sx={{ alignSelf: message.sender ? "flex-start" : "flex-end" }}
+          maxWidth={"75%"}
+          minWidth={"100px"}
+          borderRadius="50px"
+          bgcolor={sender ? "#84ca97" : "#64becb"}
+          padding="3px"
+          margin={"5px"}
+          width={"fit-content"}
+        >
+          <Typography
+            variant="body2"
+            className="text-field"
+            sx={{ overflow: "overlay" }}
+          >
+            {message.text}
+          </Typography>
+        </Box>
+      );
+    });
   };
 
-  const handleSubmitClick = () => {};
-  
-  
-  //   console.log("inputs: ", inputs);
+  //   console.log("chat-id: ", id);
+  //   console.log("messagesttttt: ", messages);
+  //   console.log("userChatId: ", user);
   return (
     <>
       <Head>
         <title>Chat App</title>
       </Head>
       <Container className="chat-con" sx={{ display: "flex" }}>
-        <ChatSidebar />
-        <Box
-          className="chat-con-box"
-          margin={"0 10px"}
-          paddingTop={"10px"}
-          display={"flex"}
-          bgcolor={"#e6dbd7"}
-          width={"70%"}
-          height={"100vh"}
-          flexDirection={"column"}
-          sx={{ overflowX: "scroll" }}
-        >
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#b0daf0"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>{" "}
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#b0daf0"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>{" "}
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#84ca97"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-            sx={{ alignSelf: "flex-end" }}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#84ca97"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-            sx={{ alignSelf: "flex-end" }}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#b0daf0"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>{" "}
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#b0daf0"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>{" "}
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#b0daf0"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>{" "}
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#84ca97"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-            sx={{ alignSelf: "flex-end" }}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#b0daf0"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>{" "}
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#b0daf0"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>{" "}
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#b0daf0"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>{" "}
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#b0daf0"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>{" "}
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#84ca97"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-            sx={{ alignSelf: "flex-end" }}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#b0daf0"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>{" "}
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#b0daf0"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>{" "}
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#b0daf0"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>{" "}
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#b0daf0"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>{" "}
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#b0daf0"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>{" "}
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#b0daf0"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>{" "}
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#b0daf0"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>{" "}
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#b0daf0"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>{" "}
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#b0daf0"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>{" "}
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#b0daf0"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>{" "}
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#b0daf0"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>{" "}
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#b0daf0"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>{" "}
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#b0daf0"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>{" "}
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#b0daf0"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>{" "}
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#b0daf0"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>{" "}
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#b0daf0"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>{" "}
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#b0daf0"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>{" "}
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#b0daf0"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>{" "}
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#b0daf0"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>{" "}
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#b0daf0"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>{" "}
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#b0daf0"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>{" "}
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#b0daf0"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>{" "}
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#b0daf0"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>{" "}
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#b0daf0"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>{" "}
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#b0daf0"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>{" "}
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#b0daf0"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>{" "}
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#b0daf0"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>{" "}
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#b0daf0"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>{" "}
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#b0daf0"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>{" "}
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#b0daf0"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>{" "}
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#b0daf0"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>{" "}
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#b0daf0"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#b0daf0"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-          >
-            <Typography variant="body2">Test chat </Typography>
-          </Box>
-          <Box
-            display={"flex"}
-            minWidth={"100px"}
-            borderRadius="50px"
-            bgcolor={"#84ca97"}
-            padding="3px"
-            margin={"1px"}
-            width={"fit-content"}
-            sx={{ alignSelf: "flex-end" }}
-          >
-            <Typography variant="body2">Test chat message</Typography>
-          </Box>
-        </Box>
+        <>
+          <ChatSidebar />
 
-        <Box
-          className="chat-send-con"
-          sx={{
-            width: "100%",
-            position: "fixed",
-            bottom: "0",
-            backgroundColor: "#f5f5dc",
-            borderTop: "0.9px solid black",
-            marginBottom: "1rem",
-            padding: "4px 0 0 0",
-          }}
-        >
-          <TextField
-            id="chat-send-con"
-            size="small"
-            multiline
-            maxRows={4}
-            name="chatText"
-            placeholder="Type a message"
-            autoComplete="off"
-            value={inputs.chatText}
-            onChange={handleInputsChange}
-            sx={{ width: "85%" }}
-          ></TextField>
-          <IconButton
-            className="send-btn"
-            onClick={handleSubmitClick}
-            sx={{ width: "10%", color: !inputs.chatText ? "inherit" : "red" }}
+          <Box
+            className="chat-text-con"
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              backgroundColor: "#faebd7",
+            }}
+            width={"70%"}
           >
-            <SendIcon />
-          </IconButton>
-        </Box>
+            <Box className="chat-con-header" bgcolor={"#5f9ea0"}>
+              {getOtherEmail(chat?.users, user)}
+            </Box>
+
+            {params.id === "messages" && (
+              <Typography align="center" mt={10}>
+                Please beginn new chat
+                <br />
+                or
+                <b />
+                select a chat participian
+              </Typography>
+            )}
+            {getMessages()}
+          </Box>
+
+          <BottomBar userId={id} user={user} />
+        </>
       </Container>
     </>
   );

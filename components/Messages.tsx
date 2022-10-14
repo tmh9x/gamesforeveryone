@@ -235,7 +235,7 @@ const Messages: React.FC<Props> = ({ message }) => {
         }}
       >
         <TextField
-          id="chat-send-con"
+          id="chat-send-field"
           size="small"
           multiline
           maxRows={4}

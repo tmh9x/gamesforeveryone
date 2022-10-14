@@ -4,6 +4,7 @@ import { addDoc, collection } from "@firebase/firestore";
 import Image from "next/image";
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
 import React from "react";
+import chatExist from "../utils/chatExist";
 import { db } from "../firebase/config";
 import getOtherEmail from "../utils/getOtherEmail";
 import { useAuth } from "../context/AuthContext";
@@ -22,22 +23,19 @@ const ChatSidebar = (props: Props) => {
     router.push(`/user/chat2/${id}`);
   };
 
-  // ----- check if new chat participians exists --- //
-  const chatExist = (email) =>
-    chats?.find(
-      (chat) => chat.users.includes(user.email) && chat.users.includes(email)
-    );
-
+//   ------ new chat ------------ //
   const newChat = async () => {
     const input = prompt("enter email of chat recipient");
-    if (!chatExist(input) && input !== user.email) {
+
+    if (!chatExist(chats, user, input) && input !== user.email) {
       await addDoc(collection(db, "chats"), { users: [user.email, input] });
     } else {
       console.log("check the mail ");
     }
   };
 
-  console.log("chats: ", chats);
+  //   console.log("chats: ", chats);
+
   const ChatParticipants = () => {
     return (
       chats &&
@@ -53,7 +51,7 @@ const ChatSidebar = (props: Props) => {
             }}
             sx={{ cursor: "pointer", display: "flex", alignItems: "center" }}
           >
-            <Avatar src="https://i.pravatar.cc/100" />
+            <Avatar src="/broken-image.jpg" />
             <Box className={"chat-list-body"}>
               <Typography
                 variant="body1"
@@ -102,7 +100,8 @@ const ChatSidebar = (props: Props) => {
         <Button
           onClick={() => newChat()}
           variant="contained"
-          sx={{ margin: "5px", padding: "4px", background: "#595252" }}
+          size="small"
+          sx={{ margin: "10px", padding: "4px", background: "#595252" }}
         >
           New Chat
         </Button>
