@@ -1,4 +1,8 @@
 import { Box, Container } from "@mui/system";
+import {
+    Button,
+    Typography,
+} from "@mui/material";
 import React, { useState } from "react";
 import { auth, db } from "../../../firebase/config";
 import {
@@ -15,9 +19,6 @@ import {
 import BottomBar from "../../../components/BottomBar";
 import ChatSidebar from "../../../components/ChatSidebar";
 import Head from "next/head";
-import {
-Typography,
-} from "@mui/material";
 import getOtherEmail from "../../../utils/getOtherEmail";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useRouter } from "next/router";
@@ -35,13 +36,19 @@ const Chat2 = (props: Props) => {
   const [messages] = useCollectionData(q);
   const params = router.query;
   
-  const [chat] = useDocumentData(doc(db, "chats", id));
-  
+  const queryChat = doc(db, "chats", id)
+  const [chat] = useDocumentData(queryChat);
+//   const [chat] = useDocumentData(doc(db, "chats", id));
+   
+const GoBack = () => {
+     router.back();
+   };
+
   const getMessages = () => {
       return messages?.map((message) => {
           const sender = message.sender === user?.email;
           
-          console.log("userChats2: ", user);
+        //   console.log("userChats2: ", user);
     //   console.log("sender: ", sender);
       return (
         <Box
@@ -85,13 +92,15 @@ const Chat2 = (props: Props) => {
           <Box
             className="chat-text-con"
             sx={{
-              display: "flex",
+              display: params.id === "messages" ? "none" : "flex",
               flexDirection: "column",
               backgroundColor: "#faebd7",
             }}
-            width={"70%"}
+            width={"100%"}
+            height={"850vh"}
           >
             <Box className="chat-con-header" bgcolor={"#5f9ea0"}>
+              <Button variant="contained" onClick={GoBack}>Back</Button>{" "}
               {getOtherEmail(chat?.users, user)}
             </Box>
 
@@ -104,10 +113,10 @@ const Chat2 = (props: Props) => {
                 select a chat participian
               </Typography>
             )}
-            {getMessages()}
+            {params.id !== "messages" && getMessages()}
           </Box>
 
-          <BottomBar userId={id} user={user} />
+          {params.id !== "messages" && <BottomBar userId={id} user={user} />}
         </>
       </Container>
     </>

@@ -1,4 +1,3 @@
-import { Box, Container } from "@mui/system";
 import {
  IconButton,
  TextField,
@@ -10,25 +9,22 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 import { auth, db } from "../firebase/config";
-import {
-  useCollectionData,
-  useDocumentData,
-} from "react-firebase-hooks/firestore";
 
-import Head from "next/head";
+import { Box, } from "@mui/system";
 import SendIcon from "@mui/icons-material/Send";
-import { useRouter } from "next/router";
 
 const BottomBar = ({ userId, user }) => {
   const [inputs, setInputs] = useState({
     chatText: "",
   });
+  const gameId = localStorage.getItem("gameId");
 
   const handleSubmitClick = async () => {
     try {
       await addDoc(collection(db, `chats/${userId}/messages`), {
         text: inputs.chatText,
         sender: user?.email,
+        gameId,
         timestamp: serverTimestamp(),
       });
       setInputs({ ...inputs, chatText: "" });
@@ -56,7 +52,6 @@ const BottomBar = ({ userId, user }) => {
         bottom: "0",
         backgroundColor: "#f5f5dc",
         borderTop: "0.9px solid black",
-        marginBottom: "1rem",
         padding: "4px 0 0 0",
       }}
     >

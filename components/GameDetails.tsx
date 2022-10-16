@@ -108,7 +108,10 @@ const GameDetails = ({ game }: any) => {
             >
               Call
             </Button>
-            <Link href="/user/chat/[id]" as={`/user/chat/${game.gameId}`}>
+            <Link
+              href="/game/send-message/[id]"
+              as={`/game/send-message/${game.gameId}`}
+            >
               <Button
                 className="message_btn"
                 variant="contained"

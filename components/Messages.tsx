@@ -110,9 +110,7 @@ const Messages: React.FC<Props> = ({ message }) => {
         // where("sellerEmail", "==", sellerEmail)
         // where("sellerId", "==", sellerId)
       );
-      //delete it later!!
-      const check =
-        "V9aVj0sRcPh1QYwvjzTE 7tvoPyYllWTqiW40UdB5 LjYVCQDgV6dRffAVoUYShE5GsF22";
+   
         
       const newMessages: Messages = [];
       const querySnapshots = await getDocs(messages);
@@ -158,7 +156,7 @@ const Messages: React.FC<Props> = ({ message }) => {
   // console.log("user: ", user);
   console.log("UserId: ", dbUserId);
   console.log("gameId: ", gameId);
-  // console.log("inputs: ", inputs);
+  console.log("chatText: ", inputs.chatText);
   console.log("chatMessages: ", chatMessages);
 
   return (

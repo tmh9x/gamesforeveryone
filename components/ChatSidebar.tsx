@@ -1,7 +1,6 @@
 import { Avatar, Box, Button, IconButton, Typography } from "@mui/material";
 import { addDoc, collection } from "@firebase/firestore";
 
-import Image from "next/image";
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
 import React from "react";
 import chatExist from "../utils/chatExist";
@@ -14,27 +13,32 @@ import { useRouter } from "next/router";
 type Props = {};
 
 const ChatSidebar = (props: Props) => {
-  const { user } = useAuth();
+  const { user, insertDoc } = useAuth();
   const [snapshot, loading, error] = useCollection(collection(db, "chats"));
   const chats = snapshot?.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
   const router = useRouter();
+  console.log("router: ", router);
+const params = router.query;
 
-  const redirect = (id) => {
-    router.push(`/user/chat2/${id}`);
+
+  const redirect = (chatDocId) => {
+    console.log("redirectid: ", chatDocId);
+    router.push(`/user/chat2/${chatDocId}`);
   };
 
-//   ------ new chat ------------ //
+  //   ------ new chat ------------ //
   const newChat = async () => {
     const input = prompt("enter email of chat recipient");
 
     if (!chatExist(chats, user, input) && input !== user.email) {
-      await addDoc(collection(db, "chats"), { users: [user.email, input] });
+      await insertDoc('chats', { users: [user.email, input] });
     } else {
       console.log("check the mail ");
     }
   };
 
-  //   console.log("chats: ", chats);
+ 
+    // console.log("chats: ", chats);
 
   const ChatParticipants = () => {
     return (
@@ -45,11 +49,17 @@ const ChatSidebar = (props: Props) => {
         .map((chat) => (
           <Box
             key={Math.random()}
-            className={"chat-list-box"}
+            className="chat-list-box"
             onClick={() => {
               redirect(chat.id);
             }}
-            sx={{ cursor: "pointer", display: "flex", alignItems: "center" }}
+            sx={{
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              background: "#a9a9a9",
+              margin: "5px 1px",
+            }}
           >
             <Avatar src="/broken-image.jpg" />
             <Box className={"chat-list-body"}>
@@ -77,14 +87,14 @@ const ChatSidebar = (props: Props) => {
       <Box
         className="sidebar-con"
         bgcolor="gray"
-        width={"30%"}
+        width={params.id === 'messages' ? '100%' : "30%"}
         height={"80vh"}
         borderRight={"solid 1px blue"}
-        display={"flex"}
+        display={params.id !== 'messages' ? 'none' : "flex"}
         flexDirection={"column"}
         overflow={"auto"}
       >
-        {user.email}
+       {user.email}
         <Box
           bgcolor="lightcoral"
           width={"100%"}

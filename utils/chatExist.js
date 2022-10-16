@@ -5,9 +5,9 @@ import { useAuth } from "../context/AuthContext";
 
 
 // ----- check if new chat participians exists --- //
-  const chatExist = (messages, usr, mail) =>
+  const chatExist = (messages, usr, sellerEmail) =>
 
   messages?.find(
-    (chat) => chat.users.includes(usr.email) && chat.users.includes(mail)
+    (chat) => chat.users.includes(usr.email) && chat.users.includes(sellerEmail)
   );
 export default chatExist;
