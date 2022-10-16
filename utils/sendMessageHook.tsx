@@ -4,13 +4,12 @@ import chatExist from "./chatExist";
 import { db } from "../firebase/config";
 
 // ------------- send message / FS ------------- start //
-const sendMessageHook = async (
+const SendMessageHook = async (
+  chats,
   gameId,
   user,
-  chats,
   sellerEmail,
-  newChatMsg,
-  inputs
+  newChatMsg
 ) => {
   console.log("user.email: ", user);
   const q = query(
@@ -52,4 +51,4 @@ const sendMessageHook = async (
   }
 };
 // ------------- send message / FS ------------- ends //
-export { sendMessageHook };
+export { SendMessageHook };

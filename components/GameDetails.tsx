@@ -23,9 +23,9 @@ const GameDetails = ({ game }: any) => {
     localStorage.setItem("sellerId", game.userId);
     localStorage.setItem("sellerEmail", game.sellerEmail);
   };
-  console.log("dbUserId: ", dbUserId);
-  console.log("game: ", game);
-  console.log("compare", game.userId, user.uid);
+  // console.log("dbUserId: ", dbUserId);
+  // console.log("game: ", game);
+  // console.log("compare", game.userId, user.uid);
   return (
     <>
       {game ? (

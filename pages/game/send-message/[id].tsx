@@ -1,27 +1,13 @@
 import { Box, Container } from "@mui/system";
-import { Button, IconButton, TextField, Typography } from "@mui/material";
-import {
-  addDoc,
-  arrayUnion,
-  collection,
-  collectionGroup,
-  deleteDoc,
-  doc,
-  getDoc,
-  getDocs,
-  onSnapshot,
-  query,
-  serverTimestamp,
-  where,
-} from "firebase/firestore";
-import { useCollection, useDocumentData } from "react-firebase-hooks/firestore";
+import { Button, TextField, Typography } from "@mui/material";
+import { collection, serverTimestamp } from "firebase/firestore";
 
 import Head from "next/head";
 import SendIcon from "@mui/icons-material/Send";
-import chatExist from "../../../utils/chatExist";
+import { SendMessageHook } from "../../../utils/sendMessageHook";
 import { db } from "../../../firebase/config";
-import { sendMessageHook } from "../../../utils/sendMessageHook";
 import { useAuth } from "../../../context/AuthContext";
+import { useCollection } from "react-firebase-hooks/firestore";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
@@ -30,7 +16,7 @@ type Props = {
 };
 
 const SendMessage: React.FC<Props> = ({ message }) => {
-  const { dbUsers, getDBUsers, user, dbUserId, insertDoc } = useAuth();
+  const { user } = useAuth();
 
   const gameId = localStorage.getItem("gameId");
   const sellerEmail = localStorage.getItem("sellerEmail");
@@ -64,75 +50,13 @@ const SendMessage: React.FC<Props> = ({ message }) => {
   // ------------- send message / FS ------------- start //
   const handleSubmitClick = async () => {
     try {
-      await sendMessageHook(
-        gameId,
-        user,
-        chats,
-        sellerEmail,
-        newChatMsg,
-        inputs
-      );
+      await SendMessageHook(chats, gameId, user, sellerEmail, newChatMsg);
+      setInputs({ ...inputs, chatText: "" });
       goBack();
     } catch (error) {
       console.log("error add message: ", error);
     }
   };
-  // const handleSubmitClick = async () => {
-  //   const q = query(
-  //     collection(db, "chats"),
-  //     where("users", "array-contains", user.email),
-  //     where("gameId", "==", gameId)
-  //   );
-  //   const querySnapshot = await getDocs(q);
-  //   const newMessages: Messages = [];
-
-  //   querySnapshot.forEach((doc) => {
-  //     const messagesObj: Message = {
-  //       ...(doc.data() as Message),
-  //       messageId: doc.id,
-  //     };
-  //     newMessages.push(messagesObj);
-  //   });
-
-  //   const messageId = newMessages.map((id) => id.messageId);
-  //   console.log("newMessages: ", newMessages);
-
-  //   try {
-  //     if (
-  //       !chatExist(chats, user, sellerEmail, gameId) &&
-  //       sellerEmail !== user?.email
-  //     ) {
-  //       const docRef = await addDoc(collection(db, "chats"), {
-  //         gameId,
-  //         users: [user?.email, sellerEmail],
-  //       });
-  //       await addDoc(collection(db, `chats/${docRef.id}/messages`), newChatMsg);
-  //       setInputs({ ...inputs, chatText: "" });
-  //       goBack();
-  //     } else {
-  //       await addDoc(
-  //         collection(db, `chats/${messageId[0]}/messages`),
-  //         newChatMsg
-  //       );
-  //       setInputs({ ...inputs, chatText: "" });
-  //       goBack();
-  //     }
-  //   } catch (error) {
-  //     console.log("error add message: ", error);
-  //   }
-
-  //   if (!inputs.chatText.trim() || !gameId || !dbUserId) {
-  //     console.log("no text");
-  //     return null;
-  //   }
-  // };
-  // ------------- send message / FS ------------- ends //
-
-  // console.log("dbUsers: ", dbUsers);
-  // // console.log("user: ", user);
-  // console.log("UserId: ", dbUserId);
-  // console.log("gameId: ", gameId);
-  // console.log("inputs.chatText: ", inputs.chatText);
 
   return (
     <>
