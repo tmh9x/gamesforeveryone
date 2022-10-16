@@ -20,6 +20,7 @@ import Head from "next/head";
 import SendIcon from "@mui/icons-material/Send";
 import chatExist from "../../../utils/chatExist";
 import { db } from "../../../firebase/config";
+import { sendMessageHook } from "../../../utils/sendMessageHook";
 import { useAuth } from "../../../context/AuthContext";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -62,57 +63,70 @@ const SendMessage: React.FC<Props> = ({ message }) => {
 
   // ------------- send message / FS ------------- start //
   const handleSubmitClick = async () => {
-    const q = query(
-      collection(db, "chats"),
-      where("users", "array-contains", user.email),
-      where("gameId", "==", gameId)
-    );
-    const querySnapshot = await getDocs(q);
-    const newMessages: Messages = [];
-
-    querySnapshot.forEach((doc) => {
-      const messagesObj: Message = {
-        ...(doc.data() as Message),
-        messageId: doc.id,
-      };
-      newMessages.push(messagesObj);
-    });
-
-    const messageId = newMessages.map((id) => id.messageId);
-    console.log("newMessages: ", newMessages);
-
     try {
-      if (
-        !chatExist(chats, user, sellerEmail, gameId) &&
-        sellerEmail !== user?.email
-      ) {
-        const docRef = await addDoc(collection(db, "chats"), {
-          gameId,
-          users: [user?.email, sellerEmail],
-        });
-        await addDoc(collection(db, `chats/${docRef.id}/messages`), newChatMsg);
-        setInputs({ ...inputs, chatText: "" });
-        goBack();
-      } else {
-        await addDoc(
-          collection(db, `chats/${messageId[0]}/messages`),
-          newChatMsg
-        );
-        setInputs({ ...inputs, chatText: "" });
-        goBack();
-      }
+      await sendMessageHook(
+        gameId,
+        user,
+        chats,
+        sellerEmail,
+        newChatMsg,
+        inputs
+      );
+      goBack();
     } catch (error) {
       console.log("error add message: ", error);
     }
-
-    if (!inputs.chatText.trim() || !gameId || !dbUserId) {
-      console.log("no text");
-      return null;
-    }
   };
-  // ------------- send message / FS ------------- ends //
+  // const handleSubmitClick = async () => {
+  //   const q = query(
+  //     collection(db, "chats"),
+  //     where("users", "array-contains", user.email),
+  //     where("gameId", "==", gameId)
+  //   );
+  //   const querySnapshot = await getDocs(q);
+  //   const newMessages: Messages = [];
 
-  
+  //   querySnapshot.forEach((doc) => {
+  //     const messagesObj: Message = {
+  //       ...(doc.data() as Message),
+  //       messageId: doc.id,
+  //     };
+  //     newMessages.push(messagesObj);
+  //   });
+
+  //   const messageId = newMessages.map((id) => id.messageId);
+  //   console.log("newMessages: ", newMessages);
+
+  //   try {
+  //     if (
+  //       !chatExist(chats, user, sellerEmail, gameId) &&
+  //       sellerEmail !== user?.email
+  //     ) {
+  //       const docRef = await addDoc(collection(db, "chats"), {
+  //         gameId,
+  //         users: [user?.email, sellerEmail],
+  //       });
+  //       await addDoc(collection(db, `chats/${docRef.id}/messages`), newChatMsg);
+  //       setInputs({ ...inputs, chatText: "" });
+  //       goBack();
+  //     } else {
+  //       await addDoc(
+  //         collection(db, `chats/${messageId[0]}/messages`),
+  //         newChatMsg
+  //       );
+  //       setInputs({ ...inputs, chatText: "" });
+  //       goBack();
+  //     }
+  //   } catch (error) {
+  //     console.log("error add message: ", error);
+  //   }
+
+  //   if (!inputs.chatText.trim() || !gameId || !dbUserId) {
+  //     console.log("no text");
+  //     return null;
+  //   }
+  // };
+  // ------------- send message / FS ------------- ends //
 
   // console.log("dbUsers: ", dbUsers);
   // // console.log("user: ", user);
@@ -142,6 +156,7 @@ const SendMessage: React.FC<Props> = ({ message }) => {
           <Typography variant="h5">Message</Typography>
           <Button
             variant="contained"
+            disabled={inputs.chatText.length < 2}
             color={!inputs.chatText ? "inherit" : "primary"}
             className="send-btn"
             onClick={handleSubmitClick}
