@@ -40,7 +40,7 @@ const Chat2 = (props: Props) => {
   const [chat] = useDocumentData(queryChat);
 //   const [chat] = useDocumentData(doc(db, "chats", id));
    
-const GoBack = () => {
+const goBack = () => {
      router.back();
    };
 
@@ -100,7 +100,7 @@ const GoBack = () => {
             height={"850vh"}
           >
             <Box className="chat-con-header" bgcolor={"#5f9ea0"}>
-              <Button variant="contained" onClick={GoBack}>Back</Button>{" "}
+              <Button variant="contained" onClick={goBack}>Back</Button>{" "}
               {getOtherEmail(chat?.users, user)}
             </Box>
 

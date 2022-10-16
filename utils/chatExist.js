@@ -2,12 +2,20 @@ import { useAuth } from "../context/AuthContext";
 
 // const { user } = useAuth();
 
-
-
 // ----- check if new chat participians exists --- //
-  const chatExist = (messages, usr, sellerEmail) =>
+const chatExist = (messages, usr, sellerEmail, gameId) => {
+  console.log('testTest', messages?.find(
+        (chat) =>
+          chat.users.includes(usr.email) &&
+          chat.users.includes(sellerEmail) &&
+          chat.gameId.includes(gameId))
+  )
 
-  messages?.find(
-    (chat) => chat.users.includes(usr.email) && chat.users.includes(sellerEmail)
+  return messages?.find(
+    (chat) =>
+      chat.users.includes(usr.email) &&
+      chat.users.includes(sellerEmail) &&
+      chat.gameId.includes(gameId)
   );
+};
 export default chatExist;

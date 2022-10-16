@@ -191,14 +191,7 @@ const Messages: React.FC<Props> = ({ message }) => {
                         paddingRight: "0.6rem",
                       }
                 }
-                // style={{
-                //   display: "flex",
-                //   border: "solid 1px",
-                //   borderRight: "unset",
-                //   alignItems: "center",
-                //   justifyContent: "end",
-                //   paddingRight: "0.6rem",
-                // }}
+            
               >
                 <p className="message-paragraph">
                   {convertTime(message.time).date}
