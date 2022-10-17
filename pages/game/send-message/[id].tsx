@@ -25,15 +25,10 @@ const SendMessage: React.FC<Props> = ({ message }) => {
   const [inputs, setInputs] = useState({
     chatText: "",
   });
-interface Chat {
-  gameId: string;
-  id: string;
-  users: string[];
-}
-type Chats = Chat[];
+
   // ------- use Firestore hooks / get chats collection ----------- //
   const [snapshot, loading, error] = useCollection(collection(db, "chats"));
-  const chats: Chats = snapshot?.docs.map((doc) => ({
+  const chats = snapshot?.docs.map((doc) => ({
     id: doc.id,
     ...doc.data(),
   }));

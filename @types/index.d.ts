@@ -16,6 +16,10 @@ interface Game {
 
 type Games = Game[];
 
+interface GameProps {
+  gameProp: string | null;
+}
+
 // ------------- used for edit-user.tsx ---- -- starts
   type TEditedUserData = {
     username?: string;
@@ -36,9 +40,7 @@ type Games = Game[];
 interface Params {
   params: { id: string };
 }
-interface GameProps {
-  gameProp: string | null;
-}
+
 
 interface IMessageProps {
   gameIdProp: string;
@@ -48,10 +50,14 @@ interface IMessageProps {
 interface Message {
   messageId: string;
   sender: string;
-  gameId: string;
   message: string;
-  time: date | undefined;
+  timestamp: date | undefined;
 }
 type Messages = Message[];
 
-
+interface Chat {
+  gameId: string;
+  id: string | undefined;
+  users: string[];
+}
+type Chats = Chat[];

@@ -1,8 +1,8 @@
 import { Box, Container } from "@mui/system";
 import { Button, Typography } from "@mui/material";
+import { DocumentReference, collection, doc, orderBy, query } from "firebase/firestore";
 import React, { useState } from "react";
 import { auth, db } from "../../../firebase/config";
-import { collection, doc, orderBy, query } from "firebase/firestore";
 import {
   useCollectionData,
   useDocumentData,
@@ -28,9 +28,10 @@ const Chat = (props: Props) => {
   const [messages] = useCollectionData(q);
   const params = router.query;
 
-  const queryChat = doc(db, "chats", id);
+   const queryChat = doc(db, "chats", id);
+  console.log("queryChat: ", queryChat);
   const [chat] = useDocumentData(queryChat);
-  //   const [chat] = useDocumentData(doc(db, "chats", id));
+
 
   const goBack = () => {
     router.back();
