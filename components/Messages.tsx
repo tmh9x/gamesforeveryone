@@ -3,25 +3,19 @@ import { Button, IconButton, TextField } from "@mui/material";
 import {
   Timestamp,
   addDoc,
-  arrayUnion,
   collection,
   collectionGroup,
-  deleteDoc,
-  doc,
-  getDoc,
   getDocs,
   onSnapshot,
   query,
-  setDoc,
-  updateDoc,
   where,
 } from "firebase/firestore";
 import { useEffect, useRef, useState } from "react";
 
 import SendIcon from "@mui/icons-material/Send";
+import { convertFirebaseTime } from "../utils/convertFirebaseTime";
 import { db } from "../firebase/config";
 import { useAuth } from "../context/AuthContext";
-import { useRouter } from "next/router";
 
 type Props = {
   message: any;
@@ -86,17 +80,6 @@ const Messages: React.FC<Props> = ({ message }) => {
   };
   // ------------- handleSubmitClick FS ------------- ends //
 
-  // -------- Convert Time ------------- ////
-  const convertTime = (time: { seconds: number; nanoseconds: number }) => {
-    const fireBaseTime = new Date(
-      time.seconds * 1000 + time.nanoseconds / 1000000
-    );
-
-    const date = fireBaseTime.toLocaleDateString();
-    const atTime = fireBaseTime.toLocaleTimeString();
-    const dateAndTime = { date, atTime };
-    return dateAndTime;
-  };
 
   const getMessages = async () => {
     try {
@@ -106,9 +89,7 @@ const Messages: React.FC<Props> = ({ message }) => {
         where("sellerId", "==", "pB6tqJugoHc2WcHmiZjDD4LFQD82"),
         where("chatBeginnerEmail", "==", "test@mail.de"),
         where("chatCreatorId", "==", dbUserId),
-        // where("gameId", "==", gameId),
-        // where("sellerEmail", "==", sellerEmail)
-        // where("sellerId", "==", sellerId)
+    
       );
    
         
@@ -194,9 +175,9 @@ const Messages: React.FC<Props> = ({ message }) => {
             
               >
                 <p className="message-paragraph">
-                  {convertTime(message.time).date}
+                  {convertFirebaseTime(message.time).date}
                   <br />
-                  {convertTime(message.time).atTime}
+                  {convertFirebaseTime(message.time).atTime}
                   <br />
                   {message.message}
                 </p>

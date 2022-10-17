@@ -28,11 +28,6 @@ const MessagesList = (props: Props) => {
       const messages = query(
         collectionGroup(db, "messages"),
         where("sellerEmail", "==", user.email)
-
-       
-        // where("buyerId", "==", dbUserId),
-        // where("gameId", "==", gameId),
-        // where("sellerId", "==", sellerId)
       );
 
       const newMessages: Messages = [];
@@ -61,9 +56,7 @@ const MessagesList = (props: Props) => {
     getMessages();
   }, []);
 
-  ("1. create");
-  ("2. create link from list to Messages.tsx");
-  ("/user/chat/7tvoPyYllWTqiW40UdB5");
+
         console.log("user: ", user);
 
   return (

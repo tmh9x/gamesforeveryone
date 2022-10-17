@@ -13,7 +13,7 @@ import { useRouter } from "next/router";
 type Props = {};
 
 const ChatSidebar = (props: Props) => {
-  const { user, insertDoc } = useAuth();
+  const { user,  } = useAuth();
   const [snapshot, loading, error] = useCollection(collection(db, "chats"));
   const chats = snapshot?.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
   const router = useRouter();
@@ -25,15 +25,15 @@ const ChatSidebar = (props: Props) => {
   };
 
   //   ------ new chat ------------ //
-  const newChat = async () => {
-    const input = prompt("enter email of chat recipient");
+  // const newChat = async () => {
+  //   const input = prompt("enter email of chat recipient");
 
-    if (!chatExist(chats, user, input) && input !== user.email) {
-      await insertDoc("chats", { users: [user.email, input] });
-    } else {
-      console.log("check the mail ");
-    }
-  };
+  //   if (!chatExist(chats, user, input) && input !== user.email) {
+  //     await insertDoc("chats", { users: [user.email, input] });
+  //   } else {
+  //     console.log("check the mail ");
+  //   }
+  // };
 
   console.log("chats: ", chats);
 

@@ -1,16 +1,9 @@
-import {
- IconButton,
- TextField,
-} from "@mui/material";
+import { IconButton, TextField } from "@mui/material";
 import React, { useState } from "react";
-import {
-  addDoc,
-  collection,
-  serverTimestamp,
-} from "firebase/firestore";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { auth, db } from "../firebase/config";
 
-import { Box, } from "@mui/system";
+import { Box } from "@mui/system";
 import SendIcon from "@mui/icons-material/Send";
 
 const BottomBar = ({ userId, user }) => {
@@ -43,7 +36,7 @@ const BottomBar = ({ userId, user }) => {
   console.log("inputs: ", inputs.chatText);
   return (
     <Box
-      className="chat-send-con"
+      className="bottom-chat-send-con"
       sx={{
         display: "flex",
         flexDirection: "row",
@@ -65,12 +58,12 @@ const BottomBar = ({ userId, user }) => {
         autoComplete="off"
         value={inputs.chatText}
         onChange={handleInputsChange}
-        sx={{ width: "90%" }}
+        sx={{ width: "90%", height: "20px" }}
       />
       <IconButton
-        className="send-btn"
+        className="bottom-send-btn"
         onClick={handleSubmitClick}
-        sx={{ width: "10%", color: !inputs.chatText ? "inherit" : "red" }}
+        sx={{ width: "10%", color: !inputs.chatText ? "inherit" : "red", marginLeft:'2px' }}
       >
         <SendIcon />
       </IconButton>

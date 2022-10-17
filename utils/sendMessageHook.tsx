@@ -11,11 +11,7 @@ const SendMessageHook = async (
   sellerEmail,
   newChatMsg
 ) => {
-  console.log("user.email: ", chats,
-  gameId,
-  user,
-  sellerEmail,
-  newChatMsg);
+  console.log("user.email: ", chats, gameId, user, sellerEmail, newChatMsg);
   const q = query(
     collection(db, "chats"),
     where("users", "array-contains", user.email),
