@@ -113,6 +113,8 @@ export const AuthContextProvider = ({
       insertDoc("users", {
         authId: userCredential.user.uid,
         email: userCredential.user.email,
+        image:
+          "https://thumbs.dreamstime.com/t/default-placeholder-profile-icon-avatar-gray-man-90197993.jpg",
       });
       console.log("userCredential: ", userCredential);
     } catch (err: any) {

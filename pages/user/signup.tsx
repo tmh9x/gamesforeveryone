@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 
 import AlertDialogSlide from "../../components/alerts/AlertDialogSlide";
-import Login from "./login";
 import { useAuth } from "../../context/AuthContext";
 import { useRouter } from "next/router";
 
@@ -31,7 +30,7 @@ const Signup = () => {
         margin: "30px auto",
       }}
     >
-      <h1 className="text-center my-3 ">Signup</h1>
+      <h1 className="text-center my-3 ">Register</h1>
       <form onSubmit={handleSignup}>
         <label>Email address</label>
         <input
@@ -60,7 +59,7 @@ const Signup = () => {
           type="password"
           placeholder="Password"
         />
-        <button type="submit">SignUp</button>
+        <button type="submit">Register</button>
       </form>
       <AlertDialogSlide
         dialogTitle="Alert"

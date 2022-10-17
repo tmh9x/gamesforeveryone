@@ -1,13 +1,13 @@
 import { Button, IconButton, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { collection, doc, getDocs, query, where } from "firebase/firestore";
-import { deleteUser, getAuth } from "firebase/auth";
+import { collection, getDocs, query, where } from "firebase/firestore";
 
 import AlertDialogSlide from "../../components/alerts/AlertDialogSlide";
 import Container from "@mui/material/Container";
 import Image from "next/image";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import { db } from "../../firebase/config";
+import { getAuth } from "firebase/auth";
 import { useAuth } from "../../context/AuthContext";
 import { useCollection } from "react-firebase-hooks/firestore";
 
