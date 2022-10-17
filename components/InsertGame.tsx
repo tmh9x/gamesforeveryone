@@ -68,7 +68,7 @@ const platforms = [
   "Nintedo Super NES Classic",
 ].sort();
 
-const InsertGame = () => {
+const InsertGame: React.FC = () => {
   const [gameData, setGameData] = useState<Game | any>({});
   const [imageUpload, setImageUpload] = useState<any>(null);
   const [inputValues, SetInputValues] = useState<string[]>([]);
@@ -79,7 +79,6 @@ const InsertGame = () => {
   const theme = useTheme();
 
   const handleChange = (event: any) => {
-    console.log("-typof: ", typeof event);
     const {
       target: { value },
     } = event;

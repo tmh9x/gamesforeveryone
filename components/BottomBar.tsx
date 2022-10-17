@@ -10,14 +10,12 @@ const BottomBar = ({ userId, user }) => {
   const [inputs, setInputs] = useState({
     chatText: "",
   });
-  const gameId = localStorage.getItem("gameId");
 
   const handleSubmitClick = async () => {
     try {
       await addDoc(collection(db, `chats/${userId}/messages`), {
         text: inputs.chatText,
         sender: user?.email,
-        gameId,
         timestamp: serverTimestamp(),
       });
       setInputs({ ...inputs, chatText: "" });

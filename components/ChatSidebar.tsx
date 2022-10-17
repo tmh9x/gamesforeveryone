@@ -16,15 +16,16 @@ const ChatSidebar = (props: Props) => {
   const chats = snapshot?.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
   const router = useRouter();
   const params = router.query;
-const chatExist = (chats && user) && chats.filter((chat) => chat.users.includes(user.email))
+  const chatExist =
+    chats && user && chats.filter((chat) => chat.users.includes(user.email));
 
-const redirect = (chatDocId) => {
-  console.log("redirectid: ", chatDocId);
-  router.push(`/user/chat/${chatDocId}`);
-};
+  const redirect = (chatDocId: string) => {
+    console.log("redirectid: ", chatDocId);
+    router.push(`/user/chat/${chatDocId}`);
+  };
 
-console.log("chatsSidebar: ", chats);
-console.log("chatExist: ", chatExist);
+  console.log("chatsSidebar: ", chats);
+  console.log("chatExist: ", chatExist);
 
   const ChatParticipants = () => {
     return (
@@ -34,40 +35,40 @@ console.log("chatExist: ", chatExist);
         .filter((chat) => chat.users.includes(user.email))
         .map((chat) => {
           console.log("chatMap: ", chat);
-        return (
-          <Box
-            key={Math.random()}
-            className="chat-list-box"
-            onClick={() => {
-              redirect(chat.id);
-            }}
-            sx={{
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              background: "#a9a9a9",
-              margin: "5px 1px",
-            }}
-          >
-            <Avatar src="/broken-image.jpg" />
-            <Box className={"chat-list-body"}>
-              <Typography
-                variant="body1"
-                component="div"
-                m={1}
-                mb={0}
-                mt={0}
-                fontSize={9}
-              >
-                {getOtherEmail(chat.users, user)}
-              </Typography>
-              <Typography m={1} mt={0} fontSize={8}>
-                messages texts
-              </Typography>
+          return (
+            <Box
+              key={Math.random()}
+              className="chat-list-box"
+              onClick={() => {
+                redirect(chat.id);
+              }}
+              sx={{
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                background: "#a9a9a9",
+                margin: "5px 1px",
+              }}
+            >
+              <Avatar src="/broken-image.jpg" />
+              <Box className={"chat-list-body"}>
+                <Typography
+                  variant="body1"
+                  component="div"
+                  m={1}
+                  mb={0}
+                  mt={0}
+                  fontSize={9}
+                >
+                  {getOtherEmail(chat.users, user)}
+                </Typography>
+                <Typography m={1} mt={0} fontSize={8}>
+                  messages texts
+                </Typography>
+              </Box>
             </Box>
-          </Box>
-        );
-  })
+          );
+        })
     );
   };
 
