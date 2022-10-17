@@ -1,9 +1,7 @@
-import { Avatar, Box, Button, IconButton, Typography } from "@mui/material";
-import { addDoc, collection } from "@firebase/firestore";
+import { Avatar, Box, Typography } from "@mui/material";
 
-import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
 import React from "react";
-import chatExist from "../utils/chatExist";
+import { collection } from "@firebase/firestore";
 import { db } from "../firebase/config";
 import getOtherEmail from "../utils/getOtherEmail";
 import { useAuth } from "../context/AuthContext";
@@ -11,9 +9,9 @@ import { useCollection } from "react-firebase-hooks/firestore";
 import { useRouter } from "next/router";
 
 type Props = {};
-
+// doc: if you decide to use on bigger screen, you can change the display size to i.e. 30%
 const ChatSidebar = (props: Props) => {
-  const { user,  } = useAuth();
+  const { user } = useAuth();
   const [snapshot, loading, error] = useCollection(collection(db, "chats"));
   const chats = snapshot?.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
   const router = useRouter();
@@ -21,19 +19,8 @@ const ChatSidebar = (props: Props) => {
 
   const redirect = (chatDocId) => {
     console.log("redirectid: ", chatDocId);
-    router.push(`/user/chat2/${chatDocId}`);
+    router.push(`/user/chat/${chatDocId}`);
   };
-
-  //   ------ new chat ------------ //
-  // const newChat = async () => {
-  //   const input = prompt("enter email of chat recipient");
-
-  //   if (!chatExist(chats, user, input) && input !== user.email) {
-  //     await insertDoc("chats", { users: [user.email, input] });
-  //   } else {
-  //     console.log("check the mail ");
-  //   }
-  // };
 
   console.log("chats: ", chats);
 
@@ -106,9 +93,13 @@ const ChatSidebar = (props: Props) => {
           boxShadow={"16"}
           sx={{ scrollbarWidth: "none", overflowX: "auto" }}
         >
-          {chats?.length > 0 ? <ChatParticipants /> :
-          <Box display={'flex'} justifyContent='center'>You have no chat</Box>
-          }
+          {chats?.length > 0 ? (
+            <ChatParticipants />
+          ) : (
+            <Box display={"flex"} justifyContent="center">
+              You have no chat
+            </Box>
+          )}
         </Box>
       </Box>
     </>

@@ -54,7 +54,7 @@ const NavBar = () => {
     } else if (e === "Contact") {
       router.push(`/${e.toLowerCase()}`);
     } else if (e === "Messages") {
-      router.push(`/user/chat2/messages/`);
+      router.push(`/user/chat/messages/`);
     } else {
       router.push(`/user/${e.toLowerCase()}`);
     }

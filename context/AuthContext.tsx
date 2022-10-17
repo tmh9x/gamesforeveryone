@@ -193,8 +193,8 @@ export const AuthContextProvider = ({
     try {
       const querySnapshot = await getDocs(collection(db, "games"));
       querySnapshot.forEach((doc) => {
-        console.log(`${doc.id} => ${doc.data()}`);
-        console.log("DATA", doc.data());
+        // console.log(`${doc.id} => ${doc.data()}`);
+        // console.log("DATA", doc.data());
         const gamesData = doc.data() as Game;
         dataArray.push({ ...gamesData, gameId: doc.id });
         setGames(dataArray);
@@ -202,7 +202,6 @@ export const AuthContextProvider = ({
     } catch (error) {
       console.log("error getgames", error);
     }
-    console.log("dataArray", dataArray);
   };
   // ------------- Get Games -FS ------------- ends //
   // ------------- set Like -FS ------------- starts //
@@ -259,7 +258,7 @@ export const AuthContextProvider = ({
   console.log("user", user && user);
   // console.log("openAlert: ", openAlert);
   // console.log("isEmailAlreadyExists: ", isEmailAlreadyExists);
-  console.log("UserId: ", dbUserId);
+  // console.log("UserId: ", dbUserId);
   console.log("dbUsers", dbUsers && dbUsers);
 
   return (

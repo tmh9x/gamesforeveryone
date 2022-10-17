@@ -57,8 +57,8 @@ type Chats = Chat[];
 
     try {
       await SendMessageHook(chats, gameId, user, sellerEmail, newChatMsg);
+      goBack();
       setInputs({ ...inputs, chatText: "" });
-      // goBack();
     } catch (error) {
       console.log("error add message: ", error);
     }
