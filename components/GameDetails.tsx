@@ -14,7 +14,7 @@ declare module "react" {
 }
 
 const GameDetails = ({ game }: any) => {
-  const { dbUserId, user } = useAuth();
+  const { dbUserId, user, dbUsers } = useAuth();
   const noImage =
     "https://eingleses.com/wp-content/uploads/2019/07/no-image.jpg";
 
@@ -23,9 +23,10 @@ const GameDetails = ({ game }: any) => {
     localStorage.setItem("sellerId", game.userId);
     localStorage.setItem("sellerEmail", game.sellerEmail);
   };
-  // console.log("dbUserId: ", dbUserId);
-  // console.log("game: ", game);
-  // console.log("compare", game.userId, user.uid);
+ 
+  console.log("dbUserId: ", dbUserId);
+  console.log("game: ", game);
+  console.log("dbUsers: ", dbUsers);
   return (
     <>
       {game ? (
@@ -100,14 +101,14 @@ const GameDetails = ({ game }: any) => {
             className="contact_box"
             style={{ display: "flex", margin: "auto", width: "90%" }}
           >
-            <Button
+          {game && game.sellerPhone &&  <Button
               className="call_btn"
               style={{ marginRight: "10px" }}
               variant="contained"
               fullWidth
             >
               Call
-            </Button>
+            </Button>}
             <Link
               href="/game/send-message/[id]"
               as={`/game/send-message/${game.gameId}`}

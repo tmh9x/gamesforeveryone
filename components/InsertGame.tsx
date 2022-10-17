@@ -73,7 +73,7 @@ const InsertGame = () => {
   const [imageUpload, setImageUpload] = useState<any>(null);
   const [inputValues, SetInputValues] = useState<string[]>([]);
 
-  const { user } = useAuth();
+  const { user, dbUsers } = useAuth();
   let myuuid = uuidv4();
 
   const theme = useTheme();
@@ -89,6 +89,7 @@ const InsertGame = () => {
       ...gameData,
       userId: user.uid,
       sellerEmail: user.email,
+      sellerPhone: dbUsers.phone,
       [event.target.name]: typeof value !== "string" ? value : value.trim(),
     });
   };
@@ -186,6 +187,7 @@ const InsertGame = () => {
 
   // console.log("user", user);
   console.log("gameData", gameData);
+  console.log("dbUsers: ", dbUsers);
 
   return (
     <Container

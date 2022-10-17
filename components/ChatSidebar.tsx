@@ -16,13 +16,15 @@ const ChatSidebar = (props: Props) => {
   const chats = snapshot?.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
   const router = useRouter();
   const params = router.query;
+const chatExist = (chats && user) && chats.filter((chat) => chat.users.includes(user.email))
 
-  const redirect = (chatDocId) => {
-    console.log("redirectid: ", chatDocId);
-    router.push(`/user/chat/${chatDocId}`);
-  };
+const redirect = (chatDocId) => {
+  console.log("redirectid: ", chatDocId);
+  router.push(`/user/chat/${chatDocId}`);
+};
 
-  console.log("chats: ", chats);
+console.log("chatsSidebar: ", chats);
+console.log("chatExist: ", chatExist);
 
   const ChatParticipants = () => {
     return (
@@ -30,7 +32,9 @@ const ChatSidebar = (props: Props) => {
       user &&
       chats
         .filter((chat) => chat.users.includes(user.email))
-        .map((chat) => (
+        .map((chat) => {
+          console.log("chatMap: ", chat);
+        return (
           <Box
             key={Math.random()}
             className="chat-list-box"
@@ -62,7 +66,8 @@ const ChatSidebar = (props: Props) => {
               </Typography>
             </Box>
           </Box>
-        ))
+        );
+  })
     );
   };
 
@@ -93,11 +98,11 @@ const ChatSidebar = (props: Props) => {
           boxShadow={"16"}
           sx={{ scrollbarWidth: "none", overflowX: "auto" }}
         >
-          {chats?.length > 0 ? (
+          {chatExist && chatExist.length > 0 ? (
             <ChatParticipants />
           ) : (
             <Box display={"flex"} justifyContent="center">
-              You have no chat
+              You have no chat yet
             </Box>
           )}
         </Box>
