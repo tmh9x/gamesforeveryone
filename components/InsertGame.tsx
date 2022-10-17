@@ -170,7 +170,6 @@ const InsertGame: React.FC = () => {
               };
               console.log("newGame: ", newGame);
 
-              // const docRef =  addDoc(collection(db, "games"), newGame);
               addDoc(collection(db, "games"), newGame).then((result) => {
                 console.log("Document written with ID: ", result.id);
               });
