@@ -44,21 +44,7 @@ export const AuthContextProvider = ({
   const [dbUserId, setDbUserId] = useState<string>("");
   const [games, setGames] = useState<Games>([]);
 
-  // ------------- used in edit-user.tsx ---- -- starts
-  type TEditedUserData = {
-    username?: string;
-    first_name?: string;
-    last_name?: string;
-    birthday?: string;
-    gender?: string;
-    street?: string;
-    postcode?: number;
-    city?: string;
-    phone?: number;
-    email?: string;
-    authId?: string;
-    id?: string;
-  };
+  
   const [editedUserData, setEditedUserData] = useState<TEditedUserData>({
     username: "",
     first_name: "",

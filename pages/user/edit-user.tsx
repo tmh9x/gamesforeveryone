@@ -1,91 +1,41 @@
 import {
-  Alert,
-  Autocomplete,
   Avatar,
   Box,
   Button,
   CssBaseline,
   FormControl,
-  FormControlLabel,
   Grid,
-  IconButton,
-  InputAdornment,
   InputLabel,
   MenuItem,
   Select,
-  Snackbar,
   TextField,
-  Tooltip,
   Typography,
 } from "@mui/material";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { getAuth, updateProfile } from "firebase/auth";
-import InfoIcon from "@mui/icons-material/Info";
-import AlertDialogSlide from "../../components/alerts/AlertDialogSlide";
-import CheckBoxIcon from "@mui/icons-material/CheckBox";
-import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
+import { doc, setDoc } from "firebase/firestore";
+
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import SnackbarMui from "../../components/alerts/SnackbarMui";
+import { db } from "../../firebase/config";
 import { useAuth } from "../../context/AuthContext";
 import { useRouter } from "next/router";
-import { number, string } from "prop-types";
-import { db } from "../../firebase/config";
-import {
-  collection,
-  getDocs,
-  doc,
-  query,
-  where,
-  setDoc,
-  onSnapshot,
-} from "firebase/firestore";
 
-// import { formatDataYyMmDd } from "../utils/formatData";
-
-const auth: any = getAuth();
 const theme = createTheme();
-const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
-const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
-const EditUser: React.FC<any> = () => {
-  const [isPwValid, setIsPwValid] = useState<boolean>(true);
-  const [isPwEquivalent, setIsPwEquivalent] = useState<boolean>(false);
-  const [isPwCharcGreatThan, setIsPwCharcGreatThan] = useState<boolean>(true);
-  const [isEmailValid, setIsEmailValid] = React.useState<boolean>(true);
-  const [selectedImage, setSelectedImage] = useState<any>(null);
-  const [FSUsers, setFSUsers] = useState<any>(null);
-  const inputFile = useRef<HTMLInputElement | null>;
-
-  // const inputFile = useRef<HTMLInputElement>(null);
-  // const inputFile = useRef<HTMLInputElement>();
-
+const EditUser: React.FC = () => {
   const {
     user,
-    dialogTitle,
-    setDialogTitle,
-    openAlert,
-    setOpenAlert,
-    alertText2,
-    setAlertText2,
-    alerTxt1,
-    setAlerTxt1,
     getDBUsers,
-    seteditedUserData,
     editedUserData,
     handleInputValueChange,
     dbUsers,
-    setDbUsers,
+    setOpenSnackBar,
   } = useAuth();
-
-  // const [userData, setUserData] = useState({
-  //   email: "",
-  //   password1: "",
-  // });
 
   const router = useRouter();
 
-  //   --------- Submit Changes to Firebase ---- starts
+  //   --------- Submit profile update to Firebase ---- starts
   const handleEditSubmit = async (e: any) => {
     e.preventDefault();
     const newUser = {
@@ -93,48 +43,16 @@ const EditUser: React.FC<any> = () => {
       authId: user.uid,
     };
     console.log("newUser: ", newUser);
-    const usersRef = doc(db, "users", dbUsers.id);
-    setDoc(usersRef, newUser, { merge: true });
-
-    /* ---- Email Check ---- starts*/
-    // let re =
-    //   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-    // if (re.test(editedUserData.email)) {
-    //     console.log("valid email :>> ");
-    //     setIsEmailValid(true);
-    // } else {
-    //     console.log("invalid email");
-    //     setIsEmailValid(false);
-    // }
-    /* ---- Password Check ---- starts*/
-    // if (editedUserData.password1 !== editedUserData.password2) {
-    //   console.log(
-    //     "Your first Password is not equivalent with 2nd password. Please enter same password in both fields."
-    //   );
-    //   setIsPwEquivalent(true);
-    //   return false;
-    // } else if (editedUserData.password1.length < 5) {
-    //   console.log("Password validation is at least 6 character");
-
-    //   setIsPwCharcGreatThan(false);
-    //   return false;
-    // } else {
-    //   setEditedUserData({
-    //     ...editedUserData,
-    //     password1: editedUserData.password1,
-    //   });
-    // }
-    /* ---- Password Check ---- ends*/
+    try {
+      const usersRef = doc(db, "users", dbUsers.id);
+      setDoc(usersRef, newUser, { merge: true });
+      setOpenSnackBar(true);
+      router.push('/user/profile');
+    } catch (error) {
+      console.log("error-edit-user: ", error);
+    }
   };
-  //   --------- Submit Changes to Firebase ---- ends
-
-  // -------- Remove Selected Image  -------
-  const removeSelectedImage = () => {
-    setSelectedImage(null);
-  };
-
- 
+  //   --------- Submit profile update to Firebase ---- ends
 
   useEffect(() => {
     getDBUsers();
@@ -143,9 +61,9 @@ const EditUser: React.FC<any> = () => {
 
   //   console.log("user", user);
   //   console.log(userData);
-  console.log("editedUserData: ", editedUserData);
-  console.log("dbUsers: ", dbUsers);
-  console.log("FBuser", user);
+  // console.log("editedUserData: ", editedUserData);
+  // console.log("dbUsers: ", dbUsers);
+  // console.log("FBuser", user);
   return (
     <>
       <ThemeProvider theme={theme}>
@@ -173,7 +91,6 @@ const EditUser: React.FC<any> = () => {
               User
             </Typography>
 
-            <SnackbarMui />
 
             <Box
               component="form"
@@ -209,8 +126,6 @@ const EditUser: React.FC<any> = () => {
                     autoComplete="off"
                     id="first_name"
                     label="First Name"
-                    // defaultValue={mtrsCurrData.first_name}
-                    // autoFocus
                     value={
                       editedUserData.first_name ? editedUserData.first_name : ""
                     }
@@ -246,11 +161,6 @@ const EditUser: React.FC<any> = () => {
                     value={
                       editedUserData.birthday ? editedUserData.birthday : ""
                     }
-                    // value={
-                    //   editedUserData.birthday
-                    //     ? formatDataYyMmDd(editedUserData.birthday)
-                    //     : ""
-                    // }
                     onChange={handleInputValueChange}
                   />
                 </Grid>
@@ -333,7 +243,6 @@ const EditUser: React.FC<any> = () => {
                 <Grid item xs={12}>
                   <TextField
                     // color="error"
-                    error={!isEmailValid}
                     size="small"
                     type="email"
                     disabled
@@ -343,14 +252,10 @@ const EditUser: React.FC<any> = () => {
                     name="email"
                     autoComplete="email"
                     value={editedUserData.email ? editedUserData.email : ""}
-                    // onChange={handleInputValueChange}
-                    // onFocus={handlePwInputFocus}
-                    // onBlur={onBlur}
                   />
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
-                    error={!isPwValid}
                     size="small"
                     disabled
                     fullWidth
@@ -359,12 +264,6 @@ const EditUser: React.FC<any> = () => {
                     type="password"
                     id="password1"
                     autoComplete="new-password"
-                    // value={
-                    //   editedUserData.password1 ? editedUserData.password1 : ""
-                    // }
-                    // onChange={handleInputValueChange}
-                    // value={password1}
-                    // onChange={(e) => setPassword1(e.target.value)}
                   />
                 </Grid>
               </Grid>

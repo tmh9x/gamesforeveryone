@@ -6,6 +6,7 @@ import AlertDialogSlide from "../../components/alerts/AlertDialogSlide";
 import Container from "@mui/material/Container";
 import Image from "next/image";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import SnackbarMui from "../../components/alerts/SnackbarMui";
 import { db } from "../../firebase/config";
 import { getAuth } from "firebase/auth";
 import { useAuth } from "../../context/AuthContext";
@@ -16,7 +17,6 @@ const Profile = () => {
   const user: any = auth.currentUser;
   const { setOpenAlert, delUser, delGame } = useAuth();
   const [games, setGames] = useState<Games>([]);
-  // const [games, setGames] = useState<any>(null);
 
   const openDeleteAlert = () => {
     setOpenAlert(true);
@@ -26,30 +26,10 @@ const Profile = () => {
     snapshotListenOptions: { includeMetadataChanges: true },
   });
 
-  // ----------- Get Gamses data -------------- starts
-  const [gamesData, gamesDataLoading, gamesDataError] = useCollection(
-    collection(db, "games"),
-    {
-      snapshotListenOptions: { includeMetadataChanges: true },
-    }
-  );
-  // ----------- Get Gamses data -------------- ends
-
   const deleteGame = async (gameId: string | undefined) => {
     delGame(gameId);
     console.log("game successfully deleted");
   };
-
-  // console.log("games: ", games);
-  console.log(
-    "value: ",
-    value?.docs.map((doc) => doc.data())
-  );
-  // console.log("auth.currentUser: ", auth.currentUser);
-  // console.log(
-  //   "games: ",
-  //   gamesData?.docs.map((doc) => doc.data())
-  // );
 
   const getGamesByUserId = async () => {
     const gamesArray: Games = [];
@@ -69,10 +49,16 @@ const Profile = () => {
 
   useEffect(() => {
     getGamesByUserId();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  console.log("user: ", user);
-  console.log("GAMES", games);
+  // console.log("user: ", user);
+  // console.log("GAMES", games);
+  // console.log("auth.currentUser: ", auth.currentUser);
+  // console.log(
+  //   "games: ",
+  //   gamesData?.docs.map((doc) => doc.data())
+  // );
   return (
     <>
       <AlertDialogSlide
@@ -211,6 +197,7 @@ const Profile = () => {
             </Button>
           </Container>
         </>
+        <SnackbarMui text="Profil updated!" duration={1000} />
       </div>
     </>
   );

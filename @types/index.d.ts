@@ -16,6 +16,23 @@ interface Game {
 
 type Games = Game[];
 
+// ------------- used for edit-user.tsx ---- -- starts
+  type TEditedUserData = {
+    username?: string;
+    first_name?: string;
+    last_name?: string;
+    birthday?: string;
+    gender?: string;
+    street?: string;
+    postcode?: number;
+    city?: string;
+    phone?: number;
+    email?: string;
+    authId?: string;
+    id?: string;
+  };
+
+
 interface Params {
   params: { id: string };
 }
