@@ -30,13 +30,11 @@ interface IMessageProps {
 
 interface Message {
   messageId: string;
-  creatorEmail: string;
-  creatorId: string;
-  receiverEmail: string;
+  sender: string;
   gameId: string;
   message: string;
   time: date | undefined;
-  buyerId: string;
-  sellerId: string;
 }
 type Messages = Message[];
+
+

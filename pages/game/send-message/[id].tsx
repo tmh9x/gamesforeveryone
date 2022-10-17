@@ -25,10 +25,15 @@ const SendMessage: React.FC<Props> = ({ message }) => {
   const [inputs, setInputs] = useState({
     chatText: "",
   });
-
+interface Chat {
+  gameId: string;
+  id: string;
+  users: string[];
+}
+type Chats = Chat[];
   // ------- use Firestore hooks / get chats collection ----------- //
   const [snapshot, loading, error] = useCollection(collection(db, "chats"));
-  const chats = snapshot?.docs.map((doc) => ({
+  const chats: Chats = snapshot?.docs.map((doc) => ({
     id: doc.id,
     ...doc.data(),
   }));
@@ -43,16 +48,17 @@ const SendMessage: React.FC<Props> = ({ message }) => {
   const newChatMsg = {
     text: inputs.chatText.trim(),
     sender: user?.email,
-    gameId,
     timestamp: serverTimestamp(),
   };
 
   // ------------- send message / FS ------------- start //
   const handleSubmitClick = async () => {
+  console.log("user.chats: ", chats);
+
     try {
       await SendMessageHook(chats, gameId, user, sellerEmail, newChatMsg);
       setInputs({ ...inputs, chatText: "" });
-      goBack();
+      // goBack();
     } catch (error) {
       console.log("error add message: ", error);
     }

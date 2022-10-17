@@ -17,9 +17,7 @@ const ChatSidebar = (props: Props) => {
   const [snapshot, loading, error] = useCollection(collection(db, "chats"));
   const chats = snapshot?.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
   const router = useRouter();
-  console.log("router: ", router);
-const params = router.query;
-
+  const params = router.query;
 
   const redirect = (chatDocId) => {
     console.log("redirectid: ", chatDocId);
@@ -31,14 +29,13 @@ const params = router.query;
     const input = prompt("enter email of chat recipient");
 
     if (!chatExist(chats, user, input) && input !== user.email) {
-      await insertDoc('chats', { users: [user.email, input] });
+      await insertDoc("chats", { users: [user.email, input] });
     } else {
       console.log("check the mail ");
     }
   };
 
- 
-    // console.log("chats: ", chats);
+  console.log("chats: ", chats);
 
   const ChatParticipants = () => {
     return (
@@ -87,41 +84,31 @@ const params = router.query;
       <Box
         className="sidebar-con"
         bgcolor="gray"
-        width={params.id === 'messages' ? '100%' : "30%"}
+        width={params.id === "messages" ? "100%" : "30%"}
         height={"80vh"}
         borderRight={"solid 1px blue"}
-        display={params.id !== 'messages' ? 'none' : "flex"}
+        display={params.id !== "messages" ? "none" : "flex"}
         flexDirection={"column"}
         overflow={"auto"}
       >
-       {user.email}
+        {user.email}
         <Box
+          className="sidebar-header-con"
           bgcolor="lightcoral"
           width={"100%"}
           height={"5vh"}
-          className="sidebar-header-con"
           display={"flex"}
           justifyContent={"end"}
-        >
-          <IconButton>
-            <KeyboardDoubleArrowLeftIcon />
-          </IconButton>
-        </Box>
-        <Button
-          onClick={() => newChat()}
-          variant="contained"
-          size="small"
-          sx={{ margin: "10px", padding: "4px", background: "#595252" }}
-        >
-          New Chat
-        </Button>
+        ></Box>
+
         <Box
           className="chat-list-con"
-          // overflowX={'scroll'}
           boxShadow={"16"}
           sx={{ scrollbarWidth: "none", overflowX: "auto" }}
         >
-          <ChatParticipants />
+          {chats?.length > 0 ? <ChatParticipants /> :
+          <Box display={'flex'} justifyContent='center'>You have no chat</Box>
+          }
         </Box>
       </Box>
     </>
