@@ -4,13 +4,16 @@ interface Game {
   creator?: string;
   description?: string;
   fsk?: number;
-  platform?: string[];
+  platform?: string;
   year?: number;
   image: string;
   genre?: string[];
   amount?: number;
   gameId?: string;
   image?: string;
+  userId?: string;
+  sellerEmail?: string;
+  sellerPhone?: string;
   userId?: string;
 }
 
