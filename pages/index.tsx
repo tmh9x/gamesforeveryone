@@ -69,7 +69,6 @@ const Home: NextPage = () => {
   const [imageList, setImageList] = useState<string[]>([]);
   const [expanded, setExpanded] = useState(false);
   const { getGames, games, setGames } = useAuth();
-  const [q, setQ] = useState();
 
   const [input, setInput] = useState({
     title: "",
@@ -85,13 +84,6 @@ const Home: NextPage = () => {
     const { value, name } = event.target;
     setInput({ ...input, [name]: value });
   };
-
-  /*   const getMakeQueries = () => {
-    const gamesRef = collection(db, "games");
-  const queries =  Object.keys(input).map(key: string =>{
-      return query(gamesRef, where(key, "==", input[key]))
-    }).join(",")
-  } */
 
   const getFilteredGames = async () => {
     const filteredGames: Games = [];
@@ -182,10 +174,6 @@ const Home: NextPage = () => {
   useEffect(() => {
     getFilteredGames();
   }, [input]);
-
-  /*   const handleGenreChange = (event: SelectChangeEvent) => {
-    setGenre(event.target.value as string);
-  }; */
 
   const imageListRef = ref(storage, "/game-images");
 
