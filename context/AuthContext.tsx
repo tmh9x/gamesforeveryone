@@ -192,11 +192,12 @@ export const AuthContextProvider = ({
 
     try {
       const querySnapshot = await getDocs(collection(db, "games"));
+      /* const q = await  */
       querySnapshot.forEach((doc) => {
         console.log(`${doc.id} => ${doc.data()}`);
         console.log("DATA", doc.data());
         const gamesData = doc.data() as Game;
-        dataArray.push({ ...gamesData, gameId: doc.id });
+        dataArray.push(doc.data());
         setGames(dataArray);
       });
     } catch (error) {
@@ -289,6 +290,7 @@ export const AuthContextProvider = ({
         delGame,
         dbUserId,
         getGames,
+        setGames,
         games,
         handleLike,
       }}
