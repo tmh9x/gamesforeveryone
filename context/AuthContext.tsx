@@ -192,6 +192,7 @@ export const AuthContextProvider = ({
 
     try {
       const querySnapshot = await getDocs(collection(db, "games"));
+      /* const q = await  */
       querySnapshot.forEach((doc) => {
         console.log(`${doc.id} => ${doc.data()}`);
         console.log("DATA", doc.data());
