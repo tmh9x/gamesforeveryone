@@ -145,6 +145,7 @@ export const AuthContextProvider = ({
   const logout = async () => {
     setUser(null);
     await signOut(auth);
+    localStorage.clear();
   };
   // ------------- Logout User ------------- ends //
 
