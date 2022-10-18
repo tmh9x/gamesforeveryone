@@ -16,6 +16,7 @@ import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
 import AddIcon from "@mui/icons-material/Add";
+import { HTMLInputTypeAttribute } from "react";
 import { db } from "../firebase/config";
 import { storage } from "../firebase/config";
 import { useAuth } from "../context/AuthContext";
@@ -32,7 +33,9 @@ const MenuProps = {
     },
   },
 };
-
+type InputBaseProps = {
+  type?: HTMLInputTypeAttribute;
+};
 const genres = [
   "Ego-Shooter",
   "Open-World-Spiel",
@@ -68,18 +71,22 @@ const platforms = [
   "Nintedo Super NES Classic",
 ].sort();
 
-const InsertGame = () => {
+const InsertGame: React.FC = () => {
   const [gameData, setGameData] = useState<Game | any>({});
-  const [imageUpload, setImageUpload] = useState<any>(null);
+  const [imageUpload, setImageUpload] = useState<File>();
   const [inputValues, SetInputValues] = useState<string[]>([]);
 
-  const { user } = useAuth();
+  const { user, dbUsers } = useAuth();
   let myuuid = uuidv4();
 
   const theme = useTheme();
 
-  const handleChange = (event: any) => {
-    console.log("-typof: ", typeof event);
+  const handleChange = (
+    event:
+      | React.ChangeEvent<HTMLInputElement>
+      | SelectChangeEvent<HTMLSelectElement>
+
+  ) => {
     const {
       target: { value },
     } = event;
@@ -88,6 +95,8 @@ const InsertGame = () => {
     setGameData({
       ...gameData,
       userId: user.uid,
+      sellerEmail: user.email,
+      sellerPhone: dbUsers.phone,
       [event.target.name]: typeof value !== "string" ? value : value.trim(),
     });
   };
@@ -169,7 +178,6 @@ const InsertGame = () => {
               };
               console.log("newGame: ", newGame);
 
-              // const docRef =  addDoc(collection(db, "games"), newGame);
               addDoc(collection(db, "games"), newGame).then(async (docId) => {
                 console.log("Document written with ID: ", docId.id);
 
@@ -192,6 +200,7 @@ const InsertGame = () => {
 
   // console.log("user", user);
   console.log("gameData", gameData);
+  console.log("dbUsers: ", dbUsers);
 
   return (
     <Container
@@ -210,6 +219,7 @@ const InsertGame = () => {
         <input
           type="file"
           onChange={(e: any) => {
+            // console.log("event: ",  e.target.files);
             setImageUpload(e.target.files[0]);
           }}
         />
@@ -228,7 +238,6 @@ const InsertGame = () => {
             onChange={(event: SelectChangeEvent<typeof gameData.platform>) =>
               handleChange(event)
             }
-            // onChange={handleChange}
           >
             {platforms.map((name) => (
               <MenuItem key={name} value={name}>
@@ -270,11 +279,10 @@ const InsertGame = () => {
             onChange={(event: SelectChangeEvent<typeof gameData.genre>) =>
               handleChange(event)
             }
-            // onChange={handleChange}
             input={<OutlinedInput id="select-multiple-genre" label="Genre" />}
             renderValue={(selected) => (
               <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                {selected.map((value: any) => (
+                {selected.map((value: string) => (
                   <Chip key={value} label={value} />
                 ))}
               </Box>

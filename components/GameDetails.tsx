@@ -14,17 +14,19 @@ declare module "react" {
 }
 
 const GameDetails = ({ game }: any) => {
-  const { dbUserId, user } = useAuth();
+  const { dbUserId, user, dbUsers } = useAuth();
   const noImage =
     "https://eingleses.com/wp-content/uploads/2019/07/no-image.jpg";
 
   const handleMessageGame = () => {
     localStorage.setItem("gameId", game.gameId);
     localStorage.setItem("sellerId", game.userId);
+    localStorage.setItem("sellerEmail", game.sellerEmail);
   };
+
   console.log("dbUserId: ", dbUserId);
   console.log("game: ", game);
-  console.log("compare", game.userId, user.uid);
+  console.log("dbUsers: ", dbUsers);
   return (
     <>
       {game ? (
@@ -99,15 +101,20 @@ const GameDetails = ({ game }: any) => {
             className="contact_box"
             style={{ display: "flex", margin: "auto", width: "90%" }}
           >
-            <Button
-              className="call_btn"
-              style={{ marginRight: "10px" }}
-              variant="contained"
-              fullWidth
+            {game && game.sellerPhone && (
+              <Button
+                className="call_btn"
+                style={{ marginRight: "10px" }}
+                variant="contained"
+                fullWidth
+              >
+                Call
+              </Button>
+            )}
+            <Link
+              href="/game/send-message/[id]"
+              as={`/game/send-message/${game.gameId}`}
             >
-              Call
-            </Button>
-            <Link href="/user/chat/[id]" as={`/user/chat/${game.gameId}`}>
               <Button
                 className="message_btn"
                 variant="contained"
@@ -120,14 +127,16 @@ const GameDetails = ({ game }: any) => {
           </div>
         ) : (
           <div className="edit-btn">
-            <Button
-              href="game/edit"
-              className="message_btn"
-              variant="contained"
-              fullWidth
-            >
-              Edit Game
-            </Button>
+            <Link href="/game/edit/[id]" as={`/game/edit/${game.gameId}`}>
+              <Button
+                href="game/edit"
+                className="message_btn"
+                variant="contained"
+                fullWidth
+              >
+                Edit Game
+              </Button>
+            </Link>
           </div>
         )}
       </Container>

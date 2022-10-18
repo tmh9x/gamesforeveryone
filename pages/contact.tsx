@@ -14,7 +14,6 @@ import SupportIcon from "@mui/icons-material/Support";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import emailjs from "@emailjs/browser";
-import formatData from "../utils/formatData";
 import { useAuth } from "../context/AuthContext";
 
 const theme = createTheme();

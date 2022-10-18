@@ -4,7 +4,7 @@ interface Game {
   creator?: string;
   description?: string;
   fsk?: number;
-  platform?: string[];
+  platform?: string;
   year?: number;
   image: string;
   genre?: string[];
@@ -12,16 +12,53 @@ interface Game {
   gameId?: string;
   image?: string;
   userId?: string;
+  sellerEmail?: string;
+  sellerPhone?: string;
+  userId?: string;
 }
 
 type Games = Game[];
 
-interface Params {
-  params: { id: string };
-}
 interface GameProps {
   gameProp: string | null;
 }
+
+interface User {
+  userId?: string;
+  user: {
+    email: string;
+    uid: string;
+  };
+}
+
+interface UserFirebase {
+  email: string | null;
+  uid: string;
+  displayName?: string | null;
+}
+
+
+// ------------- used for edit-user.tsx ---- -- starts
+  type TEditedUserData = {
+    username?: string;
+    first_name?: string;
+    last_name?: string;
+    birthday?: string;
+    gender?: string;
+    street?: string;
+    postcode?: number;
+    city?: string;
+    phone?: number;
+    email?: string;
+    authId?: string;
+    id?: string;
+  };
+
+
+interface Params {
+  params: { id: string };
+}
+
 
 interface IMessageProps {
   gameIdProp: string;
@@ -30,12 +67,15 @@ interface IMessageProps {
 
 interface Message {
   messageId: string;
-  creatorEmail: string;
-  creatorId: string;
-  gameId: string;
+  sender: string;
   message: string;
-  time: date | undefined;
-  buyerId: string;
-  sellerId: string;
+  timestamp: date | undefined;
 }
 type Messages = Message[];
+
+interface Chat {
+  gameId: string;
+  id: string;
+  users: string[];
+}
+type Chats = Chat[];

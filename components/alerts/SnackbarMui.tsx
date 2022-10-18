@@ -2,7 +2,6 @@ import * as React from "react";
 
 import { Alert, IconButton, Snackbar } from "@mui/material";
 
-import Button from "@mui/material/Button";
 import CloseIcon from "@mui/icons-material/Close";
 import { useAuth } from "../../context/AuthContext";
 

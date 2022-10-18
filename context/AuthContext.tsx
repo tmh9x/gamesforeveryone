@@ -32,7 +32,8 @@ export const AuthContextProvider = ({
   children: React.ReactNode;
 }) => {
   const [openAlert, setOpenAlert] = useState<boolean>(false);
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<UserFirebase | null>(null);
+  // const [user, setUser] = useState<User['user'] | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [isEmailAlreadyExists, setIsEmailAlreadyExists] =
     useState<boolean>(false);
@@ -44,21 +45,6 @@ export const AuthContextProvider = ({
   const [dbUserId, setDbUserId] = useState<string>("");
   const [games, setGames] = useState<Games>([]);
 
-  // ------------- used in edit-user.tsx ---- -- starts
-  type TEditedUserData = {
-    username?: string;
-    first_name?: string;
-    last_name?: string;
-    birthday?: string;
-    gender?: string;
-    street?: string;
-    postcode?: number;
-    city?: string;
-    phone?: number;
-    email?: string;
-    authId?: string;
-    id?: string;
-  };
   const [editedUserData, setEditedUserData] = useState<TEditedUserData>({
     username: "",
     first_name: "",
@@ -113,6 +99,8 @@ export const AuthContextProvider = ({
       insertDoc("users", {
         authId: userCredential.user.uid,
         email: userCredential.user.email,
+        image:
+          "https://thumbs.dreamstime.com/t/default-placeholder-profile-icon-avatar-gray-man-90197993.jpg",
       });
       console.log("userCredential: ", userCredential);
     } catch (err: any) {
@@ -161,17 +149,21 @@ export const AuthContextProvider = ({
   // ------------- Logout User ------------- ends //
 
   // ------------- Delete User (FB & FS) ------------- start //
-  const delUser = async (e: any) => {
-    const user: any = auth.currentUser;
-    try {
+  console.log("auth.currentUser: ", auth.currentUser);
+  const delUser = async () => {
+    const currentUser = auth.currentUser;
+    if(currentUser){
+        try {
       // delete FB user
-      const deleteU: any = deleteUser(user);
+      const deleteU: any = deleteUser(currentUser);
       // delete FS user
       await deleteDoc(doc(db, "users", dbUsers.id));
       console.log("User deleted");
     } catch (err) {
       console.log("error user deleting: ", err);
     }
+    }
+  
   };
   // --------------- Delete User (FB & FS) ------------- ends //
   // ------------- Delete Game -FS ------------- starts //
@@ -194,8 +186,8 @@ export const AuthContextProvider = ({
       const querySnapshot = await getDocs(collection(db, "games"));
       /* const q = await  */
       querySnapshot.forEach((doc) => {
-        console.log(`${doc.id} => ${doc.data()}`);
-        console.log("DATA", doc.data());
+        // console.log(`${doc.id} => ${doc.data()}`);
+        // console.log("DATA", doc.data());
         const gamesData = doc.data() as Game;
         dataArray.push(doc.data());
         setGames(dataArray);
@@ -203,7 +195,6 @@ export const AuthContextProvider = ({
     } catch (error) {
       console.log("error getgames", error);
     }
-    console.log("dataArray", dataArray);
   };
   // ------------- Get Games -FS ------------- ends //
   // ------------- set Like -FS ------------- starts //
@@ -260,7 +251,7 @@ export const AuthContextProvider = ({
   console.log("user", user && user);
   // console.log("openAlert: ", openAlert);
   // console.log("isEmailAlreadyExists: ", isEmailAlreadyExists);
-  console.log("UserId: ", dbUserId);
+  // console.log("UserId: ", dbUserId);
   console.log("dbUsers", dbUsers && dbUsers);
 
   return (
