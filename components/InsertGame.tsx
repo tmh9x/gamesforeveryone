@@ -12,7 +12,7 @@ import {
 import React, { useState } from "react";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { Theme, useTheme } from "@mui/material/styles";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
 import AddIcon from "@mui/icons-material/Add";
@@ -178,8 +178,15 @@ const InsertGame: React.FC = () => {
               };
               console.log("newGame: ", newGame);
 
-              addDoc(collection(db, "games"), newGame).then((result) => {
-                console.log("Document written with ID: ", result.id);
+              addDoc(collection(db, "games"), newGame).then(async (docId) => {
+                console.log("Document written with ID: ", docId.id);
+
+                const gamesRef = doc(db, "games", docId.id);
+
+                // Set the "capital" field of the city 'DC'
+                await updateDoc(gamesRef, {
+                  gameId: docId.id,
+                });
               });
             });
           }
