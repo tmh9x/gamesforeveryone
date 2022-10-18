@@ -78,7 +78,11 @@ const InsertGame: React.FC = () => {
 
   const theme = useTheme();
 
-  const handleChange = (event: any) => {
+  const handleChange = (
+    event:
+      | React.ChangeEvent<HTMLInputElement>
+      | SelectChangeEvent<HTMLSelectElement>
+  ) => {
     const {
       target: { value },
     } = event;
@@ -222,7 +226,6 @@ const InsertGame: React.FC = () => {
             onChange={(event: SelectChangeEvent<typeof gameData.platform>) =>
               handleChange(event)
             }
-            // onChange={handleChange}
           >
             {platforms.map((name) => (
               <MenuItem key={name} value={name}>
@@ -264,7 +267,6 @@ const InsertGame: React.FC = () => {
             onChange={(event: SelectChangeEvent<typeof gameData.genre>) =>
               handleChange(event)
             }
-            // onChange={handleChange}
             input={<OutlinedInput id="select-multiple-genre" label="Genre" />}
             renderValue={(selected) => (
               <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
