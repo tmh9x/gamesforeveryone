@@ -23,6 +23,14 @@ interface GameProps {
   gameProp: string | null;
 }
 
+interface User {
+  userId?: string;
+  user: {
+    email: string;
+    uid: string;
+  };
+}
+
 // ------------- used for edit-user.tsx ---- -- starts
   type TEditedUserData = {
     username?: string;

@@ -16,6 +16,7 @@ import { addDoc, collection } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
 import AddIcon from "@mui/icons-material/Add";
+import { HTMLInputTypeAttribute } from "react";
 import { db } from "../firebase/config";
 import { storage } from "../firebase/config";
 import { useAuth } from "../context/AuthContext";
@@ -32,7 +33,9 @@ const MenuProps = {
     },
   },
 };
-
+type InputBaseProps = {
+  type?: HTMLInputTypeAttribute;
+};
 const genres = [
   "Ego-Shooter",
   "Open-World-Spiel",
@@ -70,7 +73,7 @@ const platforms = [
 
 const InsertGame: React.FC = () => {
   const [gameData, setGameData] = useState<Game | any>({});
-  const [imageUpload, setImageUpload] = useState<any>(null);
+  const [imageUpload, setImageUpload] = useState<File>();
   const [inputValues, SetInputValues] = useState<string[]>([]);
 
   const { user, dbUsers } = useAuth();
@@ -82,6 +85,7 @@ const InsertGame: React.FC = () => {
     event:
       | React.ChangeEvent<HTMLInputElement>
       | SelectChangeEvent<HTMLSelectElement>
+
   ) => {
     const {
       target: { value },
@@ -208,6 +212,7 @@ const InsertGame: React.FC = () => {
         <input
           type="file"
           onChange={(e: any) => {
+            // console.log("event: ",  e.target.files);
             setImageUpload(e.target.files[0]);
           }}
         />
@@ -270,7 +275,7 @@ const InsertGame: React.FC = () => {
             input={<OutlinedInput id="select-multiple-genre" label="Genre" />}
             renderValue={(selected) => (
               <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                {selected.map((value: any) => (
+                {selected.map((value: string) => (
                   <Chip key={value} label={value} />
                 ))}
               </Box>

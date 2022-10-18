@@ -6,7 +6,7 @@ import { auth, db } from "../firebase/config";
 import { Box } from "@mui/system";
 import SendIcon from "@mui/icons-material/Send";
 
-const BottomBar = ({ userId, user }) => {
+const BottomBar = ({ userId, user }: User, ) => {
   const [inputs, setInputs] = useState({
     chatText: "",
   });
@@ -24,14 +24,14 @@ const BottomBar = ({ userId, user }) => {
     }
   };
 
-  const handleInputsChange = (e: any) => {
+  const handleInputsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = e.target;
     setInputs({ ...inputs, [name]: value });
   };
 
   console.log("user: ", user);
   console.log("userId: ", userId);
-  console.log("inputs: ", inputs.chatText);
+  console.log("inputs: ", inputs);
   return (
     <Box
       className="bottom-chat-send-con"
@@ -61,7 +61,11 @@ const BottomBar = ({ userId, user }) => {
       <IconButton
         className="bottom-send-btn"
         onClick={handleSubmitClick}
-        sx={{ width: "10%", color: !inputs.chatText ? "inherit" : "red", marginLeft:'2px' }}
+        sx={{
+          width: "10%",
+          color: !inputs.chatText ? "inherit" : "red",
+          marginLeft: "2px",
+        }}
       >
         <SendIcon />
       </IconButton>
