@@ -8,12 +8,20 @@ import { useAuth } from "../context/AuthContext";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { useRouter } from "next/router";
 
-type Props = {};
-// doc: if you decide to use on bigger screen, you can change the display size to i.e. 30%
-const ChatSidebar = (props: Props) => {
+const ChatSidebar: React.FC = () => {
   const { user } = useAuth();
   const [snapshot, loading, error] = useCollection(collection(db, "chats"));
-  const chats = snapshot?.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+  const chats: Chats = snapshot?.docs.map((doc) => {
+    console.log("doc.data(): ", doc.data());
+
+    return { ...doc.data(), id: doc.id };
+  }) as Chats;
+  // const chats: Chats = snapshot?.docs.map((doc) => {
+  //   console.log("doc.id: ", doc.id);
+  //   console.log("doc.data(): ", doc.data());
+
+  //   return { ...doc.data(), id: doc.id };
+  // });
   const router = useRouter();
   const params = router.query;
   const chatExist =
@@ -36,6 +44,7 @@ const ChatSidebar = (props: Props) => {
         .map((chat) => {
           console.log("chatMap: ", chat);
           return (
+            
             <Box
               key={Math.random()}
               className="chat-list-box"

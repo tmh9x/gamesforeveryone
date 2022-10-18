@@ -32,7 +32,8 @@ export const AuthContextProvider = ({
   children: React.ReactNode;
 }) => {
   const [openAlert, setOpenAlert] = useState<boolean>(false);
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<UserFirebase | null>(null);
+  // const [user, setUser] = useState<User['user'] | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [isEmailAlreadyExists, setIsEmailAlreadyExists] =
     useState<boolean>(false);
@@ -44,7 +45,6 @@ export const AuthContextProvider = ({
   const [dbUserId, setDbUserId] = useState<string>("");
   const [games, setGames] = useState<Games>([]);
 
-  
   const [editedUserData, setEditedUserData] = useState<TEditedUserData>({
     username: "",
     first_name: "",
@@ -149,17 +149,21 @@ export const AuthContextProvider = ({
   // ------------- Logout User ------------- ends //
 
   // ------------- Delete User (FB & FS) ------------- start //
-  const delUser = async (e: any) => {
-    const user: any = auth.currentUser;
-    try {
+  console.log("auth.currentUser: ", auth.currentUser);
+  const delUser = async () => {
+    const currentUser = auth.currentUser;
+    if(currentUser){
+        try {
       // delete FB user
-      const deleteU: any = deleteUser(user);
+      const deleteU: any = deleteUser(currentUser);
       // delete FS user
       await deleteDoc(doc(db, "users", dbUsers.id));
       console.log("User deleted");
     } catch (err) {
       console.log("error user deleting: ", err);
     }
+    }
+  
   };
   // --------------- Delete User (FB & FS) ------------- ends //
   // ------------- Delete Game -FS ------------- starts //

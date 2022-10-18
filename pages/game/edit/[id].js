@@ -26,7 +26,6 @@ const EditGame = (gm) => {
   const router = useRouter();
 
   const handleChange = (e) => {
-    console.log("e.target.value", e.target.value);
     setGameData({
       ...gameData,
       [e.target.name]: e.target.value,

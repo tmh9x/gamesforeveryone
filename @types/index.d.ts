@@ -31,6 +31,13 @@ interface User {
   };
 }
 
+interface UserFirebase {
+  email: string | null;
+  uid: string;
+  displayName?: string | null;
+}
+
+
 // ------------- used for edit-user.tsx ---- -- starts
   type TEditedUserData = {
     username?: string;
@@ -68,7 +75,7 @@ type Messages = Message[];
 
 interface Chat {
   gameId: string;
-  id: string | undefined;
+  id: string;
   users: string[];
 }
 type Chats = Chat[];
