@@ -1,10 +1,12 @@
-import { Button, IconButton, Typography } from "@mui/material";
+import { Button, Card, Container, IconButton, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { collection, doc, getDocs, query, where } from "firebase/firestore";
 import { deleteUser, getAuth } from "firebase/auth";
 
 import AlertDialogSlide from "../../components/alerts/AlertDialogSlide";
-import Container from "@mui/material/Container";
+import Box from "@mui/material/Box";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import EditIcon from "@mui/icons-material/Edit";
 import Image from "next/image";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import { db } from "../../firebase/config";
@@ -14,7 +16,7 @@ import { useCollection } from "react-firebase-hooks/firestore";
 const Profile = () => {
   const auth = getAuth();
   const user: any = auth.currentUser;
-  const { setOpenAlert, delUser, delGame } = useAuth();
+  const { setOpenAlert, delUser, delGame, editGame } = useAuth();
   const [games, setGames] = useState<Games>([]);
   // const [games, setGames] = useState<any>(null);
 
@@ -96,17 +98,16 @@ const Profile = () => {
           {value?.docs.map((doc) => {
             return (
               doc.data().authId === auth?.currentUser?.uid && (
-                <Container
+                <Box
                   key={doc.id}
                   sx={{
                     backgroundColor: "rgba(180, 180, 180, 0.1)",
                     borderRadius: "5px",
                     padding: "1em",
-                    width: "80%",
-                    margin: "2em auto",
+                    margin: "2em 1em",
                   }}
                 >
-                  <Container
+                  <Box
                     sx={{
                       display: "flex",
                       justifyContent: "center",
@@ -119,96 +120,147 @@ const Profile = () => {
                       width="100"
                       height="100"
                     />
-                  </Container>
-                  <Container
+                  </Box>
+                  <Box
                     sx={{ display: "flex", justifyContent: "space-between" }}
                   >
                     <Typography variant="body2">Firstname: </Typography>
                     <Typography>{doc.data()?.first_name}</Typography>
-                  </Container>
-                  <Container
+                  </Box>
+                  <Box
                     sx={{ display: "flex", justifyContent: "space-between" }}
                   >
                     <Typography variant="body2">Lastname: </Typography>
                     <Typography>{doc.data()?.last_name}</Typography>
-                  </Container>
-                  <Container
+                  </Box>
+                  <Box
                     sx={{ display: "flex", justifyContent: "space-between" }}
                   >
                     <Typography variant="body2">Gender: </Typography>
                     <Typography>{doc.data()?.gender}</Typography>
-                  </Container>
-                  <Container
+                  </Box>
+                  <Box
                     sx={{ display: "flex", justifyContent: "space-between" }}
                   >
                     <Typography variant="body2">Street: </Typography>
                     <Typography>{doc.data()?.street}</Typography>
-                  </Container>
-                  <Container
+                  </Box>
+                  <Box
                     sx={{ display: "flex", justifyContent: "space-between" }}
                   >
                     <Typography variant="body2">Post Code: </Typography>
                     <Typography>{doc.data()?.postcode}</Typography>
-                  </Container>
-                  <Container
+                  </Box>
+                  <Box
                     sx={{ display: "flex", justifyContent: "space-between" }}
                   >
                     <Typography variant="body2">City: </Typography>
                     <Typography>{doc.data()?.city}</Typography>
-                  </Container>
-                  <Container
+                  </Box>
+                  <Box
                     sx={{ display: "flex", justifyContent: "space-between" }}
                   >
                     <Typography variant="body2">Email: </Typography>
                     <Typography>{doc.data()?.email}</Typography>
-                  </Container>
-                  <Container
+                  </Box>
+                  <Box
                     sx={{ display: "flex", justifyContent: "space-between" }}
                   >
                     <Typography variant="body2">Phone: </Typography>
                     <Typography>{doc.data()?.Paragraphhone}</Typography>
-                  </Container>
-                  <Container
+                  </Box>
+                  <Box
                     sx={{ display: "flex", justifyContent: "space-between" }}
                   >
                     <Typography variant="body2">Birthday: </Typography>
                     <Typography>{doc.data()?.birthday}</Typography>
-                  </Container>
-                </Container>
+                  </Box>
+
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-around",
+                    }}
+                  >
+                    <Button variant="contained" href="/user/edit-user">
+                      Edit User
+                    </Button>
+
+                    <Button
+                      sx={{ backgroundColor: "#e63946" }}
+                      variant="contained"
+                      onClick={openDeleteAlert}
+                    >
+                      Delete User
+                    </Button>
+                  </Box>
+                </Box>
               )
             );
           })}
 
-          {games &&
-            games.map((game: Game, index: number) => (
-              <Container key={index} sx={{ display: "flex" }}>
-                <Image src={game.image} alt="" width="40px" height="40px" />
-                <Typography>{game.title}</Typography>
-                <IconButton
-                  sx={{ color: "#e63946" }}
-                  onClick={() => deleteGame(game.gameId)}
+          <Container
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "1em",
+            }}
+          >
+            {games &&
+              games.map((game: Game, index: number) => (
+                <Card
+                  key={index}
+                  sx={{ display: "grid", gridTemplateColumns: "30% 50% 20%" }}
                 >
-                  <RemoveCircleOutlineIcon />
-                </IconButton>
-              </Container>
-            ))}
+                  <Box>
+                    <Image
+                      src={game.image}
+                      alt=""
+                      width="150px"
+                      height="150px"
+                    />
+                  </Box>
 
-          <Container sx={{ display: "flex", flexDirection: "column" }}>
-            <Button variant="contained" href="/user/edit-user">
-              Edit Profile
-            </Button>
-            <br />
-            <Button variant="contained" href="/game/edit">
-              Edit Game
-            </Button>
-            <br />
-            <Button
-              sx={{ backgroundColor: "#e63946" }}
-              variant="contained"
-              onClick={openDeleteAlert}
-            >
-              Delete User
-            </Button>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      paddingLeft: "0.5em",
+                    }}
+                  >
+                    <Typography>{game.platform}</Typography>
+                    <Typography>{game.title}</Typography>
+                    <Typography>${game.price}</Typography>
+                    <Typography>{game.genre}</Typography>
+                  </Box>
+
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <IconButton
+                      sx={{ background: "#1A76D2", borderRadius: 1 }}
+                      href={`/game/edit/${game.gameId}`}
+                    >
+                      <EditIcon fontSize="large" sx={{ color: "#fff" }} />
+                    </IconButton>
+
+                    <IconButton
+                      sx={{ background: "#e63946", borderRadius: 1 }}
+                      onClick={() => deleteGame(game.gameId)}
+                    >
+                      <DeleteForeverIcon
+                        fontSize="large"
+                        sx={{ color: "#fff" }}
+                      />
+                    </IconButton>
+                  </Box>
+                </Card>
+              ))}
           </Container>
         </>
       </div>
