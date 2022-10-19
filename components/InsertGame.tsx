@@ -99,12 +99,13 @@ const InsertGame: React.FC = () => {
       ...gameData,
       userId: user.uid,
       sellerEmail: user.email,
-      sellerPhone: dbUsers.phone,
+      sellerPhone: dbUsers?.phone ? dbUsers.phone : "",
       [event.target.name]: typeof value !== "string" ? value : value.trim(),
     });
   };
 
   const handleInsertGameClick = async () => {
+    console.log("dbUsers: ", dbUsers);
     setIsErrorField(false);
 
     if (
@@ -185,6 +186,7 @@ const InsertGame: React.FC = () => {
               // GAME DATA UPLOAD starts -------///
               const newGame = {
                 ...gameData,
+                sellerPhone: dbUsers?.phone ? dbUsers.phone : "",
                 image: downloadURL,
               };
 
@@ -192,13 +194,6 @@ const InsertGame: React.FC = () => {
 
               addDoc(collection(db, "games"), newGame).then(async (docId) => {
                 console.log("Document written with ID: ", docId.id);
-
-                const gamesRef = doc(db, "games", docId.id);
-
-                // Set the "capital" field of the city 'DC'
-                await updateDoc(gamesRef, {
-                  gameId: docId.id,
-                });
               });
 
               router.push(`/user/profile`);

@@ -49,7 +49,7 @@ const AlertDialogSlide: React.FC<IProps> = ({
   allowFunction,
   rejectFunction,
 }) => {
-  const { setOpenAlert, openAlert } = useAuth();
+  const { setOpenAlert, openAlert, dialogTitleContext, alerTxt1 } = useAuth();
 
   const handleClose = (event: any, reason?: string): void => {
     const value = event.target.value;
@@ -64,7 +64,7 @@ const AlertDialogSlide: React.FC<IProps> = ({
     setOpenAlert(false);
   };
 
-  console.log("openAlert: ", openAlert);
+  // console.log("openAlert: ", openAlert);
   // console.log("allowFunction: ", allowFunction);
 
   return (
@@ -75,13 +75,18 @@ const AlertDialogSlide: React.FC<IProps> = ({
       onClose={handleClose}
       aria-describedby="alert-dialog-slide-description"
     >
-      <DialogTitle>{dialogTitle}</DialogTitle>
+      <DialogTitle>
+        {dialogTitle ? dialogTitle : dialogTitleContext}
+      </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-slide-description">
-          {text1}
+          {text1 ? text1 : alerTxt1}
         </DialogContentText>
       </DialogContent>
-      <DialogActions>
+      <DialogActions
+        className="dialog-btn-con"
+        sx={{ justifyContent: "space-around" }}
+      >
         {buttonTxt1 && (
           <Button
             variant={buttonVariant1}
