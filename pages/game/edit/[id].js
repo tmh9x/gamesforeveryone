@@ -1,13 +1,8 @@
-import { IconButton, TextField, TextareaAutosize } from "@mui/material";
+import { IconButton, TextField } from "@mui/material";
 import React, { useState } from "react";
 import { db, storage } from "../../../firebase/config";
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import {
-  getDownloadURL,
-  ref,
-  uploadBytes,
-  uploadBytesResumable,
-} from "firebase/storage";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
 import AddIcon from "@mui/icons-material/Add";
 import { Container } from "@mui/system";
@@ -24,8 +19,6 @@ const EditGame = (gm) => {
 
   const { setOpenSnackBar, setAlerTxt1 } = useAuth();
   const router = useRouter();
-  const noImage =
-    "https://eingleses.com/wp-content/uploads/2019/07/no-image.jpg";
 
   const handleChange = (e) => {
     setGameData({
@@ -35,15 +28,14 @@ const EditGame = (gm) => {
   };
 
   const handleUpdateGame = async () => {
-    // IMAGE UPLOAD
-    console.log("game.gameId: ", game.gameId);
     try {
+      // IMAGE UPLOAD
       const metadata = {
         contentType: "image/jpeg",
       };
 
       // Upload file and metadata to the object 'images/mountains.jpg'
-      if (imageUpload !== null) {
+      if (imageUpload) {
         const storageRef = ref(
           storage,
           "game-images/" + imageUpload.name + myuuid
@@ -103,7 +95,6 @@ const EditGame = (gm) => {
                 ...gameData,
                 image: downloadURL,
               };
-              console.log("newGame: ", newGame);
 
               // GAME DATA UPLOAD
               const gameRef = doc(db, "games", game.gameId);
@@ -122,10 +113,9 @@ const EditGame = (gm) => {
         const gameRef = doc(db, "games", game.gameId);
         await setDoc(gameRef, gameData, { merge: true });
 
+        router.push(`/game/details/${game.gameId}`);
         setOpenSnackBar(true);
         setAlerTxt1("Game successfully edited");
-
-        router.push(`/game/details/${game.gameId}`);
 
         console.log("Document written with ID: ", gameRef.id);
       }
@@ -135,9 +125,9 @@ const EditGame = (gm) => {
   };
 
   //  console.log("user", user);
-  console.log("gameData", gameData);
+  // console.log("gameData", gameData);
   // console.log("game: ", game);
-  console.log("imageUpload: ", imageUpload);
+  // console.log("imageUpload: ", imageUpload);
 
   return (
     <Container

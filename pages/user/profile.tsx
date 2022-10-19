@@ -37,13 +37,10 @@ const Profile = () => {
 
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
-      console.log("doc.id", doc.id);
-      /* const gameObject: {} = { id: doc.id, data: doc.data() }; */
+      // console.log("doc.id", doc.id);
       const gameObject: Game = { ...doc.data(), gameId: doc.id };
-      console.log("doc.data", doc.data());
       gamesArray.push(gameObject);
     });
-    console.log("gamesArray", gamesArray);
     setGames(gamesArray);
   };
 
@@ -197,7 +194,7 @@ const Profile = () => {
             </Button>
           </Container>
         </>
-        <SnackbarMui text="Profil updated!" duration={1000} />
+        <SnackbarMui duration={1000} />
       </div>
     </>
   );

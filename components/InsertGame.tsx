@@ -7,6 +7,7 @@ import {
   InputLabel,
   MenuItem,
   OutlinedInput,
+  Snackbar,
   TextField,
 } from "@mui/material";
 import React, { useState } from "react";
@@ -17,9 +18,11 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
 import AddIcon from "@mui/icons-material/Add";
 import { HTMLInputTypeAttribute } from "react";
+import SnackbarMui from "./alerts/SnackbarMui";
 import { db } from "../firebase/config";
 import { storage } from "../firebase/config";
 import { useAuth } from "../context/AuthContext";
+import { useRouter } from "next/router";
 import { v4 as uuidv4 } from "uuid";
 
 // Genre starts
@@ -75,22 +78,22 @@ const InsertGame: React.FC = () => {
   const [gameData, setGameData] = useState<Game | any>({});
   const [imageUpload, setImageUpload] = useState<File>();
   const [inputValues, SetInputValues] = useState<string[]>([]);
+  const [isErrorField, setIsErrorField] = useState<boolean>(false);
 
-  const { user, dbUsers } = useAuth();
+  const { user, dbUsers, setOpenSnackBar, setAlerTxt1 } = useAuth();
   let myuuid = uuidv4();
-
+  const router = useRouter();
   const theme = useTheme();
-
+  const noImage =
+    "https://eingleses.com/wp-content/uploads/2019/07/no-image.jpg";
   const handleChange = (
     event:
       | React.ChangeEvent<HTMLInputElement>
       | SelectChangeEvent<HTMLSelectElement>
-
   ) => {
     const {
       target: { value },
     } = event;
-    console.log("value: ", value);
 
     setGameData({
       ...gameData,
@@ -102,32 +105,40 @@ const InsertGame: React.FC = () => {
   };
 
   const handleInsertGameClick = async () => {
-    // IMAGE UPLOAD
-    try {
-      // if (imageUpload == null) return;
-      if (!imageUpload) {
-        setGameData({
-          ...gameData,
-          image:
-            "https://cdn.pixabay.com/photo/2021/02/16/18/55/gamer-6022003_1280.png",
-        });
-      } else {
-        const metadata = {
-          contentType: "image/jpeg",
-        };
+    setIsErrorField(false);
 
-        // Upload file and metadata to the object 'images/mountains.jpg'
+    if (
+      !gameData.platform ||
+      !gameData.title ||
+      !gameData.genre ||
+      !gameData.description ||
+      !gameData.price
+    ) {
+      setIsErrorField(true);
+      setAlerTxt1("Please check your inputs!");
+      setOpenSnackBar(true);
+      setTimeout(() => {
+        setOpenSnackBar(false);
+      }, 2000);
+      return;
+    }
+    try {
+      const metadata = {
+        contentType: "image/jpeg",
+      };
+
+      if (imageUpload) {
         const storageRef = ref(
           storage,
           "game-images/" + imageUpload.name + myuuid
         );
+
         const uploadTask = uploadBytesResumable(
           storageRef,
           imageUpload,
           metadata
         );
 
-        // Listen for state changes, errors, and completion of the upload.
         uploadTask.on(
           "state_changed",
           (snapshot) => {
@@ -176,7 +187,8 @@ const InsertGame: React.FC = () => {
                 ...gameData,
                 image: downloadURL,
               };
-              console.log("newGame: ", newGame);
+
+              // GAME DATA UPLOAD
 
               addDoc(collection(db, "games"), newGame).then(async (docId) => {
                 console.log("Document written with ID: ", docId.id);
@@ -188,19 +200,36 @@ const InsertGame: React.FC = () => {
                   gameId: docId.id,
                 });
               });
+
+              router.push(`/user/profile`);
+              setAlerTxt1("Game successfully inserted!");
+              setOpenSnackBar(true);
             });
           }
           // GAME DATA UPLOAD ends -------///
         );
+      } else {
+        // GAME DATA UPLOAD starts -------///
+        addDoc(collection(db, "games"), { ...gameData, image: noImage }).then(
+          async (docId) => {
+            console.log("Document written with ID: ", docId.id);
+            router.push(`/user/profile`);
+            setAlerTxt1("Game successfully inserted!");
+            setOpenSnackBar(true);
+          }
+        );
       }
+
+      // GAME DATA UPLOAD ends -------///
     } catch (e) {
       console.error("Error adding document: ", e);
     }
   };
 
   // console.log("user", user);
-  console.log("gameData", gameData);
-  console.log("dbUsers: ", dbUsers);
+  // console.log("gameData", gameData);
+  // console.log("dbUsers: ", dbUsers);
+  // console.log("imageUpload: ", imageUpload);
 
   return (
     <Container
@@ -219,7 +248,6 @@ const InsertGame: React.FC = () => {
         <input
           type="file"
           onChange={(e: any) => {
-            // console.log("event: ",  e.target.files);
             setImageUpload(e.target.files[0]);
           }}
         />
@@ -232,6 +260,7 @@ const InsertGame: React.FC = () => {
             labelId="multiple-platform-label"
             id="multiple-platform"
             required
+            error={isErrorField}
             name="platform"
             label="platforms"
             value={gameData.platform ? gameData.platform : ""}
@@ -248,6 +277,7 @@ const InsertGame: React.FC = () => {
         </FormControl>
 
         <TextField
+          error={isErrorField}
           sx={{ backgroundColor: "#fff", marginBottom: "1em" }}
           id="title"
           name="title"
@@ -273,7 +303,7 @@ const InsertGame: React.FC = () => {
             labelId="multiple-genre-label"
             id="multiple-genre"
             multiple
-            required
+            error={isErrorField}
             name="genre"
             value={gameData.genre ? gameData.genre : inputValues}
             onChange={(event: SelectChangeEvent<typeof gameData.genre>) =>
@@ -311,12 +341,12 @@ const InsertGame: React.FC = () => {
           onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
             handleChange(event)
           }
-          required
           fullWidth
         />
         <TextField
           sx={{ backgroundColor: "#fff", marginBottom: "1em" }}
           multiline
+          error={isErrorField}
           maxRows={10}
           id="description"
           name="description"
@@ -338,7 +368,6 @@ const InsertGame: React.FC = () => {
           onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
             handleChange(event)
           }
-          required
           fullWidth
         />
         <TextField
@@ -351,6 +380,7 @@ const InsertGame: React.FC = () => {
           onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
             handleChange(event)
           }
+          error={isErrorField}
           required
           fullWidth
         />
@@ -377,6 +407,7 @@ const InsertGame: React.FC = () => {
           <AddIcon />
         </IconButton>
       </Container>
+      <SnackbarMui />
     </Container>
   );
 };

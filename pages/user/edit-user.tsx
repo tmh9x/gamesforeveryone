@@ -11,7 +11,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect } from "react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { doc, setDoc } from "firebase/firestore";
 
@@ -31,6 +31,7 @@ const EditUser: React.FC = () => {
     handleInputValueChange,
     dbUsers,
     setOpenSnackBar,
+    setAlerTxt1,
   } = useAuth();
 
   const router = useRouter();
@@ -42,12 +43,12 @@ const EditUser: React.FC = () => {
       ...editedUserData,
       authId: user.uid,
     };
-    console.log("newUser: ", newUser);
     try {
       const usersRef = doc(db, "users", dbUsers.id);
       setDoc(usersRef, newUser, { merge: true });
+      router.push("/user/profile");
+      setAlerTxt1("Profil updated!");
       setOpenSnackBar(true);
-      router.push('/user/profile');
     } catch (error) {
       console.log("error-edit-user: ", error);
     }
@@ -63,6 +64,7 @@ const EditUser: React.FC = () => {
   //   console.log(userData);
   // console.log("editedUserData: ", editedUserData);
   // console.log("dbUsers: ", dbUsers);
+  // console.log("newUser: ", newUser);
   // console.log("FBuser", user);
   return (
     <>
@@ -90,7 +92,6 @@ const EditUser: React.FC = () => {
             <Typography component="h1" variant="h5">
               User
             </Typography>
-
 
             <Box
               component="form"
