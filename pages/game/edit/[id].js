@@ -22,8 +22,10 @@ const EditGame = (gm) => {
   const [gameData, setGameData] = useState(game);
   const [imageUpload, setImageUpload] = useState(null);
 
-  const { setOpenSnackBar } = useAuth();
+  const { setOpenSnackBar, setAlerTxt1 } = useAuth();
   const router = useRouter();
+  const noImage =
+    "https://eingleses.com/wp-content/uploads/2019/07/no-image.jpg";
 
   const handleChange = (e) => {
     setGameData({
@@ -32,25 +34,21 @@ const EditGame = (gm) => {
     });
   };
 
-  const updateGame = async () => {
+  const handleUpdateGame = async () => {
     // IMAGE UPLOAD
     console.log("game.gameId: ", game.gameId);
     try {
-      if (imageUpload === null) {
-        setGameData({
-          ...gameData,
-          image: gameData.image,
-        });
-      } else {
-        const metadata = {
-          contentType: "image/jpeg",
-        };
+      const metadata = {
+        contentType: "image/jpeg",
+      };
 
-        // Upload file and metadata to the object 'images/mountains.jpg'
+      // Upload file and metadata to the object 'images/mountains.jpg'
+      if (imageUpload !== null) {
         const storageRef = ref(
           storage,
           "game-images/" + imageUpload.name + myuuid
         );
+
         const uploadTask = uploadBytesResumable(
           storageRef,
           imageUpload,
@@ -111,16 +109,26 @@ const EditGame = (gm) => {
               const gameRef = doc(db, "games", game.gameId);
               setDoc(gameRef, newGame, { merge: true });
 
-                 setOpenSnackBar(true);
-                 router.push(`/game/details/${game.gameId}`);
-                 console.log("Document written with ID: ", gameRef.id);
+              setOpenSnackBar(true);
+              setAlerTxt1("Game successfully edited");
+              router.push(`/game/details/${game.gameId}`);
+              console.log("Document written with ID: ", gameRef.id);
             });
           }
           // GAME DATA UPLOAD ends -------///
         );
-      }
+      } else {
+        // GAME DATA UPLOAD
+        const gameRef = doc(db, "games", game.gameId);
+        await setDoc(gameRef, gameData, { merge: true });
 
-   
+        setOpenSnackBar(true);
+        setAlerTxt1("Game successfully edited");
+
+        router.push(`/game/details/${game.gameId}`);
+
+        console.log("Document written with ID: ", gameRef.id);
+      }
     } catch (e) {
       console.error("Error adding games: ", e);
     }
@@ -248,7 +256,7 @@ const EditGame = (gm) => {
           type="submit"
           size="large"
           style={{ backgroundColor: "#e63946", color: "#fff" }}
-          onClick={updateGame}
+          onClick={handleUpdateGame}
         >
           <AddIcon />
         </IconButton>

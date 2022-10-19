@@ -20,7 +20,7 @@ const pages: string[] = ["Home", "Insert", "Watch", "Login", "SignUp"];
 const settings = ["Profile", "Messages"];
 
 const NavBar = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, dbUsers } = useAuth();
   const router = useRouter();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
@@ -43,9 +43,9 @@ const NavBar = () => {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
- 
+
   // e: React.MouseEvent<HTMLLIElement, MouseEvent>
-  const handleNavMenuClick = ( e: string) => {
+  const handleNavMenuClick = (e: string) => {
     setAnchorElUser(null);
 
     if (e === "Home") {
@@ -61,6 +61,7 @@ const NavBar = () => {
     }
     handleCloseNavMenu();
   };
+  console.log("user?.username: ", dbUsers);
 
   return (
     <AppBar
@@ -132,8 +133,7 @@ const NavBar = () => {
                   (!user && (page === "Login" || page === "SignUp") && (
                     <MenuItem
                       key={page}
-                      onClick={(
-                      ) => handleNavMenuClick(page)}
+                      onClick={() => handleNavMenuClick(page)}
                     >
                       <Typography textAlign="center">{page}</Typography>
                     </MenuItem>
@@ -178,8 +178,7 @@ const NavBar = () => {
                 (user && page !== "Login" && page !== "SignUp" && (
                   <Button
                     key={page}
-                    onClick={(e
-                    ) => handleNavMenuClick(page)}
+                    onClick={(e) => handleNavMenuClick(page)}
                     sx={{ my: 2, color: "white", display: "block" }}
                   >
                     {page}
@@ -188,8 +187,7 @@ const NavBar = () => {
                 (!user && page !== "Watch" && page !== "Insert" && (
                   <Button
                     key={page}
-                    onClick={(
-                    ) => handleNavMenuClick(page)}
+                    onClick={() => handleNavMenuClick(page)}
                     sx={{ my: 2, color: "white", display: "block" }}
                   >
                     {page}
@@ -203,7 +201,11 @@ const NavBar = () => {
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   <Avatar
-                    alt={user.email.toUpperCase()}
+                    alt={
+                      dbUsers?.username
+                        ? dbUsers.username.toUpperCase()
+                        : user.email.toUpperCase()
+                    }
                     src="/broken-image.jpg"
                   />
                 </IconButton>
@@ -227,9 +229,7 @@ const NavBar = () => {
                 {settings.map((setting) => (
                   <MenuItem
                     key={setting}
-                    onClick={() =>
-                      handleNavMenuClick(setting)
-                    }
+                    onClick={() => handleNavMenuClick(setting)}
                   >
                     <Typography textAlign="center">{setting}</Typography>
                   </MenuItem>

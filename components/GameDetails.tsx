@@ -3,6 +3,7 @@ import { Button, Container, Typography } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import SnackbarMui from "./alerts/SnackbarMui";
 import { useAuth } from "../context/AuthContext";
 
 // Add attributes to HTML element in TypeScript
@@ -14,7 +15,7 @@ declare module "react" {
 }
 
 const GameDetails = ({ game }: any) => {
-  const { dbUserId, user, dbUsers } = useAuth();
+  const { dbUserId, user, dbUsers, alerTxt1 } = useAuth();
   const noImage =
     "https://eingleses.com/wp-content/uploads/2019/07/no-image.jpg";
 
@@ -140,6 +141,7 @@ const GameDetails = ({ game }: any) => {
           </div>
         )}
       </Container>
+      <SnackbarMui text={alerTxt1} />
     </>
   );
 };
