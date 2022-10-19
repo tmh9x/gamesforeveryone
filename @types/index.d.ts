@@ -9,7 +9,7 @@ interface Game {
   image: string;
   genre?: string[];
   amount?: number;
-  gameId?: string;
+  gameId: string;
   image?: string;
   userId?: string;
   sellerEmail?: string;

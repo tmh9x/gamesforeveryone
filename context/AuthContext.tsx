@@ -39,7 +39,7 @@ export const AuthContextProvider = ({
     useState<boolean>(false);
   const [alertText2, setAlertText2] = useState<string>("");
   const [alerTxt1, setAlerTxt1] = useState<string>("");
-  const [dialogTitle, setDialogTitle] = useState<string>("");
+  const [dialogTitleContext, setDialogTitleContext] = useState<string>("");
   const [openSnackBar, setOpenSnackBar] = useState(false);
   const [dbUsers, setDbUsers] = useState<any>(null);
   const [dbUserId, setDbUserId] = useState<string>("");
@@ -151,11 +151,13 @@ export const AuthContextProvider = ({
 
   // ------------- Delete User (FB & FS) ------------- start //
   const delUser = async () => {
+    console.log('dbUsers.id :>> ', dbUsers.id);
     const currentUser = auth.currentUser;
+    console.log("currentUser: ", currentUser);
     if(currentUser){
         try {
       // delete FB user
-      const deleteU: any = deleteUser(currentUser);
+     await deleteUser(currentUser);
       // delete FS user
       await deleteDoc(doc(db, "users", dbUsers.id));
       console.log("User deleted");
@@ -267,8 +269,8 @@ export const AuthContextProvider = ({
         setAlertText2,
         alerTxt1,
         setAlerTxt1,
-        dialogTitle,
-        setDialogTitle,
+        dialogTitleContext,
+        setDialogTitleContext,
         openSnackBar,
         setOpenSnackBar,
         delUser,
