@@ -150,7 +150,6 @@ export const AuthContextProvider = ({
   // ------------- Logout User ------------- ends //
 
   // ------------- Delete User (FB & FS) ------------- start //
-  console.log("auth.currentUser: ", auth.currentUser);
   const delUser = async () => {
     const currentUser = auth.currentUser;
     if(currentUser){
