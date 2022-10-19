@@ -6,7 +6,7 @@ import { auth, db } from "../firebase/config";
 import { Box } from "@mui/system";
 import SendIcon from "@mui/icons-material/Send";
 
-const BottomBar = ({ userId, user }: User, ) => {
+const BottomBar = ({ userId, user }: User) => {
   const [inputs, setInputs] = useState({
     chatText: "",
   });
@@ -41,9 +41,8 @@ const BottomBar = ({ userId, user }: User, ) => {
         width: "100%",
         position: "fixed",
         bottom: "0",
-        backgroundColor: "#f5f5dc",
         borderTop: "0.9px solid black",
-        padding: "4px 0 0 0",
+        padding: "4px",
       }}
     >
       <TextField

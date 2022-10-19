@@ -41,15 +41,10 @@ type InputBaseProps = {
 };
 const genres = [
   "Ego-Shooter",
-  "Open-World-Spiel",
-  "Action-Adventure",
   "Action",
-  "Nichtlineares Gameplay",
   "Adventure",
   "Fighting",
   "Survival",
-  "Rhythm",
-  "Battle Royale",
   "Role-Playing",
   "Strategy",
 ].sort();
@@ -64,15 +59,7 @@ function getStyles(name: string, values: readonly string[], theme: Theme) {
 }
 // Genre starts ends
 
-const platforms = [
-  "PS-3",
-  "PS-4",
-  "PS-5",
-  "Xbox S",
-  "Xbox X",
-  "Google Stadia",
-  "Nintedo Super NES Classic",
-].sort();
+const platforms = ["Playstation", "Xbox", "Nintendo"].sort();
 
 const InsertGame: React.FC = () => {
   const [gameData, setGameData] = useState<Game | any>({});

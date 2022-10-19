@@ -1,6 +1,12 @@
 import { Box, Container } from "@mui/system";
-import { Button, Typography } from "@mui/material";
-import { DocumentReference, collection, doc, orderBy, query } from "firebase/firestore";
+import { Button, IconButton, Typography } from "@mui/material";
+import {
+  DocumentReference,
+  collection,
+  doc,
+  orderBy,
+  query,
+} from "firebase/firestore";
 import React, { useState } from "react";
 import { auth, db } from "../../../firebase/config";
 import {
@@ -8,6 +14,7 @@ import {
   useDocumentData,
 } from "react-firebase-hooks/firestore";
 
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import BottomBar from "../../../components/BottomBar";
 import ChatSidebar from "../../../components/ChatSidebar";
 import Head from "next/head";
@@ -17,9 +24,7 @@ import getOtherEmail from "../../../utils/getOtherEmail";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useRouter } from "next/router";
 
-type Props = {};
-
-const Chat = (props: Props) => {
+const Chat = () => {
   const router = useRouter();
   const { id } = router.query;
   const [user] = useAuthState(auth);
@@ -28,10 +33,9 @@ const Chat = (props: Props) => {
   const [messages] = useCollectionData(q);
   const params = router.query;
 
-   const queryChat = doc(db, "chats", id);
+  const queryChat = doc(db, "chats", id);
   console.log("queryChat: ", queryChat);
   const [chat] = useDocumentData(queryChat);
-
 
   const goBack = () => {
     router.back();
@@ -61,15 +65,14 @@ const Chat = (props: Props) => {
               sx={{
                 alignSelf: sender ? "flex-end" : "flex-start",
                 flexDirection: "column",
-                textAlign:'center'
+                textAlign: "center",
+                maxWidth: "75%",
+                minWidth: "20px",
+                borderRadius: "5px",
+                padding: "5px",
+                margin: "5px 5px 0 5px",
               }}
-              maxWidth={"75%"}
-              minWidth={"20px"}
-              borderRadius={sender ? "0px 10px 0px 10px" : "10px 0px 10px 0px"}
               bgcolor={sender ? "#84ca97" : "#64becb"}
-              padding="3px"
-              margin={"5px 5px 0 5px"}
-              width={"fit-content"}
             >
               <Typography
                 variant="body2"
@@ -94,7 +97,7 @@ const Chat = (props: Props) => {
               {message?.timestamp !== null &&
                 message?.timestamp !== undefined &&
                 convertFirebaseTime(message?.timestamp)?.date}
-                {' | '}
+              {" | "}
               {message?.timestamp !== null &&
                 message?.timestamp !== undefined &&
                 convertFirebaseTime(message?.timestamp)?.atTime}
@@ -115,7 +118,7 @@ const Chat = (props: Props) => {
       <Head>
         <title>Chat App</title>
       </Head>
-      <Container className="chat-con" sx={{ display: "flex" }}>
+      <Box className="chat-con" sx={{ display: "flex" }}>
         <>
           <ChatSidebar />
 
@@ -124,33 +127,29 @@ const Chat = (props: Props) => {
             sx={{
               display: params.id === "messages" ? "none" : "flex",
               flexDirection: "column",
-              backgroundColor: "#faebd7",
+              width: "100%",
             }}
-            width={"100%"}
-            height={"850vh"}
           >
-            <Box className="chat-con-header" bgcolor={"#5f9ea0"}>
-              <Button variant="contained" onClick={goBack}>
-                Back
-              </Button>{" "}
-              {getOtherEmail(chat?.users, user)}
-            </Box>
-
-            {/* {params.id === "messages" && (
-              <Typography align="center" mt={10}>
-                Please beginn new chat
-                <br />
-                or
-                <b />
-                select a chat participian
+            <Box
+              className="chat-con-header"
+              sx={{
+                display: "flex",
+                backgroundColor: "#303030",
+                color: "#fff",
+              }}
+            >
+              <IconButton onClick={goBack}>
+                <ArrowBackIosIcon sx={{ color: "#fff" }} />
+              </IconButton>
+              <Typography sx={{ padding: "0.5em 0" }}>
+                {getOtherEmail(chat?.users, user)}
               </Typography>
-            )} */}
+            </Box>
             {params.id !== "messages" && getMessages()}
           </Box>
-
           {params.id !== "messages" && <BottomBar userId={id} user={user} />}
         </>
-      </Container>
+      </Box>
     </>
   );
 };

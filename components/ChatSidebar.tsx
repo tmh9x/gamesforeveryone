@@ -44,7 +44,6 @@ const ChatSidebar: React.FC = () => {
         .map((chat) => {
           console.log("chatMap: ", chat);
           return (
-            
             <Box
               key={Math.random()}
               className="chat-list-box"
@@ -55,11 +54,13 @@ const ChatSidebar: React.FC = () => {
                 cursor: "pointer",
                 display: "flex",
                 alignItems: "center",
-                background: "#a9a9a9",
-                margin: "5px 1px",
+                padding: "20px 20px",
               }}
             >
-              <Avatar src="/broken-image.jpg" />
+              <Avatar
+                src="/broken-image.jpg"
+                sx={{ width: "50px", height: "50px" }}
+              />
               <Box className={"chat-list-body"}>
                 <Typography
                   variant="body1"
@@ -72,7 +73,7 @@ const ChatSidebar: React.FC = () => {
                   {getOtherEmail(chat.users, user)}
                 </Typography>
                 <Typography m={1} mt={0} fontSize={8}>
-                  messages texts
+                  last message
                 </Typography>
               </Box>
             </Box>
@@ -85,23 +86,24 @@ const ChatSidebar: React.FC = () => {
     <>
       <Box
         className="sidebar-con"
-        bgcolor="gray"
         width={params.id === "messages" ? "100%" : "30%"}
         height={"80vh"}
-        borderRight={"solid 1px blue"}
         display={params.id !== "messages" ? "none" : "flex"}
         flexDirection={"column"}
         overflow={"auto"}
       >
-        {user.email}
         <Box
-          className="sidebar-header-con"
-          bgcolor="lightcoral"
-          width={"100%"}
-          height={"5vh"}
-          display={"flex"}
-          justifyContent={"end"}
-        ></Box>
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            backgroundColor: "#303030",
+            color: "#fff",
+            padding: "0.5em",
+            height: "24px",
+          }}
+        >
+          {user.email}
+        </Box>
 
         <Box
           className="chat-list-con"
