@@ -7,7 +7,6 @@ import Box from "@mui/material/Box";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import EditIcon from "@mui/icons-material/Edit";
 import Image from "next/image";
-import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import SnackbarMui from "../../components/alerts/SnackbarMui";
 import { db } from "../../firebase/config";
 import { getAuth } from "firebase/auth";
@@ -15,23 +14,51 @@ import { useAuth } from "../../context/AuthContext";
 import { useCollection } from "react-firebase-hooks/firestore";
 
 const Profile = () => {
+  const [deleteWhichItem, setDeleteWhichItem] = useState<string>("");
+  const [games, setGames] = useState<Games>([]);
+  const [gameId, setGameId] = useState("second");
+  const [currentGameTitle, setCurrentGameTitle] = useState<string>("");
+
+  const {
+    setOpenAlert,
+    delUser,
+    delGame,
+    setAlerTxt1,
+    setDialogTitleContext,
+    setOpenSnackBar,
+  } = useAuth();
+
   const auth = getAuth();
   const user: any = auth.currentUser;
-  const { setOpenAlert, delUser, delGame, editGame } = useAuth();
-  const [games, setGames] = useState<Games>([]);
 
-  const openDeleteAlert = () => {
+  const openDeleteGameAlert = (e: Game) => {
+    setDeleteWhichItem("game");
+    setCurrentGameTitle(e.title);
+    setGameId(e.gameId);
     setOpenAlert(true);
+    setDialogTitleContext(`Delete "${e.title}"?`);
+    setAlerTxt1(`Are you sure to delete the game "${e.title}"?`);
+  };
+
+  const openDeleteUserAlert = () => {
+    setDeleteWhichItem("");
+    setOpenAlert(true);
+    setDialogTitleContext(`Delete Account?`);
+    setAlerTxt1(`Want you delete your account?`);
+  };
+
+  const handleDeleteGameClick = async () => {
+    await delGame(gameId);
+    getGamesByUserId();
+    setOpenSnackBar(true);
+    setAlerTxt1(`The game "${currentGameTitle}" has been deleted`);
+    console.log("game successfully deleted");
+    console.log("gameId: ", gameId);
   };
 
   const [value, loading, error] = useCollection(collection(db, "users"), {
     snapshotListenOptions: { includeMetadataChanges: true },
   });
-
-  const deleteGame = async (gameId: string | undefined) => {
-    delGame(gameId);
-    console.log("game successfully deleted");
-  };
 
   const getGamesByUserId = async () => {
     const gamesArray: Games = [];
@@ -43,6 +70,7 @@ const Profile = () => {
       const gameObject: Game = { ...doc.data(), gameId: doc.id };
       gamesArray.push(gameObject);
     });
+    console.log("gamesArray: ", gamesArray);
     setGames(gamesArray);
   };
 
@@ -61,15 +89,17 @@ const Profile = () => {
   return (
     <>
       <AlertDialogSlide
-        text1={"Are you sure?"}
-        dialogTitle={"Delete User"}
+        // text1={"Are you sure?"}
+        // dialogTitle={"Delete User"}
         buttonTxt1={"cancel"}
         buttonTxt2={"delete"}
         buttonVariant1={"outlined"}
         buttonVariant2={"outlined"}
         buttonColor1={"success"}
         buttonColor2={"error"}
-        allowFunction={delUser}
+        allowFunction={
+          deleteWhichItem === "game" ? handleDeleteGameClick : delUser
+        }
         // rejectFunction={}
       />
 
@@ -170,9 +200,10 @@ const Profile = () => {
                     </Button>
 
                     <Button
+                      className="delete-user-btn"
                       sx={{ backgroundColor: "#e63946" }}
                       variant="contained"
-                      onClick={openDeleteAlert}
+                      onClick={openDeleteUserAlert}
                     >
                       Delete User
                     </Button>
@@ -249,25 +280,22 @@ const Profile = () => {
                       >
                         <EditIcon sx={{ color: "#fff" }} />
                       </IconButton>
-
-                      <IconButton
-                        sx={{
-                          background: "#e63946",
-                          borderRadius: 1,
-                          width: "50px",
-                          marginLeft: "0.5em",
-                        }}
-                        onClick={() => deleteGame(game.gameId)}
-                      >
-                        <DeleteForeverIcon sx={{ color: "#fff" }} />
-                      </IconButton>
-                    </Box>
+                    <IconButton
+                      className="delete-game-btn"
+                      sx={{ background: "#e63946", borderRadius: 1 }}
+                      onClick={() => openDeleteGameAlert(game)}
+                    >
+                      <DeleteForeverIcon
+                        fontSize="large"
+                        sx={{ color: "#fff" }}
+                      />
+                    </IconButton>
                   </Box>
                 </Card>
               ))}
           </Container>
         </>
-        <SnackbarMui duration={1000} />
+        <SnackbarMui duration={1500} />
       </div>
     </>
   );
