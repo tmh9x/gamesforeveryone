@@ -280,16 +280,17 @@ const Profile = () => {
                       >
                         <EditIcon sx={{ color: "#fff" }} />
                       </IconButton>
-                    <IconButton
-                      className="delete-game-btn"
-                      sx={{ background: "#e63946", borderRadius: 1 }}
-                      onClick={() => openDeleteGameAlert(game)}
-                    >
-                      <DeleteForeverIcon
-                        fontSize="large"
-                        sx={{ color: "#fff" }}
-                      />
-                    </IconButton>
+                      <IconButton
+                        className="delete-game-btn"
+                        sx={{ background: "#e63946", borderRadius: 1 }}
+                        onClick={() => openDeleteGameAlert(game)}
+                      >
+                        <DeleteForeverIcon
+                          fontSize="large"
+                          sx={{ color: "#fff" }}
+                        />
+                      </IconButton>
+                    </Box>
                   </Box>
                 </Card>
               ))}
