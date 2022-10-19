@@ -193,7 +193,7 @@ const Profile = () => {
               games.map((game: Game, index: number) => (
                 <Card
                   key={index}
-                  sx={{ display: "grid", gridTemplateColumns: "30% 50% 20%" }}
+                  sx={{ display: "grid", gridTemplateColumns: "1fr 1.5fr 1fr" }}
                 >
                   <Box>
                     <Image
@@ -212,10 +212,9 @@ const Profile = () => {
                       paddingLeft: "0.5em",
                     }}
                   >
-                    <Typography>{game.platform}</Typography>
-                    <Typography>{game.title}</Typography>
-                    <Typography>${game.price}</Typography>
+                    <Typography variant="h6">{game.title}</Typography>
                     <Typography>{game.genre}</Typography>
+                    <Typography>${game.price}</Typography>
                   </Box>
 
                   <Box
@@ -225,22 +224,44 @@ const Profile = () => {
                       justifyContent: "space-between",
                     }}
                   >
-                    <IconButton
-                      sx={{ background: "#1A76D2", borderRadius: 1 }}
-                      href={`/game/edit/${game.gameId}`}
-                    >
-                      <EditIcon fontSize="large" sx={{ color: "#fff" }} />
-                    </IconButton>
+                    <Box>
+                      <Typography sx={{ textAlign: "end" }}>
+                        <span
+                          style={{
+                            backgroundColor: "#303030",
+                            borderRadius: "5px 0 0 5px",
+                            color: "#fff",
+                            padding: "0.3em",
+                          }}
+                        >
+                          {game.platform}
+                        </span>
+                      </Typography>
+                    </Box>
+                    <Box sx={{ display: "flex" }}>
+                      <IconButton
+                        sx={{
+                          background: "#1A76D2",
+                          borderRadius: 1,
+                          width: "50px",
+                        }}
+                        href={`/game/edit/${game.gameId}`}
+                      >
+                        <EditIcon sx={{ color: "#fff" }} />
+                      </IconButton>
 
-                    <IconButton
-                      sx={{ background: "#e63946", borderRadius: 1 }}
-                      onClick={() => deleteGame(game.gameId)}
-                    >
-                      <DeleteForeverIcon
-                        fontSize="large"
-                        sx={{ color: "#fff" }}
-                      />
-                    </IconButton>
+                      <IconButton
+                        sx={{
+                          background: "#e63946",
+                          borderRadius: 1,
+                          width: "50px",
+                          marginLeft: "0.5em",
+                        }}
+                        onClick={() => deleteGame(game.gameId)}
+                      >
+                        <DeleteForeverIcon sx={{ color: "#fff" }} />
+                      </IconButton>
+                    </Box>
                   </Box>
                 </Card>
               ))}
