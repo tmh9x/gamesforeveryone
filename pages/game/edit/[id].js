@@ -1,13 +1,8 @@
-import { IconButton, TextField, TextareaAutosize } from "@mui/material";
+import { IconButton, TextField } from "@mui/material";
 import React, { useState } from "react";
 import { db, storage } from "../../../firebase/config";
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import {
-  getDownloadURL,
-  ref,
-  uploadBytes,
-  uploadBytesResumable,
-} from "firebase/storage";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
 import AddIcon from "@mui/icons-material/Add";
 import { Container } from "@mui/system";
@@ -22,7 +17,7 @@ const EditGame = (gm) => {
   const [gameData, setGameData] = useState(game);
   const [imageUpload, setImageUpload] = useState(null);
 
-  const { setOpenSnackBar } = useAuth();
+  const { setOpenSnackBar, setAlerTxt1 } = useAuth();
   const router = useRouter();
 
   const handleChange = (e) => {
@@ -32,25 +27,20 @@ const EditGame = (gm) => {
     });
   };
 
-  const updateGame = async () => {
-    // IMAGE UPLOAD
-    console.log("game.gameId: ", game.gameId);
+  const handleUpdateGame = async () => {
     try {
-      if (imageUpload === null) {
-        setGameData({
-          ...gameData,
-          image: gameData.image,
-        });
-      } else {
-        const metadata = {
-          contentType: "image/jpeg",
-        };
+      // IMAGE UPLOAD
+      const metadata = {
+        contentType: "image/jpeg",
+      };
 
-        // Upload file and metadata to the object 'images/mountains.jpg'
+      // Upload file and metadata to the object 'images/mountains.jpg'
+      if (imageUpload) {
         const storageRef = ref(
           storage,
           "game-images/" + imageUpload.name + myuuid
         );
+
         const uploadTask = uploadBytesResumable(
           storageRef,
           imageUpload,
@@ -105,31 +95,39 @@ const EditGame = (gm) => {
                 ...gameData,
                 image: downloadURL,
               };
-              console.log("newGame: ", newGame);
 
               // GAME DATA UPLOAD
               const gameRef = doc(db, "games", game.gameId);
               setDoc(gameRef, newGame, { merge: true });
 
-                 setOpenSnackBar(true);
-                 router.push(`/game/details/${game.gameId}`);
-                 console.log("Document written with ID: ", gameRef.id);
+              setOpenSnackBar(true);
+              setAlerTxt1("Game successfully edited");
+              router.push(`/game/details/${game.gameId}`);
+              console.log("Document written with ID: ", gameRef.id);
             });
           }
           // GAME DATA UPLOAD ends -------///
         );
-      }
+      } else {
+        // GAME DATA UPLOAD
+        const gameRef = doc(db, "games", game.gameId);
+        await setDoc(gameRef, gameData, { merge: true });
 
-   
+        router.push(`/game/details/${game.gameId}`);
+        setOpenSnackBar(true);
+        setAlerTxt1("Game successfully edited");
+
+        console.log("Document written with ID: ", gameRef.id);
+      }
     } catch (e) {
       console.error("Error adding games: ", e);
     }
   };
 
   //  console.log("user", user);
-  console.log("gameData", gameData);
+  // console.log("gameData", gameData);
   // console.log("game: ", game);
-  console.log("imageUpload: ", imageUpload);
+  // console.log("imageUpload: ", imageUpload);
 
   return (
     <Container
@@ -248,7 +246,7 @@ const EditGame = (gm) => {
           type="submit"
           size="large"
           style={{ backgroundColor: "#e63946", color: "#fff" }}
-          onClick={updateGame}
+          onClick={handleUpdateGame}
         >
           <AddIcon />
         </IconButton>

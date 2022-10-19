@@ -37,7 +37,7 @@ const SnackbarMui: React.FC<IProps> = ({
   background,
   duration = 3000,
 }) => {
-  const { openSnackBar, setOpenSnackBar } = useAuth();
+  const { openSnackBar, setOpenSnackBar, alerTxt1 } = useAuth();
 
   const SnackbarStyle = {
     width: width,
@@ -85,7 +85,7 @@ const SnackbarMui: React.FC<IProps> = ({
         open={openSnackBar}
         autoHideDuration={duration}
         onClose={handleClose}
-        message={text}
+        message={text ? text : alerTxt1}
         action={action}
         style={SnackbarStyle}
       />
