@@ -1,4 +1,5 @@
 import {
+  Box,
   Collapse,
   Container,
   FormControl,
@@ -22,28 +23,15 @@ import type { NextPage } from "next";
 import { styled } from "@mui/material/styles";
 import { useAuth } from "../context/AuthContext";
 
-const platformArray: string[] = [
-  "All",
-  "PS-3",
-  "PS-4",
-  "PS-5",
-  "Xbox S",
-  "Xbox X",
-  "Google Stadia",
-  "Nintedo Super NES Classic",
-];
+const platformArray: string[] = ["All", "Playstation", "Xbox", "Nintendo"];
 const genreArray: string[] = [
   "All",
   "Ego-Shooter",
-  "Open-World-Spiel",
   "Action-Adventure",
   "Action",
-  "Nichtlineares Gameplay",
   "Adventure",
   "Fighting",
   "Survival",
-  "Rhythm",
-  "Battle Royale",
   "Role-Playing",
   "Strategy",
 ];
@@ -196,7 +184,7 @@ const Home: NextPage = () => {
   console.log("games", games);
 
   return (
-    <Container sx={{ padding: "0 2rem" }}>
+    <Box>
       <Container sx={{ textAlign: "center" }}>
         <ExpandMore
           expand={expanded}
@@ -208,11 +196,11 @@ const Home: NextPage = () => {
         </ExpandMore>
 
         <Collapse in={expanded} timeout="auto" unmountOnExit>
-          <Container>
+          <Box>
             <TextField
               id="title"
               name="title"
-              label="search.."
+              label="Search"
               variant="outlined"
               sx={{ marginBottom: "1em" }}
               size="small"
@@ -253,16 +241,17 @@ const Home: NextPage = () => {
                 ))}
               </Select>
             </FormControl>
-          </Container>
+          </Box>
         </Collapse>
       </Container>
 
-      <Carousel />
-      {games && (
-        <List
-          sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
-        >
-          {games.map((game: Game, i: number) => (
+      {/*  <Box sx={{ marginBottom: "2em" }}>
+        <Carousel />
+      </Box> */}
+
+      <Box>
+        {games &&
+          games.map((game: Game, i: number) => (
             <div key={i}>
               <GameCard
                 title={game.title}
@@ -279,9 +268,8 @@ const Home: NextPage = () => {
               />
             </div>
           ))}
-        </List>
-      )}
-    </Container>
+      </Box>
+    </Box>
   );
 };
 
