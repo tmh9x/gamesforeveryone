@@ -7,6 +7,7 @@ import Box from "@mui/material/Box";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import EditIcon from "@mui/icons-material/Edit";
 import Image from "next/image";
+import Link from "next/link";
 import SnackbarMui from "../../components/alerts/SnackbarMui";
 import { db } from "../../firebase/config";
 import { getAuth } from "firebase/auth";
@@ -227,25 +228,34 @@ const Profile = () => {
                   key={index}
                   sx={{ display: "grid", gridTemplateColumns: "1fr 1.5fr 1fr" }}
                 >
-                  <Box>
-                    <Image
-                      src={game.image}
-                      alt=""
-                      width="150px"
-                      height="150px"
-                    />
-                  </Box>
-
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "center",
-                      paddingLeft: "0.5em",
-                      gap: "0.3em",
-                    }}
+                  <Link
+                    href={"/game/details/[id]"}
+                    as={`/game/details/${game.gameId}`}
                   >
-                    <Typography
+                    <Box className="image-con">
+                      <Image
+                        src={game.image}
+                        alt=""
+                        width="150px"
+                        height="150px"
+                      />
+                    </Box>
+                  </Link>
+                  <Link
+                    href={"/game/details/[id]"}
+                    as={`/game/details/${game.gameId}`}
+                  >
+                    <Box
+                      className="card-body"
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        paddingLeft: "0.5em",
+                        gap: "0.3em",
+                      }}
+                    >
+                      <Typography
                       sx={{ textTransform: "uppercase" }}
                       variant="h6"
                     >
@@ -255,7 +265,8 @@ const Profile = () => {
                     <Typography sx={{ color: "gray" }}>
                       $ {game.price}
                     </Typography>
-                  </Box>
+                    </Box>
+                  </Link>
 
                   <Box
                     sx={{
@@ -279,11 +290,31 @@ const Profile = () => {
                       </Typography>
                     </Box>
                     <Box sx={{ display: "flex" }}>
-                      <IconButton
+                      <Link
+                        href={`/game/edit/[id]`}
+                        as={`/game/edit/${game.gameId}`}
+                      >
+                        <Button
+                          size="small"
+                          variant="contained"
+                          sx={{
+                            background: "#1A76D2",
+                            borderRadius: 1,
+                            width: "50px",
+                          }}
+                        >
+                          <EditIcon sx={{ color: "#fff" }} />
+                        </Button>
+                      </Link>
+
+                      <Button
+                        className="delete-game-btn"
+                        size="small"
+                        variant="contained"
                         sx={{
-                          background: "#1A76D2",
+                          background: "#e63946",
                           borderRadius: 1,
-                          width: "50px",
+                          marginLeft: "0.3em",
                         }}
                         href={`/game/edit/${game.gameId}`}
                       >
@@ -303,7 +334,7 @@ const Profile = () => {
                           fontSize="medium"
                           sx={{ color: "#fff" }}
                         />
-                      </IconButton>
+                      </Button>
                     </Box>
                   </Box>
                 </Card>
