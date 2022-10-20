@@ -45,7 +45,6 @@ const NavBar = () => {
     setAnchorElUser(null);
   };
 
-  // e: React.MouseEvent<HTMLLIElement, MouseEvent>
   const handleNavMenuClick = (e: string) => {
     setAnchorElUser(null);
     if (e === "Home") {

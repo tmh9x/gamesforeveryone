@@ -11,19 +11,23 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { db, storage } from "../../firebase/config";
 import { doc, setDoc } from "firebase/firestore";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import SnackbarMui from "../../components/alerts/SnackbarMui";
-import { db } from "../../firebase/config";
 import { useAuth } from "../../context/AuthContext";
 import { useRouter } from "next/router";
+import { v4 as uuidv4 } from "uuid";
 
 const theme = createTheme();
 
 const EditUser: React.FC = () => {
+  const [imageUpload, setImageUpload] = useState<File | null>(null);
+let myuuid = uuidv4();
   const {
     user,
     getDBUsers,
@@ -37,18 +41,109 @@ const EditUser: React.FC = () => {
   const router = useRouter();
 
   //   --------- Submit profile update to Firebase ---- starts
-  const handleEditSubmit = async (e: any) => {
+  const handleEditSubmit = async (e) => {
     e.preventDefault();
-    const newUser = {
-      ...editedUserData,
-      authId: user.uid,
-    };
+   
     try {
-      const usersRef = doc(db, "users", dbUsers.id);
-      setDoc(usersRef, newUser, { merge: true });
-      router.push("/user/profile");
-      setAlerTxt1("Profil updated!");
-      setOpenSnackBar(true);
+      // IMAGE UPLOAD
+      const metadata = {
+        contentType: "image/jpeg",
+      };
+
+      // Upload file and metadata to the object 'images/mountains.jpg'
+      if (imageUpload) {
+        const storageRef = ref(
+          storage,
+          "game-images/" + imageUpload.name + myuuid
+        );
+
+        const uploadTask = uploadBytesResumable(
+          storageRef,
+          imageUpload,
+          metadata
+        );
+
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+            // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+            const progress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log("Upload is " + progress + "% done");
+            switch (snapshot.state) {
+              case "paused":
+                console.log("Upload is paused");
+                break;
+              case "running":
+                console.log("Upload is running");
+                break;
+            }
+          },
+          (error) => {
+            // A full list of error codes is available at
+            // https://firebase.google.com/docs/storage/web/handle-errors
+            switch (error.code) {
+              case "storage/unauthorized":
+                console.log(
+                  "User doesn't have permission to access the object"
+                );
+                break;
+              case "storage/canceled":
+                console.log("User canceled the upload");
+                break;
+              // ...
+              case "storage/unknown":
+                console.log(
+                  "Unknown error occurred, inspect error.serverResponse"
+                );
+                break;
+            }
+          },
+          () => {
+            // Upload completed successfully, now we can get the download URL
+            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+              console.log("File available at", downloadURL);
+
+              // User DATA UPLOAD starts -------///
+              const newUser = {
+                ...editedUserData,
+                image: downloadURL,
+                authId: user.uid,
+              };
+  console.log("newUser: ", newUser);
+
+              // User DATA UPLOAD
+              const usersRef = doc(db, "users", dbUsers.id);
+              setDoc(usersRef, newUser, { merge: true });
+
+              router.push("/user/profile");
+              setAlerTxt1("Profil updated!");
+              setOpenSnackBar(true);
+              console.log("Document written with ID: ", usersRef.id);
+            });
+          }
+          // User DATA UPLOAD ends -------///
+        );
+      } else {
+        // User DATA UPLOAD
+       const usersRef = doc(db, "users", dbUsers.id);
+       setDoc(
+         usersRef,
+         { ...editedUserData, image: <Avatar src="/broken-image.jpg" /> },
+         { merge: true }
+       );
+
+       router.push("/user/profile");
+       setAlerTxt1("Profil updated!");
+       setOpenSnackBar(true);
+       console.log("Document written with ID: ", usersRef.id);
+      }
+
+      // const usersRef = doc(db, "users", dbUsers.id);
+      // setDoc(usersRef, newUser, { merge: true });
+      // router.push("/user/profile");
+      // setAlerTxt1("Profil updated!");
+      // setOpenSnackBar(true);
     } catch (error) {
       console.log("error-edit-user: ", error);
     }
@@ -62,9 +157,8 @@ const EditUser: React.FC = () => {
 
   //   console.log("user", user);
   //   console.log(userData);
-  // console.log("editedUserData: ", editedUserData);
+  console.log("editedUserData: ", editedUserData);
   // console.log("dbUsers: ", dbUsers);
-  // console.log("newUser: ", newUser);
   // console.log("FBuser", user);
   return (
     <>
@@ -101,6 +195,19 @@ const EditUser: React.FC = () => {
             >
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
+                  <TextField
+                    type="file"
+                    onChange={(e) => {
+                      setImageUpload(e.target.files[0]);
+                    }}
+                  >
+                    </TextField>
+
+
+
+
+
+
                   <TextField
                     size="small"
                     type="text"
