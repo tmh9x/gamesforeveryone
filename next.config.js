@@ -11,6 +11,7 @@ const nextConfig = {
       "cdn.pixabay.com",
       "eingleses.com",
       "i.pravatar.cc",
+      "thumbs.dreamstime.com",
     ],
   },
 };

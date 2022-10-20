@@ -45,10 +45,8 @@ const NavBar = () => {
     setAnchorElUser(null);
   };
 
-  // e: React.MouseEvent<HTMLLIElement, MouseEvent>
   const handleNavMenuClick = (e: string) => {
     setAnchorElUser(null);
-
     if (e === "Home") {
       router.push(`/`);
     } else if (e === "Insert") {
@@ -62,6 +60,14 @@ const NavBar = () => {
     }
     handleCloseNavMenu();
   };
+
+  const handleLogoutClick = () => {
+    logout();
+    router.push(`/user/login`);
+    handleCloseNavMenu();
+    handleCloseUserMenu();
+  };
+
   console.log("user?.username: ", dbUsers);
 
   return (
@@ -142,12 +148,7 @@ const NavBar = () => {
               )}
 
               {user && (
-                <MenuItem
-                  onClick={() => {
-                    logout();
-                    router.push(`/user/login`);
-                  }}
-                >
+                <MenuItem onClick={handleLogoutClick}>
                   <Typography textAlign="center">Logout</Typography>
                 </MenuItem>
               )}
@@ -236,12 +237,7 @@ const NavBar = () => {
                   </MenuItem>
                 ))}
                 {user && (
-                  <MenuItem
-                    onClick={() => {
-                      logout();
-                      router.push(`/user/login`);
-                    }}
-                  >
+                  <MenuItem onClick={handleLogoutClick}>
                     <Typography textAlign="center">Logout</Typography>
                   </MenuItem>
                 )}

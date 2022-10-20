@@ -19,7 +19,8 @@ const Profile = () => {
   const [games, setGames] = useState<Games>([]);
   const [gameId, setGameId] = useState("second");
   const [currentGameTitle, setCurrentGameTitle] = useState<string>("");
-
+const imagePlaceholder =
+  "https://thumbs.dreamstime.com/t/default-placeholder-profile-icon-avatar-gray-man-90197993.jpg";
   const {
     setOpenAlert,
     delUser,
@@ -129,7 +130,7 @@ const Profile = () => {
                     }}
                   >
                     <Image
-                      src="/images/defaultImage.jpg"
+                      src={doc.data()?.image ? doc.data()?.image : imagePlaceholder}
                       alt=""
                       width="100"
                       height="100"
