@@ -7,6 +7,7 @@ import Box from "@mui/material/Box";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import EditIcon from "@mui/icons-material/Edit";
 import Image from "next/image";
+import Link from "next/link";
 import SnackbarMui from "../../components/alerts/SnackbarMui";
 import { db } from "../../firebase/config";
 import { getAuth } from "firebase/auth";
@@ -226,27 +227,37 @@ const Profile = () => {
                   key={index}
                   sx={{ display: "grid", gridTemplateColumns: "1fr 1.5fr 1fr" }}
                 >
-                  <Box>
-                    <Image
-                      src={game.image}
-                      alt=""
-                      width="150px"
-                      height="150px"
-                    />
-                  </Box>
-
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "center",
-                      paddingLeft: "0.5em",
-                    }}
+                  <Link
+                    href={"/game/details/[id]"}
+                    as={`/game/details/${game.gameId}`}
                   >
-                    <Typography variant="h6">{game.title}</Typography>
-                    <Typography>{game.genre}</Typography>
-                    <Typography>${game.price}</Typography>
-                  </Box>
+                    <Box className="image-con">
+                      <Image
+                        src={game.image}
+                        alt=""
+                        width="150px"
+                        height="150px"
+                      />
+                    </Box>
+                  </Link>
+                  <Link
+                    href={"/game/details/[id]"}
+                    as={`/game/details/${game.gameId}`}
+                  >
+                    <Box
+                      className="card-body"
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        paddingLeft: "0.5em",
+                      }}
+                    >
+                      <Typography variant="h6">{game.title}</Typography>
+                      <Typography>{game.genre}</Typography>
+                      <Typography>${game.price}</Typography>
+                    </Box>
+                  </Link>
 
                   <Box
                     sx={{
@@ -270,26 +281,39 @@ const Profile = () => {
                       </Typography>
                     </Box>
                     <Box sx={{ display: "flex" }}>
-                      <IconButton
-                        sx={{
-                          background: "#1A76D2",
-                          borderRadius: 1,
-                          width: "50px",
-                        }}
-                        href={`/game/edit/${game.gameId}`}
+                      <Link
+                        href={`/game/edit/[id]`}
+                        as={`/game/edit/${game.gameId}`}
                       >
-                        <EditIcon sx={{ color: "#fff" }} />
-                      </IconButton>
-                      <IconButton
+                        <Button
+                          size="small"
+                          variant="contained"
+                          sx={{
+                            background: "#1A76D2",
+                            borderRadius: 1,
+                            width: "50px",
+                          }}
+                        >
+                          <EditIcon sx={{ color: "#fff" }} />
+                        </Button>
+                      </Link>
+
+                      <Button
                         className="delete-game-btn"
-                        sx={{ background: "#e63946", borderRadius: 1 }}
+                        size="small"
+                        variant="contained"
+                        sx={{
+                          background: "#e63946",
+                          borderRadius: 1,
+                          marginLeft: "0.3em",
+                        }}
                         onClick={() => openDeleteGameAlert(game)}
                       >
                         <DeleteForeverIcon
                           fontSize="large"
                           sx={{ color: "#fff" }}
                         />
-                      </IconButton>
+                      </Button>
                     </Box>
                   </Box>
                 </Card>
