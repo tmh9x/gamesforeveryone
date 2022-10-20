@@ -256,15 +256,15 @@ const Profile = () => {
                       }}
                     >
                       <Typography
-                      sx={{ textTransform: "uppercase" }}
-                      variant="h6"
-                    >
-                      {game.title}
-                    </Typography>
-                    <Typography variant="body2">{game.genre}</Typography>
-                    <Typography sx={{ color: "gray" }}>
-                      $ {game.price}
-                    </Typography>
+                        sx={{ textTransform: "uppercase" }}
+                        variant="h6"
+                      >
+                        {game.title}
+                      </Typography>
+                      <Typography variant="body2">{game.genre}</Typography>
+                      <Typography sx={{ color: "gray" }}>
+                        $ {game.price}
+                      </Typography>
                     </Box>
                   </Link>
 
@@ -294,34 +294,21 @@ const Profile = () => {
                         href={`/game/edit/[id]`}
                         as={`/game/edit/${game.gameId}`}
                       >
-                        <Button
+                        <IconButton
                           size="small"
-                          variant="contained"
                           sx={{
-                            background: "#1A76D2",
+                            background: "#e63946",
                             borderRadius: 1,
+                            backgroundColor: "rgb(26, 118, 210)",
                             width: "50px",
                           }}
+                          href={`/game/edit/${game.gameId}`}
                         >
-                          <EditIcon sx={{ color: "#fff" }} />
-                        </Button>
+                          <EditIcon fontSize="medium" sx={{ color: "#fff" }} />
+                        </IconButton>
                       </Link>
 
-                      <Button
-                        className="delete-game-btn"
-                        size="small"
-                        variant="contained"
-                        sx={{
-                          background: "#e63946",
-                          borderRadius: 1,
-                          marginLeft: "0.3em",
-                        }}
-                        href={`/game/edit/${game.gameId}`}
-                      >
-                        <EditIcon fontSize="medium" sx={{ color: "#fff" }} />
-                      </IconButton>
                       <IconButton
-                        className="delete-game-btn"
                         sx={{
                           background: "#e63946",
                           borderRadius: 1,
@@ -334,7 +321,7 @@ const Profile = () => {
                           fontSize="medium"
                           sx={{ color: "#fff" }}
                         />
-                      </Button>
+                      </IconButton>
                     </Box>
                   </Box>
                 </Card>
