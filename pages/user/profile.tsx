@@ -134,6 +134,7 @@ const Profile = () => {
                       height="100"
                     />
                   </Box>
+
                   <Box
                     sx={{ display: "flex", justifyContent: "space-between" }}
                   >
@@ -241,11 +242,19 @@ const Profile = () => {
                       flexDirection: "column",
                       justifyContent: "center",
                       paddingLeft: "0.5em",
+                      gap: "0.3em",
                     }}
                   >
-                    <Typography variant="h6">{game.title}</Typography>
-                    <Typography>{game.genre}</Typography>
-                    <Typography>${game.price}</Typography>
+                    <Typography
+                      sx={{ textTransform: "uppercase" }}
+                      variant="h6"
+                    >
+                      {game.title}
+                    </Typography>
+                    <Typography variant="body2">{game.genre}</Typography>
+                    <Typography sx={{ color: "gray" }}>
+                      $ {game.price}
+                    </Typography>
                   </Box>
 
                   <Box
@@ -278,15 +287,20 @@ const Profile = () => {
                         }}
                         href={`/game/edit/${game.gameId}`}
                       >
-                        <EditIcon sx={{ color: "#fff" }} />
+                        <EditIcon fontSize="medium" sx={{ color: "#fff" }} />
                       </IconButton>
                       <IconButton
                         className="delete-game-btn"
-                        sx={{ background: "#e63946", borderRadius: 1 }}
+                        sx={{
+                          background: "#e63946",
+                          borderRadius: 1,
+                          marginLeft: "0.3em",
+                          width: "50px",
+                        }}
                         onClick={() => openDeleteGameAlert(game)}
                       >
                         <DeleteForeverIcon
-                          fontSize="large"
+                          fontSize="medium"
                           sx={{ color: "#fff" }}
                         />
                       </IconButton>

@@ -1,4 +1,4 @@
-import { Button, Container, Typography } from "@mui/material";
+import { Box, Button, Container, Typography } from "@mui/material";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -49,40 +49,36 @@ const GameDetails = ({ game }: any) => {
             height="400px"
           />
 
-          <Typography paragraph>{game.title}</Typography>
+          <Box sx={{ width: "70%", margin: "0 auto" }}>
+            <Typography variant="h6">{game.title}</Typography>
 
-          <Typography paragraph color="text.secondary">
-            {game.description
-              ? game.description
-              : " Lorem ipsum dolor sit amet consectetur, adipisicing elit. Officia, alias mollitia earum molestias corporis nobis adipisci suscipitsaepe culpa vero esse reiciendis debitis incidunt delectus sunt ducimus praesentium porro vitae."}
-          </Typography>
+            <Typography paragraph color="text.secondary">
+              {game.description
+                ? game.description
+                : " Lorem ipsum dolor sit amet consectetur, adipisicing elit. Officia, alias mollitia earum molestias corporis nobis adipisci suscipitsaepe culpa vero esse reiciendis debitis incidunt delectus sunt ducimus praesentium porro vitae."}
+            </Typography>
 
-          <Container>
-            <Container sx={{ display: "flex", justifyContent: "space-around" }}>
-              <Typography paragraph>Genre:</Typography>
-              <Typography paragraph>
-                {game.genre.map((item: string) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </Typography>
-            </Container>
-            <Container sx={{ display: "flex", justifyContent: "space-around" }}>
-              <Typography paragraph>Creator:</Typography>
-              <Typography paragraph>{game.creator}</Typography>
-            </Container>
-            <Container sx={{ display: "flex", justifyContent: "space-around" }}>
-              <Typography paragraph>Plattform:</Typography>
-              <Typography paragraph>{game.platform}</Typography>
-            </Container>
-            <Container sx={{ display: "flex", justifyContent: "space-around" }}>
-              <Typography paragraph>Year:</Typography>
-              <Typography paragraph>{game.year}</Typography>
-            </Container>
-            <Container sx={{ display: "flex", justifyContent: "space-around" }}>
-              <Typography paragraph>FSK:</Typography>
-              <Typography paragraph>{game.fsk}</Typography>
-            </Container>
-          </Container>
+            <Box sx={{ display: "flex" }}>
+              <Box>
+                <Typography paragraph>Genre:</Typography>
+                <Typography paragraph>Creator:</Typography>
+                <Typography paragraph>Platform:</Typography>
+                <Typography paragraph>Year:</Typography>
+                <Typography paragraph>FSK:</Typography>
+              </Box>
+              <Box>
+                <Typography paragraph>
+                  {game.genre.map((item: string) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </Typography>
+                <Typography paragraph>{game.creator}</Typography>
+                <Typography paragraph>{game.platform}</Typography>
+                <Typography paragraph>{game.year}</Typography>
+                <Typography paragraph>{game.fsk}</Typography>
+              </Box>
+            </Box>
+          </Box>
         </Container>
       ) : (
         <h3>Failed!!!</h3>

@@ -1,10 +1,9 @@
-import { IconButton, TextField } from "@mui/material";
+import { Box, Button, IconButton, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { db, storage } from "../../../firebase/config";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
-import AddIcon from "@mui/icons-material/Add";
 import { Container } from "@mui/system";
 import { useAuth } from "../../../context/AuthContext";
 import { useRouter } from "next/router";
@@ -124,11 +123,6 @@ const EditGame = (gm) => {
     }
   };
 
-  //  console.log("user", user);
-  // console.log("gameData", gameData);
-  // console.log("game: ", game);
-  // console.log("imageUpload: ", imageUpload);
-
   return (
     <Container
       sx={{
@@ -140,11 +134,12 @@ const EditGame = (gm) => {
         margin: "1.5em auto",
         gap: "1em",
         borderRadius: "5px",
+        textAlign: "center",
       }}
     >
-      <form>
-        <h1>Edit Game</h1>
-        <input
+      <Box component="form">
+        <Typography variant="h5">Edit Game</Typography>
+        <TextField
           type="file"
           onChange={(e) => {
             setImageUpload(e.target.files[0]);
@@ -239,17 +234,17 @@ const EditGame = (gm) => {
           onChange={handleChange}
           value={gameData?.creator ? gameData?.creator : ""}
         />
-      </form>
+      </Box>
       <Container>
-        <IconButton
+        <Button
           sx={{ textAlign: "center", margin: "5px" }}
           type="submit"
           size="large"
           style={{ backgroundColor: "#e63946", color: "#fff" }}
           onClick={handleUpdateGame}
         >
-          <AddIcon />
-        </IconButton>
+          save
+        </Button>
       </Container>
     </Container>
   );

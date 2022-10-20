@@ -1,3 +1,4 @@
+import { Box, Button, TextField, Typography } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 
 import AlertDialogSlide from "../../components/alerts/AlertDialogSlide";
@@ -24,49 +25,63 @@ const Signup = () => {
 
   // console.log('data', data);
   return (
-    <div
-      style={{
-        width: "40%",
+    <Box
+      sx={{
+        width: "60%",
         margin: "30px auto",
+        border: "2px solid lightgray",
+        display: "flex",
+        flexDirection: "column",
+        padding: "2em",
+        borderRadius: "5px",
+        justifyItems: "center",
+        gap: "2em",
       }}
     >
-      <h1 className="text-center my-3 ">Register</h1>
-      <form onSubmit={handleSignup}>
-        <label>Email address</label>
-        <input
-          onChange={(e: any) =>
-            setData({
-              ...data,
-              email: e.target.value,
-            })
-          }
-          value={data.email}
-          required
-          type="email"
-          placeholder="Enter email"
-        />
+      <Typography variant="h4" sx={{ textAlign: "center" }}>
+        Register
+      </Typography>
 
-        <label>Password</label>
-        <input
-          onChange={(e: any) =>
-            setData({
-              ...data,
-              password: e.target.value,
-            })
-          }
-          value={data.password}
-          required
-          type="password"
-          placeholder="Password"
+      <Box sx={{ textAlign: "center" }}>
+        <Box component="form" onSubmit={handleSignup}>
+          <Typography>Email address</Typography>
+          <TextField
+            onChange={(e: any) =>
+              setData({
+                ...data,
+                email: e.target.value,
+              })
+            }
+            value={data.email}
+            required
+            type="email"
+            placeholder="Enter email"
+          />
+
+          <Typography>Password</Typography>
+          <TextField
+            onChange={(e: any) =>
+              setData({
+                ...data,
+                password: e.target.value,
+              })
+            }
+            value={data.password}
+            required
+            type="password"
+            placeholder="Password"
+          />
+          <Button variant="contained" sx={{ marginTop: "1em" }} type="submit">
+            Register
+          </Button>
+        </Box>
+        <AlertDialogSlide
+          dialogTitle="Alert"
+          text1={alerTxt1}
+          buttonTxt1={"Close"}
         />
-        <button type="submit">Register</button>
-      </form>
-      <AlertDialogSlide
-        dialogTitle="Alert"
-        text1={alerTxt1}
-        buttonTxt1={"Close"}
-      />
-    </div>
+      </Box>
+    </Box>
   );
 };
 
