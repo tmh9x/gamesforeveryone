@@ -27,7 +27,8 @@ const theme = createTheme();
 
 const EditUser: React.FC = () => {
   const [imageUpload, setImageUpload] = useState<File | null>(null);
-let myuuid = uuidv4();
+  let myuuid = uuidv4();
+  const imagePlaceholder= 'https://thumbs.dreamstime.com/t/default-placeholder-profile-icon-avatar-gray-man-90197993.jpg'
   const {
     user,
     getDBUsers,
@@ -43,7 +44,7 @@ let myuuid = uuidv4();
   //   --------- Submit profile update to Firebase ---- starts
   const handleEditSubmit = async (e) => {
     e.preventDefault();
-   
+
     try {
       // IMAGE UPLOAD
       const metadata = {
@@ -110,7 +111,7 @@ let myuuid = uuidv4();
                 image: downloadURL,
                 authId: user.uid,
               };
-  console.log("newUser: ", newUser);
+              console.log("newUser: ", newUser);
 
               // User DATA UPLOAD
               const usersRef = doc(db, "users", dbUsers.id);
@@ -126,17 +127,17 @@ let myuuid = uuidv4();
         );
       } else {
         // User DATA UPLOAD
-       const usersRef = doc(db, "users", dbUsers.id);
-       setDoc(
-         usersRef,
-         { ...editedUserData, image: <Avatar src="/broken-image.jpg" /> },
-         { merge: true }
-       );
+        const usersRef = doc(db, "users", dbUsers.id);
+        setDoc(
+          usersRef,
+          { ...editedUserData, image: imagePlaceholder },
+          { merge: true }
+        );
 
-       router.push("/user/profile");
-       setAlerTxt1("Profil updated!");
-       setOpenSnackBar(true);
-       console.log("Document written with ID: ", usersRef.id);
+        router.push("/user/profile");
+        setAlerTxt1("Profil updated!");
+        setOpenSnackBar(true);
+        console.log("Document written with ID: ", usersRef.id);
       }
 
       // const usersRef = doc(db, "users", dbUsers.id);
@@ -196,18 +197,15 @@ let myuuid = uuidv4();
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
                   <TextField
+                    size="small"
                     type="file"
+                    fullWidth
                     onChange={(e) => {
                       setImageUpload(e.target.files[0]);
                     }}
-                  >
-                    </TextField>
-
-
-
-
-
-
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     size="small"
                     type="text"
