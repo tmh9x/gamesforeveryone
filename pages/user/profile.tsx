@@ -130,7 +130,9 @@ const imagePlaceholder =
                     }}
                   >
                     <Image
-                      src={doc.data()?.image ? doc.data()?.image : imagePlaceholder}
+                      src={
+                        doc.data()?.image ? doc.data()?.image : imagePlaceholder
+                      }
                       alt=""
                       width="100"
                       height="100"
@@ -223,6 +225,17 @@ const imagePlaceholder =
               gap: "1em",
             }}
           >
+            <Box
+              className="your-dverts-header"
+              sx={{
+                borderBottom: "1px solid #888484",
+                textAlign: "center",
+                paddingBottom: "1rem",
+                marginBottom: "1rem",
+              }}
+            >
+              Your Adverts
+            </Box>
             {games &&
               games.map((game: Game, index: number) => (
                 <Card

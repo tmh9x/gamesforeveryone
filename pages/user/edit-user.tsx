@@ -42,7 +42,7 @@ const EditUser: React.FC = () => {
   const router = useRouter();
 
   //   --------- Submit profile update to Firebase ---- starts
-  const handleEditSubmit = async (e) => {
+  const handleEditSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
 
     try {
@@ -169,7 +169,7 @@ const EditUser: React.FC = () => {
           <SnackbarMui text="No data available" />
         ) : (
           <Box
-            className="sign-up-mentor-con"
+            className="edit-user-con"
             sx={{
               width: "80%",
               margin: "8px auto 0 auto",
@@ -378,7 +378,7 @@ const EditUser: React.FC = () => {
                 style={{ display: "flex", justifyContent: "space-around" }}
               >
                 <Button
-                  href="/mentors/profile"
+                  href="/user/profile"
                   type="submit"
                   variant="contained"
                   color="inherit"
